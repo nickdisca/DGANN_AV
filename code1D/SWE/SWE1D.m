@@ -15,8 +15,8 @@ xcen = mean(x,1);
 if(save_ind)
     fid = fopen(ind_fname,'w');
 end
-ind0 = Tcells_SWE_type(q,ind_var);
-q    = SlopeLimit_SWE_type(q,gravity,lim_var,ind0);
+ind0 = Tcells_SWE_type1D(q,ind_var,bc_cond);
+q    = SlopeLimit_SWE_type1D(q,gravity,lim_var,ind0,bc_cond);
 
 % [qc,Char] = SWEUtoC1D(q,gravity);
 % [Char(:,:,1),ind0x] = SlopeLimitN_SWE2(Char(:,:,1));
@@ -24,7 +24,7 @@ q    = SlopeLimit_SWE_type(q,gravity,lim_var,ind0);
 % [q] = SWECtoU1D(Char,qc,gravity);
 % ind0 = unique([ind0x,ind0y]);
 if(save_ind)
-    Tcell_write(fid,time,xcen(ind0));
+    Tcell_write1D(fid,time,xcen(ind0));
     figure(100)
     subplot(1,3,1)
     plot(xcen(ind0),ones(1,length(ind0))*time,'r.')
@@ -70,8 +70,8 @@ while(time<FinalTime)
     [rhsq]  = SWERHS1D_weak(q, gravity);
     q1      = q + dt*rhsq;
     
-    ind1 = Tcells_SWE_type(q1,ind_var);
-    q1   = SlopeLimit_SWE_type(q1,gravity,lim_var,ind1);
+    ind1 = Tcells_SWE_type1D(q1,ind_var,bc_cond);
+    q1   = SlopeLimit_SWE_type1D(q1,gravity,lim_var,ind1,bc_cond);
     
 %     [qc,Char] = SWEUtoC1D(q1,gravity);
 %     [Char(:,:,1),ind1x] = SlopeLimitN_SWE2(Char(:,:,1));
@@ -80,7 +80,7 @@ while(time<FinalTime)
 %     ind1 = unique([ind1x,ind1y]);
     
     if(save_ind)
-        Tcell_write(fid,time+dt,xcen(ind1));
+        Tcell_write1D(fid,time+dt,xcen(ind1));
     end
     
     if( min(min(real(q1(:,:,1)))) <= 0.0)
@@ -92,8 +92,8 @@ while(time<FinalTime)
     [rhsq]  = SWERHS1D_weak(q1, gravity);
     q2      = (3*q + (q1 + dt*rhsq))/4.0;
     
-    ind2 = Tcells_SWE_type(q2,ind_var);
-    q2   = SlopeLimit_SWE_type(q2,gravity,lim_var,ind2);
+    ind2 = Tcells_SWE_type1D(q2,ind_var,bc_cond);
+    q2   = SlopeLimit_SWE_type1D(q2,gravity,lim_var,ind2,bc_cond);
     
 %     [qc,Char] = SWEUtoC1D(q2,gravity);
 %     [Char(:,:,1),ind2x] = SlopeLimitN_SWE2(Char(:,:,1));
@@ -102,7 +102,7 @@ while(time<FinalTime)
 %     ind2 = unique([ind2x,ind2y]);
     
     if(save_ind)
-        Tcell_write(fid,time+dt,xcen(ind2));
+        Tcell_write1D(fid,time+dt,xcen(ind2));
     end
     
     if( min(min(real(q2(:,:,1)))) <= 0.0)
@@ -114,8 +114,8 @@ while(time<FinalTime)
     [rhsq]  = SWERHS1D_weak(q2, gravity);
     q       = (q + 2*(q2 + dt*rhsq))/3.0;
     
-    ind3 = Tcells_SWE_type(q,ind_var);
-    q    = SlopeLimit_SWE_type(q,gravity,lim_var,ind3);
+    ind3 = Tcells_SWE_type1D(q,ind_var,bc_cond);
+    q    = SlopeLimit_SWE_type1D(q,gravity,lim_var,ind3,bc_cond);
 
 %     [qc,Char] = SWEUtoC1D(q1,gravity);
 %     [Char(:,:,1),ind3x] = SlopeLimitN_SWE2(Char(:,:,1));
@@ -124,7 +124,7 @@ while(time<FinalTime)
 %     ind3 = unique([ind3x,ind3y]);    
 
     if(save_ind)
-        Tcell_write(fid,time+dt,xcen(ind3));
+        Tcell_write1D(fid,time+dt,xcen(ind3));
     end
     
     if( min(min(real(q(:,:,1)))) <= 0.0)

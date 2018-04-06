@@ -15,11 +15,11 @@ xcen = mean(x,1);
 if(save_ind)
     fid = fopen(ind_fname,'w');
 end
-ind0 = Tcells_Euler_type(q,gas_gamma, gas_const,ind_var);
-q    = SlopeLimit_Euler_type(q,gas_gamma, gas_const,lim_var,ind0);
+ind0 = Tcells_Euler_type1D(q,gas_gamma, gas_const,ind_var,bc_cond);
+q    = SlopeLimit_Euler_type1D(q,gas_gamma, gas_const,lim_var,ind0,bc_cond);
 
 if(save_ind)
-    Tcell_write(fid,time,xcen(ind0));
+    Tcell_write1D(fid,time,xcen(ind0));
     figure(100)
     subplot(1,3,1)
     plot(xcen(ind0),ones(1,length(ind0))*time,'r.')
@@ -66,12 +66,12 @@ while(time<FinalTime)
     [rhsq]  = EulerRHS1D_weak(q, gas_gamma, gas_const);
     q1      = q + dt*rhsq;
     
-    ind1 = Tcells_Euler_type(q1,gas_gamma, gas_const,ind_var);
-    q1   = SlopeLimit_Euler_type(q1,gas_gamma, gas_const,lim_var,ind1);
+    ind1 = Tcells_Euler_type1D(q1,gas_gamma, gas_const,ind_var,bc_cond);
+    q1   = SlopeLimit_Euler_type1D(q1,gas_gamma, gas_const,lim_var,ind1,bc_cond);
    
     
     if(save_ind)
-        Tcell_write(fid,time+dt,xcen(ind1));
+        Tcell_write1D(fid,time+dt,xcen(ind1));
     end
     
     pre = (gas_gamma-1)*(q1(:,:,3) - 0.5*q1(:,:,2).^2./q1(:,:,1));
@@ -84,12 +84,12 @@ while(time<FinalTime)
     [rhsq]  = EulerRHS1D_weak(q1, gas_gamma, gas_const);
     q2      = (3*q + (q1 + dt*rhsq))/4.0;
     
-    ind2 = Tcells_Euler_type(q2,gas_gamma, gas_const,ind_var);
-    q2   = SlopeLimit_Euler_type(q2,gas_gamma, gas_const,lim_var,ind2);
+    ind2 = Tcells_Euler_type1D(q2,gas_gamma, gas_const,ind_var,bc_cond);
+    q2   = SlopeLimit_Euler_type1D(q2,gas_gamma, gas_const,lim_var,ind2,bc_cond);
     
     
     if(save_ind)
-        Tcell_write(fid,time+dt,xcen(ind2));
+        Tcell_write1D(fid,time+dt,xcen(ind2));
     end
     
     pre    = (gas_gamma-1)*(q2(:,:,3) - 0.5*q2(:,:,2).^2./q2(:,:,1));
@@ -102,11 +102,11 @@ while(time<FinalTime)
     [rhsq]  = EulerRHS1D_weak(q2, gas_gamma, gas_const);
     q       = (q + 2*(q2 + dt*rhsq))/3.0;
     
-    ind3 = Tcells_Euler_type(q,gas_gamma, gas_const,ind_var);
-    q    = SlopeLimit_Euler_type(q,gas_gamma, gas_const,lim_var,ind3);    
+    ind3 = Tcells_Euler_type1D(q,gas_gamma, gas_const,ind_var,bc_cond);
+    q    = SlopeLimit_Euler_type1D(q,gas_gamma, gas_const,lim_var,ind3,bc_cond);    
 
     if(save_ind)
-        Tcell_write(fid,time+dt,xcen(ind3));
+        Tcell_write1D(fid,time+dt,xcen(ind3));
     end
 
  

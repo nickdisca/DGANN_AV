@@ -8,7 +8,7 @@ Globals1D_DG;
 Globals1D_MLP;
 
 % Set exact flux and Jacobian
-[flux,dflux] = Set_flux(model);
+[flux,dflux] = Set_scalar_flux1D(model);
 
 time = 0;
 
@@ -23,10 +23,10 @@ end
 
 
 % Limit initial solution
-ind0  = Find_Tcells(u);
-u     = SlopeLimit(u,ind0);
+ind0  = Scalar1D_Tcells(u,bc_cond);
+u     = Scalar1D_limit(u,ind0,bc_cond);
 if(save_ind)
-    Tcell_write(fid,time,xcen(ind0));
+    Tcell_write1D(fid,time,xcen(ind0));
     figure(100)
     subplot(1,3,1)
     plot(xcen(ind0),ones(1,length(ind0))*time,'r.')
@@ -73,10 +73,10 @@ while(time<FinalTime)
   u1  = u  + dt*rhsu;
 
   % Limit fields
-  ind1  = Find_Tcells(u1);
-  u1     = SlopeLimit(u1,ind1);
+  ind1  = Scalar1D_Tcells(u1,bc_cond);
+  u1    = Scalar1D_limit(u1,ind1,bc_cond);
   if(save_ind)
-      Tcell_write(fid,time+dt,xcen(ind1));
+      Tcell_write1D(fid,time+dt,xcen(ind1));
   end
   
 
@@ -85,10 +85,10 @@ while(time<FinalTime)
   u2   = (3*u  + u1  + dt*rhsu )/4;
 
   % Limit fields
-  ind2  = Find_Tcells(u2);
-  u2     = SlopeLimit(u2,ind2);
+  ind2  = Scalar1D_Tcells(u2,bc_cond);
+  u2    = Scalar1D_limit(u2,ind2,bc_cond);
   if(save_ind)
-      Tcell_write(fid,time+dt,xcen(ind2));
+      Tcell_write1D(fid,time+dt,xcen(ind2));
   end
 
   % SSP RK Stage 3.
@@ -96,10 +96,10 @@ while(time<FinalTime)
   u  = (u  + 2*u2  + 2*dt*rhsu )/3;
   
   % Limit solution
-  ind3  = Find_Tcells(u);
-  u     = SlopeLimit(u,ind3);
+  ind3  = Scalar1D_Tcells(u,bc_cond);
+  u     = Scalar1D_limit(u,ind3,bc_cond);
   if(save_ind)
-      Tcell_write(fid,time+dt,xcen(ind3));
+      Tcell_write1D(fid,time+dt,xcen(ind3));
   end
   
   % Increment time and adapt timestep

@@ -12,14 +12,19 @@ gas_gamma = 1.4;
 
 % Domain and time parameters by declaring variables
 % Domain    --->  [bnd_l , bnd_r]
-% bc_type   --->  Periodic, Open
+% bc_cond   ---> {'r_bc_type_left', r_bc_val_left, 'r_bc_type_right',r_bc_val_right;
+%                 'm_bc_type_left', m_bc_val_left, 'm_bc_type_right',m_bc_val_right;
+%                 'e_bc_type_left', e_bc_val_left, 'e_bc_type_right',e_bc_val_right}
+%                  bc_types can be 'P', 'D' or 'N'
 % FinalTIme 
 % CFL
 % Nelem     ---> Number of cell/elements in the mesh
 bnd_l     = -1.0;  
 bnd_r     = 1.0;
-mesh_pert = 0.0;
-bc_type   = 'Open';
+mesh_pert = 0.1;
+bc_cond   = {'N',0,'N',0.0;
+             'N',0,'N',0.0;
+             'N',0,'N',0.0};
 FinalTime = 0.6;
 CFL       = 0.4;
 Nelem     = 128;
@@ -31,12 +36,12 @@ vel_IC =@(x) (x<0)*(-1.0)+ (x>=0.0)*1.0;
 pre_IC =@(x) 0*x + 0.2;
 
 % Order of polymomials used for approximation 
-%N = 2;
+N = 4;
 
 % Troubled-cell indicator
 % inidcator_type ---> minmod, TVB, NN
 % TVB_M          ---> Parameter needed by TVB limiter
-indicator_type = 'minmod';
+% indicator_type = 'minmod';
 indicator_type = 'TVB'; TVB_M = 10;
 indicator_type = 'TVB'; TVB_M = 100;
 indicator_type = 'TVB'; TVB_M = 1000;
@@ -57,10 +62,7 @@ ind_var = 'prim';
 %ind_var = 'de';
 
 % Neural Network Parameters
-nn_model      = 'MLP5';	
-sub_model     = 'A';
-data_set      = 'DSET_2';
-data_subset   = 'IND_2';
+nn_model      = 'MLP_v1';
 
 % Limiter used for reconstruction (this need not be the same as the 
 % troubled-cell indicator)
@@ -80,7 +82,7 @@ lim_var = "prim";
 lim_var = "char_stencil";
 
 % Plot and save parameters
-plot_iter = 10;
+plot_iter = 100;
 save_soln = true;
 save_ind  = true;
 
