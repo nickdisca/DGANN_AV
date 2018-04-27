@@ -1,38 +1,32 @@
-% Purpose : Setup script, building operators, grid, metric and connectivity for 1D solver.     
-
-% Definition of constants
-NODETOL = 1e-10;
-Np = N+1; Nfp = 1; Nfaces=2;
+% Purpose : Setup script, building operators, maps
+Np = N+1;
 
 % Compute basic Legendre Gauss Lobatto grid
 r = JacobiGL(0,0,N);
 
 % Build reference element matrices
-V  = Vandermonde1D(N, r); invV = inv(V);
-Dr = Dmatrix1D(N, r, V);
-
-% Create surface integral terms
-LIFT = Lift1D();
+V     = Vandermonde1D(N, r); 
+invV  = inv(V);
+Dr    = Dmatrix1D(N, r, V);
+M     = inv(V')/V; % mass matrix corresponding to reference element
+invM  = inv(M);
+S     = M*Dr;
+int_metric = 2*ones(Np,1)*(1./hK);
+Imat  = eye(Np);
+AVG1D = sum(M)/2; % Averaging array
 
 % build coordinates of all the nodes
-va = EToV(:,1)'; vb = EToV(:,2)';
-x = ones(N+1,1)*VX(va) + 0.5*(r+1)*(VX(vb)-VX(va));
+x = ones(N+1,1)*VX(1:Nv-1) + 0.5*(r+1)*(VX(2:Nv)-VX(1:Nv-1));
 
-% calculate geometric factors
-[rx,J] = GeometricFactors1D(x,Dr);
+% Create face node extractor
+VtoE = zeros(2,K);
+for j=1:K
+    VtoE(1,j) = (j-1)*(Np)+1;
+    VtoE(2,j) = j*(Np);
+end
 
-% Compute masks for edge nodes
-fmask1 = find( abs(r+1) < NODETOL)'; 
-fmask2 = find( abs(r-1) < NODETOL)';
-Fmask  = [fmask1;fmask2]';
-Fx = x(Fmask(:), :);
+% Build Projection maps (needed for Shu-Fu indicator)
+Get_Projection_1D;
 
-% Build surface normals and inverse metric at surface
-[nx] = Normals1D();
-Fscale = 1./(J(Fmask,:));
 
-% Build connectivity matrix
-[EToE, EToF] = Connect1D(EToV);
 
-% Build connectivity maps
-[vmapM, vmapP, vmapB, mapB] = BuildMaps1D;

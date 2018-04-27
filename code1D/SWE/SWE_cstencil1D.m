@@ -10,11 +10,13 @@ Globals1D_DG;
 q_lim = q(:,2:K+1,:);
 
 % Compute cell averages
-depthh = invV*q(:,:,1); depthh(2:Np,:)=0;
-deptha = V*depthh; depthc = deptha(1,:);
+% depthh = invV*q(:,:,1); depthh(2:Np,:)=0;
+% deptha = V*depthh; depthc = deptha(1,:);
+depthc = AVG1D*q(:,:,1);
 
-dischageh = invV*q(:,:,2); dischageh(2:Np,:)=0;
-dischargea = V*dischageh; dischargec = dischargea(1,:);
+% dischageh = invV*q(:,:,2); dischageh(2:Np,:)=0;
+% dischargea = V*dischageh; dischargec = dischargea(1,:);
+dischargec = AVG1D*q(:,:,2);
 
 % Compute characterisic variables
 if(~isempty(ind))

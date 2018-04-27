@@ -1,17 +1,18 @@
-function fname = SWE_ind_fname1D()
+function fname = SWE_ind_fname1D(REL_PATH)
 
 Globals1D_DG;
 Globals1D_MLP;
 
-fname = sprintf('../User_output/%s1D_%s_P%d_N%d',model,test_name,...
+fname = sprintf('%sUser_output/%s1D_%s_P%d_N%d',REL_PATH,model,test_name,...
                  N,Nelem);
 if(strcmp(indicator_type,'minmod'))
     fname = sprintf('%s_IND_%s',fname,indicator_type);
 elseif(strcmp(indicator_type,'TVB'))
     fname = sprintf('%s_IND_%s_%d',fname,indicator_type,TVB_M);
 elseif(strcmp(indicator_type,'NN'))
-    fname = sprintf('%s_IND_%s_%s',fname,indicator_type,...
-            nn_model);
+    fname = sprintf('%s_IND_%s',fname,nn_model);
+elseif(strcmp(indicator_type,'FuShu'))
+    fname = sprintf('%s_IND_FS',fname);    
 else
     error('Indicator %s not available',indicator_type);
 end

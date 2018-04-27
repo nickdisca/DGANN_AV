@@ -17,14 +17,17 @@ Ener_ext  = q(:,:,3);
 %depthc = zeros(1,K); dischargec = zeros(1,K); Char = zeros(2,Np,3);
 
 % Compute cell averages
-rhoh = invV*rho_ext; rhoh(2:Np,:)=0;
-rhoa = V*rhoh; rhoc = rhoa(1,:);
+% rhoh = invV*rho_ext; rhoh(2:Np,:)=0;
+% rhoa = V*rhoh; rhoc = rhoa(1,:);
+rhoc = AVG1D*rho_ext;
 
-mmth = invV*mmt_ext; mmth(2:Np,:)=0;
-mmta = V*mmth; mmtc = mmta(1,:);
+% mmth = invV*mmt_ext; mmth(2:Np,:)=0;
+% mmta = V*mmth; mmtc = mmta(1,:);
+mmtc = AVG1D*mmt_ext;
 
-Enerh = invV*Ener_ext; Enerh(2:Np,:)=0;
-Enera = V*Enerh; Enerc = Enera(1,:);
+% Enerh = invV*Ener_ext; Enerh(2:Np,:)=0;
+% Enera = V*Enerh; Enerc = Enera(1,:);
+Enerc = AVG1D*Ener_ext;
 
 % Compute characterisic variables
 if(~isempty(ind))

@@ -11,11 +11,13 @@ NTC = size(q(1,:,1)); % All cells  on which q is defined. This may contain
 
 qc = zeros(NTC,2); Char = zeros(Np,NTC,2); % Including ghost cells
 % Compute cell averages
-depthh = invV*q(:,:,1); depthh(2:Np,:)=0; 
-deptha = V*depthh; qc(:,1) = deptha(1,:);
+% depthh = invV*q(:,:,1); depthh(2:Np,:)=0; 
+% deptha = V*depthh; qc(:,1) = deptha(1,:);
+qc(:,1) = AVG1D*q(:,:,1);
 
-dischargeh = invV*q(:,:,2); dischargeh(2:Np,:)=0; 
-dischargea = V*dischargeh; qc(:,2) = dischargea(1,:);
+% dischargeh = invV*q(:,:,2); dischargeh(2:Np,:)=0; 
+% dischargea = V*dischargeh; qc(:,2) = dischargea(1,:);
+qc(:,2) = AVG1D*q(:,:,2);
 
 
 % Compute characterisic variables

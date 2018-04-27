@@ -1,17 +1,18 @@
-function Save_Euler_soln1D(q,gas_gamma, gas_const)
+function Save_Euler_soln1D(q,gas_gamma, gas_const,REL_PATH)
 
 Globals1D_DG;
 Globals1D_MLP;
 
-data_fname = sprintf('../User_output/%s1D_%s_P%d_N%d',model,test_name,N,...
+data_fname = sprintf('%sUser_output/%s1D_%s_P%d_N%d',REL_PATH,model,test_name,N,...
                       Nelem);
 if(strcmp(indicator_type,'minmod'))
     data_fname = sprintf('%s_IND_%s',data_fname,indicator_type);
 elseif(strcmp(indicator_type,'TVB'))
     data_fname = sprintf('%s_IND_%s_%d',data_fname,indicator_type,TVB_M);
 elseif(strcmp(indicator_type,'NN'))
-    data_fname = sprintf('%s_IND_%s_%s',data_fname,indicator_type,...
-            nn_model);
+    data_fname = sprintf('%s_IND_%s',data_fname,nn_model);
+elseif(strcmp(indicator_type,'FuShu'))
+    data_fname = sprintf('%s_IND_FS',data_fname);
 else
     error('Indicator %s not available',indicator_type);
 end

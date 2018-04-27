@@ -1,9 +1,12 @@
-function [n_input,n_output,n_hidden_layer,leaky_alpha,WEIGHTS,BIASES] = ...
-    read_mlp_param1D(nn_model)
+function [n_input,n_output,n_hidden_layer,leaky_alpha,WEIGHTS,BIASES,NN_Dir] = ...
+    read_mlp_param1D(nn_model,REL_PATH)
 
-Model_dir = horzcat('../Trained_networks/1D/',nn_model);
+NN_Dir = horzcat(REL_PATH,'Trained_networks/1D/',nn_model);
 
-param_file = horzcat(Model_dir,'/model_parameters.dat');
+% Add NN_dit to path. This will be removed at the end of the solver run
+addpath(NN_Dir);
+
+param_file = horzcat(NN_Dir,'/model_parameters.dat');
 
 fid = fopen(param_file);
 PAR = textscan(fid,'%s %f','delimiter',' ');
@@ -23,11 +26,11 @@ WEIGHTS = cell(n_hidden_layer + 1,1);
 BIASES  = cell(n_hidden_layer + 1,1);
 
 for i=1:n_hidden_layer
-    WEIGHTS{i,1} = load(horzcat(Model_dir,'/w_h',num2str(i),'.dat'))';
-    BIASES{i,1}  = load(horzcat(Model_dir,'/b_h',num2str(i),'.dat'));
+    WEIGHTS{i,1} = load(horzcat(NN_Dir,'/w_h',num2str(i),'.dat'))';
+    BIASES{i,1}  = load(horzcat(NN_Dir,'/b_h',num2str(i),'.dat'));
 end
 
-WEIGHTS{end,1} = load(horzcat(Model_dir,'/w_out.dat'))';
-BIASES{end,1}  = load(horzcat(Model_dir,'/b_out.dat'));
+WEIGHTS{end,1} = load(horzcat(NN_Dir,'/w_out.dat'))';
+BIASES{end,1}  = load(horzcat(NN_Dir,'/b_out.dat'));
 
 end

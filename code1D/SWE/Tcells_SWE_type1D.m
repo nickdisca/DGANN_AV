@@ -10,7 +10,7 @@ switch ind_var
         ind = Find_Tcells1D(q_ext(:,:,1));
     case 'velocity'
         ind = Find_Tcells1D(q_ext(:,:,2)./q_ext(:,:,1));
-    case 'dv'
+    case 'prim'
         ind_d = Find_Tcells1D(q_ext(:,:,1));
         ind_v = Find_Tcells1D(q_ext(:,:,2)./q_ext(:,:,1));
         ind   = unique([ind_d,ind_v]);

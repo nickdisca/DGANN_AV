@@ -16,11 +16,9 @@ function badc_prob = ind_MLP1D(x, n_input,n_output,n_hidden_layer,leaky_alpha,..
    assert(size(WEIGHTS{end},1) == n_output);
    assert(size(BIASES{end},1) == n_output);
    
-   x_in = x;
+   % SCALE DATA BEFORE USING IN NETWORK
+   x_in = Scaling(x);
    
-   %Scaling Data
-   fact = repmat(max(max(abs(x_in),[],1),1),m,1);
-   x_in = x_in./fact;
    % HIDDEN LAYERS
    for i=1:n_hidden_layer
 
