@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>README</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+}
+</style>
+
+<style type="text/css">
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: black;
+	background: none;
+	text-shadow: 0 1px white;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+
+@media print {
+	code[class*="language-"],
+	pre[class*="language-"] {
+		text-shadow: none;
+	}
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #f5f2f0;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: slategray;
+}
+
+.token.punctuation {
+	color: #999;
+}
+
+.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+	color: #a67f59;
+	background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #07a;
+}
+
+.token.function {
+	color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+	color: #e90;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<h1 id="toc_0">DGANN solver</h1>
+
+<h3 id="toc_1">Created by: Deep Ray, EPFL, Switzerland </br> Webpage: deepray.github.io </br>Date : 10 January, 2018</h3>
+
+<p><strong>DGANN</strong> is a RKDG-solver written in MATLAB, which is also capable of using an artificial neural network trained to serve as a troubled-cell detector. The main source code for the RKDG solver is based on the solvers available with the following texts:</p>
+
+<ol>
+<li>Nodal Disontinuous Galerkin methods, by Jan S. Hesthaven and Tim Warburton. </li>
+<li>Numerical Methods for Conservation Laws: From Analysis to Algorithms, by Jan S. Hesthaven.</li>
+</ol>
+
+<p>Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">&quot;An artificial neural network as a troubled-cell indicator&quot;</a>.</p>
+
+<h2 id="toc_2">Running the code</h2>
+
+<p>After cloning the git repository, execute <strong>mypath.m</strong> from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the <strong>Examples</strong> directory.</p>
+
+<h3 id="toc_3">Scalar 1D</h3>
+
+<p>The basic structure of the example script is as follows.</p>
+
+<div><pre><code class="language-matlab">clc
+clear all
+close all
+
+Globals1D_DG;
+Globals1D_MLP;
+
+model = &#39;Advection&#39;;
+test_name = &#39;Sine&#39;;
+u_IC =@(x) sin(10*pi*x);   
+
+bnd_l     = 0.0;  
+bnd_r     = 1.4;
+mesh_pert = 0.0;
+bc_cond   = {&#39;P&#39;,0.0,&#39;P&#39;,0.0};
+FinalTime = 1.4;
+CFL       = 0.2;
+Nelem     = 100;
+N         = 4;
+
+indicator_type = &#39;minmod&#39;;
+nn_model       = &#39;MLP_v1&#39;;  
+rec_limiter    = &#39;minmod&#39;;
+
+plot_iter = 100;
+save_soln = true;
+save_ind  = true;
+
+% Call code driver
+ScalarDriver1D; </code></pre></div>
+
+<ul>
+<li><code>Globals1D_DG</code> and <code>Globals1D_MLP</code> declare important global variables needed by the solver and the MLP network. </li>
+<li>The <code>model</code> flag sets the type of scalar model which is being solved. The following scalar models are currently available:
+
+<ul>
+<li><code>&#39;Advection&#39;</code>: Linear advection equation with the advection speed st to 1.</li>
+<li><code>&#39;Burgers&#39;</code> : Burgers equation with the flux \(u^2/2\).</li>
+<li><code>&#39;BuckLev&#39;</code>: Buckley-Leverett equation with flux contant  set to \(0.5\).</li>
+</ul></li>
+<li><code>test_name</code> is used to declare the name of the test. This is used for creating various save files.</li>
+<li><code>u_IC</code> is used to set the initial condition for the problem.</li>
+<li><code>bnd_l</code> and <code>bnd_r</code> define the left and right domain boundaries, which is descritized using <code>Nelem</code> number of elements. The degree of the polynomial in each element/cell is set using <code>N</code>. </li>
+<li><p><code>mesh_pert</code> is used to randomly perturb the interior cell-interfaces using the following algorithm</p>
+
+<p>\[
+x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,N-1
+\]</p>
+
+<p>where \(h\) is the mesh size of the initial uniform grid.</p></li>
+<li><p><code>bc_cond</code> is used to set the left and right boundary conditions. It is a cell of the form
+<code>{LEFT_BC_TYPE, LEFT_BC_VAL, RIGHT_BC_TYPE,RIGHT_BC_VAL}</code>. The <code>BC_TYPES</code> can be set as:</p>
+
+<ul>
+<li><code>&#39;P&#39;</code>: Periodic boundary conditions. In this case, both boundary type must be set to <code>&#39;P&#39;</code>.</li>
+<li><code>&#39;N&#39;</code>: Neumann boundary condition.</li>
+<li><code>&#39;D&#39;</code>: Dirichlet boundary condition, with the imposed Dirichlet value given by <code>BC_VAL</code>. Note that <code>BC_VAL</code> is ignored if <code>BC_TYPE</code> is not set to <code>&#39;D&#39;</code>. </li>
+</ul></li>
+<li><p>The final simulation time is set using <code>FinalTime</code>, while the time step is chosen using <code>CFL</code>.</p></li>
+<li><p>The troubled-cell indicator is set using <code>indicator_type</code>. The following options are currently available:</p>
+
+<ul>
+<li><code>&#39;minmod&#39;</code>: Uses the basic minmod limiter.</li>
+<li><code>&#39;TVB&#39;</code>: Uses the modified minmod-type TVB limiter. If this is chosen, then one aslo needs to set the variable <code>TVB_M</code> to a positive number. Note that if this constant is set to 0, then the limiter reduces to the usual minmod limiter.</li>
+<li>&#39;<code>NN</code>&#39;: Uses the trained neural network. The network name is set using the variable <code>nn_model</code>. The available networks are described below in the section <strong>Using the MLP indicator</strong>.</li>
+</ul></li>
+<li><p>The limiter usd to reconstruct the solution in each troubled-cell,is set using <code>rec_limiter</code>. The following options are currently available:</p>
+
+<ul>
+<li><code>&#39;none&#39;</code>: No limiting is applied.</li>
+<li><code>&#39;minmod&#39;</code>: MUSCL reconstruction using minmod limiter.</li>
+</ul></li>
+<li><p>The flag <code>plot_iter</code> is used for visualization purposes. The solution is plots are shown after every <code>plot_iter</code> number of iterations during the simulation.</p></li>
+<li><p>If solution at the final time needs to be saved, the flag <code>save_soln</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The solution files are save in the directory <strong>User_output</strong>. The filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format: </p>
+
+<ul>
+<li>Column 1: x-coordinates</li>
+<li>Column 2: solution value at corresponding x-coordinate </li>
+</ul></li>
+<li><p>If the time-history of the troubled-cells needs to be viewe/saved, the flag <code>save_indn</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The time-history files are also save in the directory <strong>User_output</strong>. The filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}_tcells.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format:</p>
+
+<ul>
+<li>Each row of the file contains the time, followed by the mid-points of the cells flagged as troubled-cells at that time.</li>
+<li>The first row corresponds to the cell flagged at time \(t=0\). This is essentially done for the initial condition.</li>
+<li>Following the first row, the rows can be grouped in sets of size \(r\), to list the cells flagged after each sub-stage of the r-stage time-integration scheme. Since the current implementation of the code uses SSP-RK3, the rows will be grouped as triplets. </li>
+</ul></li>
+<li><p>The main driver script <code>ScalarDriver1D</code> is called once all the flags have been set.</p></li>
+</ul>
+
+<h3 id="toc_4">Shallow Water 1D</h3>
+
+<p>The basic structure of the example script is as follows.</p>
+
+<div><pre><code class="language-matlab">clc
+clear all
+close all
+
+Globals1D_DG;
+Globals1D_MLP;
+
+model        = &#39;SWE&#39;;
+gravity      = 1.0;
+test_name    = &#39;Dambreak&#39;;
+depth_IC     =@(x) 3*(x&lt;0.0) + 1*(x&gt;=0.0);
+velocity_IC  =@(x) 0*x;
+
+bnd_l     = -3.0;  
+bnd_r     = 3.0;
+mesh_pert = 0.0;
+bc_cond   = {&#39;N&#39;,0.0,&#39;N&#39;,0.0;
+             &#39;N&#39;,0.0,&#39;N&#39;,0.0};  % For conserved variables
+FinalTime = 1;
+CFL       = 0.4;
+Nelem     = 100;
+N         = 4;
+
+indicator_type = &#39;minmod&#39;;
+ind_var        = &#39;depth&#39;;
+nn_model       = &#39;MLP_v1&#39;; 
+rec_limiter    = &#39;minmod&#39;;
+lim_var        = &#39;con&#39;;
+
+plot_iter = 100;
+save_soln = true;
+save_ind  = true;
+
+% Call code driver
+SWEDriver1D;</code></pre></div>
+
+<p>Most of the structure is similar to the Scalar 1D script. The differences are described below.</p>
+
+<ul>
+<li>The <code>model</code> needs to be set as <code>&#39;SWE&#39;</code>. This should not be changed.</li>
+<li>The acceleration due to gravity is set using <code>gravity</code>.</li>
+<li>The initial depth and velocity are set using <code>depth_IC</code> and <code>velocity_IC</code>.</li>
+<li>The <code>bc_cond</code> has the same format as earlier, although now it has two rows of parameters. The first row corresponds to depth, while the second corresponds to the discharge (depth*velocity). Note that the boundary condition are set for the conserved variables.</li>
+<li>For systems of conservation laws, there are various choices for the variables to be used for troubled-cell detection. For the shallow water equations, this choice is made via the flag <code>ind_var</code>, with the following options:
+
+<ul>
+<li><code>&#39;depth&#39;</code>: Only the depth variable is used</li>
+<li><code>&#39;velocity&#39;</code>: Only the velocity variable is used</li>
+<li><code>&#39;prim&#39;</code>: The primitive variables i.e., depth and velocity, are used. The troubled-cells flagged for each variable is pooled together.</li>
+</ul></li>
+<li>As was the case with detection, there are several options for the variables which can be reconstructed. This is set using the flag <code>rec_var</code>, with the following options:
+
+<ul>
+<li><code>&#39;prim&#39;</code>:  The primitive variables i.e., depth and velocity, are recontructed.</li>
+<li><code>&#39;con&#39;</code>:  The conserved variables i.e., depth and discharge, are recontructed.</li>
+<li><code>&#39;char_cell&#39;</code>: The local characterictic variables are reconstructed. These are obtained cell-by-cell using the linearized transformation operators. More precisely, the transformation matrix in each cell is evaluated using the cell-average value, following which the conserved variables are transformed to the characteristic variables in that cell. The same transformation is used to retrieve the conserved variables after limiting the characteristic variables. </li>
+<li><code>&#39;char_stencil&#39;</code>: The local characterictic variables obtained cell-by-cell can introduce spurious oscillations in the solution. One can also obtain the local characteristic variables, stencil-by stencil. More precisely, for a given reconstruction stencil of 3-cells, the transformation matrix is evaluated using the cell-average value of the central cell, following which the conserved variables are transformed to the characteristic variables in every cell of that stencil. The transformed variables are used to obtain the reconstructed characteristic variables in the central cell. Note that this approach can be 3 times more expensive than the <code>&#39;char_cell&#39;</code> approach.</li>
+</ul></li>
+<li>The solution filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{ind_var}_{rec_limiter}_{rec_var}.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format: 
+
+<ul>
+<li>Column 1: x-coordinates</li>
+<li>Column 2: the value of depth and velocity (in that order) at corresponding x-coordinate.</li>
+</ul></li>
+<li>The troubled-cell time-history filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{ind_var}_{rec_limiter}_{rec_var}_tcells.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>.</li>
+<li>The main driver script <code>SWEDriver1D</code> is called once all the flags have been set.</li>
+</ul>
+
+<h3 id="toc_5">Euler 1D</h3>
+
+<p>The basic structure of the example script is as follows.</p>
+
+<div><pre><code class="language-matlab">clc
+clear all
+close all
+
+Globals1D_DG;
+Globals1D_MLP;
+
+model     = &#39;Euler&#39;;
+gas_const = 1.0;
+gas_gamma = 1.4;
+test_name = &#39;ShockEntropy&#39;;
+rho_IC    =@(x) (x&lt;-4)*3.857143 + (x&gt;=-4).*(1 + 0.2*sin(5*x));
+vel_IC    =@(x) (x&lt;-4)*2.629369;
+pre_IC    =@(x) (x&lt;-4)*10.33333 + (x&gt;=-4)*1.0;
+
+
+bnd_l     = -5.0;  
+bnd_r     = 5.0;
+mesh_pert = 0.0;
+bc_cond   = {&#39;D&#39;,3.857143,&#39;N&#39;,0.0;
+             &#39;D&#39;,10.141852,&#39;D&#39;,0.0;
+             &#39;D&#39;,39.166661,&#39;N&#39;,0.0};  % For conserved variables
+FinalTime = 1.8;
+CFL       = 0.1;
+Nelem     = 200;
+N         = 4;
+
+indicator_type = &#39;minmod&#39;;
+ind_var        = &#39;prim&#39;;
+nn_model       = &#39;MLP_v1&#39;;
+rec_limiter    = &#39;minmod&#39;;
+lim_var        = &#39;con&#39;;
+
+plot_iter = 100;
+save_soln = true;
+save_ind  = true;
+
+% Call code driver
+EulerDriver1D; </code></pre></div>
+
+<p>Most of the structure is similar to the shallow water 1D script. The differences are described below. </p>
+
+<ul>
+<li>The <code>model</code> needs to be set as <code>&#39;SWE&#39;</code>. This should not be changed.</li>
+<li>The gas constant and ratio of specific heats is set using <code>gas_const</code> and <code>gas_gamma</code>.</li>
+<li>The initial density, velocity and pressure are set using <code>rho_IC</code>, <code>vel_IC</code> and <code>pre_IC</code>.</li>
+<li>The <code>bc_cond</code> has the same format as earlier, although now it has three rows of parameters. The first row corresponds to density, the second corresponds to the momentum, and the third to energy. Note that the boundary condition are set for the conserved variables.</li>
+<li>For the Euler equations, <code>ind_var</code> can be set as:
+
+<ul>
+<li><code>&#39;density&#39;</code>: Only the density is used</li>
+<li><code>&#39;velocity&#39;</code>: Only the velocity is used</li>
+<li><code>&#39;pressure&#39;</code>: Only the pressure is used</li>
+<li><code>&#39;prim&#39;</code>: The primitive variables i.e., depth, velocity and pressure, are used. The troubled-cells flagged for each variable is pooled together.</li>
+<li><code>&#39;energy&#39;</code>: Only the energy is used.</li>
+<li><code>&#39;de&#39;</code>: Density and energy are used.</li>
+</ul></li>
+<li>The main driver script <code>EulerDriver1D</code> is called once all the flags have been set. The troubled-cells flagged for each variable is pooled together.</li>
+</ul>
+
+<h2 id="toc_6">Using the MLP indicator</h2>
+
+<p>For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder <strong>Trained_networks</strong>. For each network, the following files exist:</p>
+
+<ul>
+<li><strong><em>model_parameters.dat</em></strong>: Lists the dimensions of the input (IDIM) and output (ODIM) layers for the network, the number of hidden layers (NHL), and network hyperparameters (the Leaky ReLU factor, etc.).</li>
+<li><strong><em>w_h{i}.dat</em></strong>: Weights for the i&#39;th hidden layer.</li>
+<li><strong><em>w_out.dat</em></strong>: Weights for the output layer</li>
+<li><strong><em>b_h{i}.dat</em></strong>: Biases for the i&#39;th hidden layer</li>
+<li><strong><em>b_out.dat</em></strong>: Biases for the output layer.</li>
+<li><strong><em>Scaling.m</em></strong>: Script for scaling the input data before passing it through the network.</li>
+</ul>
+
+<p>Consider the input \(X\) to be an array of size \(m \times n\), where \(m\) is the dimension of each data sample, while \(n\) is the number of samples. The algortihm for the network is as follows:</p>
+
+<p>\[
+\begin{align}
+X &amp;= \text{Scaling}(X) \\
+X &amp;= \sum_{i=1}^{NHL} f_{\text{activation}}(W_i X + b_i)\\
+Y &amp;= \text{Softmax}(W_{out} X + b_{out})\\
+\end{align}
+\]</p>
+
+<p>where the final output \(Y\) is of dimension \(2 \times n\). The activation function is chosen as a suitable non-linear function, such as the Logistic function, hyperbolic tangent, ReLU, etc. The Softmax function is used a the output function. The first row of \(Y\) gives the probability of the sample corresponding to a troubled-cell, while the second row gives the probability of the sample corresponding to a good-cell. Note that the sum along each column of \(Y\) equals \(1\). The indices of the troubled-cells can be obtained as</p>
+
+<p>\[
+ind = \text{find}(Y(1,:) &gt; 0.5).
+\]</p>
+
+<p>The MATLAB script to read in the various weights and biases can be found unde the folder <strong>MLP_scripts</strong>. The script to use the MLP network is also available under the same folder.</p>
+
+<h3 id="toc_7">Network for 1D problems</h3>
+
+<p>The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.</p>
+
+<ul>
+<li><p><strong>MLP_v1</strong>: This network has an input layer of size 5. In particular, the input for the classification of cell \(i\) is \(X=[\overline{u}_{i-1}, \overline{u}_{i}, \overline{u}_{i+1}, u_{i-\frac{1}{2}}^+, u_{i+\frac{1}{2}}^-]\), where the first 3 quantities are the cell averages of the solution in the cells \(i-1,i,i+1\) and the last two entries are the left and right cell interface values of the approximating polynomial in cell \(i\). There are 5 hidden layers, whose widths are 256, 128, 64, 32 and 16, going from the input to the output layer. The activation function is taken to be the Leaky ReLU activation function </p>
+
+<p>\[
+f_{\text{activation}}(U) = max(0,U) - \nu(0,-U),
+\]</p>
+
+<p>with the parameter \(\nu\). The details and results with this indicator are published <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">here</a>.</p></li>
+</ul>
+
+
+
+<script type="text/javascript">
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(){var e=/\blang(?:uage)?-(\w+)\b/i,t=0,n=_self.Prism={util:{encode:function(e){return e instanceof a?new a(e.type,n.util.encode(e.content),e.alias):"Array"===n.util.type(e)?e.map(n.util.encode):e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++t}),e.__id},clone:function(e){var t=n.util.type(e);switch(t){case"Object":var a={};for(var r in e)e.hasOwnProperty(r)&&(a[r]=n.util.clone(e[r]));return a;case"Array":return e.map&&e.map(function(e){return n.util.clone(e)})}return e}},languages:{extend:function(e,t){var a=n.util.clone(n.languages[e]);for(var r in t)a[r]=t[r];return a},insertBefore:function(e,t,a,r){r=r||n.languages;var l=r[e];if(2==arguments.length){a=arguments[1];for(var i in a)a.hasOwnProperty(i)&&(l[i]=a[i]);return l}var o={};for(var s in l)if(l.hasOwnProperty(s)){if(s==t)for(var i in a)a.hasOwnProperty(i)&&(o[i]=a[i]);o[s]=l[s]}return n.languages.DFS(n.languages,function(t,n){n===r[e]&&t!=e&&(this[t]=o)}),r[e]=o},DFS:function(e,t,a,r){r=r||{};for(var l in e)e.hasOwnProperty(l)&&(t.call(e,l,e[l],a||l),"Object"!==n.util.type(e[l])||r[n.util.objId(e[l])]?"Array"!==n.util.type(e[l])||r[n.util.objId(e[l])]||(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,l,r)):(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,null,r)))}},plugins:{},highlightAll:function(e,t){var a={callback:t,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};n.hooks.run("before-highlightall",a);for(var r,l=a.elements||document.querySelectorAll(a.selector),i=0;r=l[i++];)n.highlightElement(r,e===!0,a.callback)},highlightElement:function(t,a,r){for(var l,i,o=t;o&&!e.test(o.className);)o=o.parentNode;o&&(l=(o.className.match(e)||[,""])[1],i=n.languages[l]),t.className=t.className.replace(e,"").replace(/\s+/g," ")+" language-"+l,o=t.parentNode,/pre/i.test(o.nodeName)&&(o.className=o.className.replace(e,"").replace(/\s+/g," ")+" language-"+l);var s=t.textContent,u={element:t,language:l,grammar:i,code:s};if(!s||!i)return n.hooks.run("complete",u),void 0;if(n.hooks.run("before-highlight",u),a&&_self.Worker){var c=new Worker(n.filename);c.onmessage=function(e){u.highlightedCode=e.data,n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(u.element),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},c.postMessage(JSON.stringify({language:u.language,code:u.code,immediateClose:!0}))}else u.highlightedCode=n.highlight(u.code,u.grammar,u.language),n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(t),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},highlight:function(e,t,r){var l=n.tokenize(e,t);return a.stringify(n.util.encode(l),r)},tokenize:function(e,t){var a=n.Token,r=[e],l=t.rest;if(l){for(var i in l)t[i]=l[i];delete t.rest}e:for(var i in t)if(t.hasOwnProperty(i)&&t[i]){var o=t[i];o="Array"===n.util.type(o)?o:[o];for(var s=0;s<o.length;++s){var u=o[s],c=u.inside,g=!!u.lookbehind,h=!!u.greedy,f=0,d=u.alias;u=u.pattern||u;for(var p=0;p<r.length;p++){var m=r[p];if(r.length>e.length)break e;if(!(m instanceof a)){u.lastIndex=0;var y=u.exec(m),v=1;if(!y&&h&&p!=r.length-1){var b=r[p+1].matchedStr||r[p+1],k=m+b;if(p<r.length-2&&(k+=r[p+2].matchedStr||r[p+2]),u.lastIndex=0,y=u.exec(k),!y)continue;var w=y.index+(g?y[1].length:0);if(w>=m.length)continue;var _=y.index+y[0].length,P=m.length+b.length;if(v=3,P>=_){if(r[p+1].greedy)continue;v=2,k=k.slice(0,P)}m=k}if(y){g&&(f=y[1].length);var w=y.index+f,y=y[0].slice(f),_=w+y.length,S=m.slice(0,w),O=m.slice(_),j=[p,v];S&&j.push(S);var A=new a(i,c?n.tokenize(y,c):y,d,y,h);j.push(A),O&&j.push(O),Array.prototype.splice.apply(r,j)}}}}}return r},hooks:{all:{},add:function(e,t){var a=n.hooks.all;a[e]=a[e]||[],a[e].push(t)},run:function(e,t){var a=n.hooks.all[e];if(a&&a.length)for(var r,l=0;r=a[l++];)r(t)}}},a=n.Token=function(e,t,n,a,r){this.type=e,this.content=t,this.alias=n,this.matchedStr=a||null,this.greedy=!!r};if(a.stringify=function(e,t,r){if("string"==typeof e)return e;if("Array"===n.util.type(e))return e.map(function(n){return a.stringify(n,t,e)}).join("");var l={type:e.type,content:a.stringify(e.content,t,r),tag:"span",classes:["token",e.type],attributes:{},language:t,parent:r};if("comment"==l.type&&(l.attributes.spellcheck="true"),e.alias){var i="Array"===n.util.type(e.alias)?e.alias:[e.alias];Array.prototype.push.apply(l.classes,i)}n.hooks.run("wrap",l);var o="";for(var s in l.attributes)o+=(o?" ":"")+s+'="'+(l.attributes[s]||"")+'"';return"<"+l.tag+' class="'+l.classes.join(" ")+'" '+o+">"+l.content+"</"+l.tag+">"},!_self.document)return _self.addEventListener?(_self.addEventListener("message",function(e){var t=JSON.parse(e.data),a=t.language,r=t.code,l=t.immediateClose;_self.postMessage(n.highlight(r,n.languages[a],a)),l&&_self.close()},!1),_self.Prism):_self.Prism;var r=document.currentScript||[].slice.call(document.getElementsByTagName("script")).pop();return r&&(n.filename=r.src,document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",n.highlightAll)),_self.Prism}();"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism);
+</script>
+
+<script type="text/javascript">
+Prism.languages.matlab={string:/\B'(?:''|[^'\n])*'/,comment:[/%\{[\s\S]*?\}%/,/%.+/],number:/\b-?(?:\d*\.?\d+(?:[eE][+-]?\d+)?(?:[ij])?|[ij])\b/,keyword:/\b(?:break|case|catch|continue|else|elseif|end|for|function|if|inf|NaN|otherwise|parfor|pause|pi|return|switch|try|while)\b/,"function":/(?!\d)\w+(?=\s*\()/,operator:/\.?[*^\/\\']|[+\-:@]|[<>=~]=?|&&?|\|\|?/,punctuation:/\.{3}|[.,;\[\](){}!]/};
+</script>
+
+<script type="text/x-mathjax-config">
+(function () {
+
+MathJax.Hub.Config({
+	'showProcessingMessages': false,
+	'messageStyle': 'none'
+});
+
+if (typeof MathJaxListener !== 'undefined') {
+	MathJax.Hub.Register.StartupHook('End', function () {
+		MathJaxListener.invokeCallbackForKey_('End');
+	});
+}
+
+})();
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+</body>
+
+</html>

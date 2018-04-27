@@ -1,5 +1,7 @@
 # DGANN solver
-###Created by: Deep Ray, EPFL, Switzerland </br> Webpage: deepray.github.io </br>Date : 10 January, 2018
+###Created by: Deep Ray, EPFL, Switzerland 
+###Webpage: deepray.github.io 
+###Date : 10 January, 2018
 
 **DGANN** is a RKDG-solver written in MATLAB, which is also capable of using an artificial neural network trained to serve as a troubled-cell detector. The main source code for the RKDG solver is based on the solvers available with the following texts:
 
