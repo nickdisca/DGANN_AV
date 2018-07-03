@@ -19,15 +19,15 @@ gas_gamma = 1.4;
 % FinalTIme 
 % CFL
 % Nelem     ---> Number of cell/elements in the mesh
-bnd_l     = -5.0;  
-bnd_r     = 5.0;
+bnd_l     = -1.0;  
+bnd_r     = 1.0;
 mesh_pert = 0.0;
-bc_cond   = {'N',0,'N',0.0;
-             'N',0,'N',0.0;
-             'N',0,'N',0.0};  % For conserved variables
-FinalTime = 2;
+bc_cond   = {'D',1,'D',0.125;
+             'D',0,'D',0.0;
+             'D',1/(0.4),'D',0.1/(0.4)};  % For conserved variables
+FinalTime = .25;
 CFL       = 0.4;
-Nelem     = 200;
+Nelem     = 300;
 
 % Initial condition
 test_name = 'Sod';
@@ -36,7 +36,7 @@ vel_IC =@(x) 0*x;
 pre_IC =@(x) 1*(x<0.0) + 0.1*(x>=0.0);
 
 % Order of polymomials used for approximation 
-N = 4;
+N = 7;
 
 % Troubled-cell indicator
 % inidcator_type ---> minmod, TVB, NN
@@ -45,8 +45,8 @@ indicator_type = 'minmod';
 indicator_type = 'TVB'; TVB_M = 10;
 %indicator_type = 'TVB'; TVB_M = 100;
 %indicator_type = 'TVB'; TVB_M = 1000;
-indicator_type = 'NN';
-indicator_type = 'FuShu';
+%indicator_type = 'NN';
+%indicator_type = 'FuShu';
 
 % Indicator variable
 % ind_var ---> density

@@ -1,7 +1,7 @@
 function x_in = Scaling(x)
 
-% Perform scaling for each colum of x. If the values in a column do not 
-% lie in [-1,1], then the colum is divided by the maximum of the absolulte 
+% Perform scaling for each column of x. If the values in a column do not 
+% lie in [-1,1], then the column is divided by the maximum of the absolute 
 % values in that column.
 
 [m,n] = size(x);

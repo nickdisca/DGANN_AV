@@ -470,7 +470,11 @@ pre[class*="language-"] {
 
 <h1 id="toc_0">DGANN solver</h1>
 
-<h3 id="toc_1">Created by: Deep Ray, EPFL, Switzerland </br> Webpage: deepray.github.io </br>Date : 10 January, 2018</h3>
+<h3 id="toc_1">Created by: Deep Ray, EPFL, Switzerland</h3>
+
+<h3 id="toc_2">Webpage: deepray.github.io</h3>
+
+<h3 id="toc_3">Date : 10 January, 2018</h3>
 
 <p><strong>DGANN</strong> is a RKDG-solver written in MATLAB, which is also capable of using an artificial neural network trained to serve as a troubled-cell detector. The main source code for the RKDG solver is based on the solvers available with the following texts:</p>
 
@@ -481,15 +485,17 @@ pre[class*="language-"] {
 
 <p>Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">&quot;An artificial neural network as a troubled-cell indicator&quot;</a>.</p>
 
-<h2 id="toc_2">Running the code</h2>
+<h2 id="toc_4">Running the code</h2>
 
 <p>After cloning the git repository, execute <strong>mypath.m</strong> from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the <strong>Examples</strong> directory.</p>
 
-<h3 id="toc_3">Scalar 1D</h3>
+<h3 id="toc_5">Scalar 1D</h3>
 
 <p>The basic structure of the example script is as follows.</p>
 
-<div><pre><code class="language-matlab">clc
+<div><pre><code class="language-matlab">CleanUp1D;
+
+clc
 clear all
 close all
 
@@ -521,11 +527,12 @@ save_ind  = true;
 ScalarDriver1D; </code></pre></div>
 
 <ul>
+<li><code>CleanUp1D</code> removes temporary file paths added, which is especially important if the previous run of the script terminated prematurely. This must be the first line of every script. DO NOT REMOVE IT!</li>
 <li><code>Globals1D_DG</code> and <code>Globals1D_MLP</code> declare important global variables needed by the solver and the MLP network. </li>
 <li>The <code>model</code> flag sets the type of scalar model which is being solved. The following scalar models are currently available:
 
 <ul>
-<li><code>&#39;Advection&#39;</code>: Linear advection equation with the advection speed st to 1.</li>
+<li><code>&#39;Advection&#39;</code>: Linear advection equation with the advection speed set to 1.</li>
 <li><code>&#39;Burgers&#39;</code> : Burgers equation with the flux \(u^2/2\).</li>
 <li><code>&#39;BuckLev&#39;</code>: Buckley-Leverett equation with flux contant  set to \(0.5\).</li>
 </ul></li>
@@ -535,7 +542,7 @@ ScalarDriver1D; </code></pre></div>
 <li><p><code>mesh_pert</code> is used to randomly perturb the interior cell-interfaces using the following algorithm</p>
 
 <p>\[
-x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,N-1
+x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,Nelem-1
 \]</p>
 
 <p>where \(h\) is the mesh size of the initial uniform grid.</p></li>
@@ -578,11 +585,13 @@ x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_
 <li><p>The main driver script <code>ScalarDriver1D</code> is called once all the flags have been set.</p></li>
 </ul>
 
-<h3 id="toc_4">Shallow Water 1D</h3>
+<h3 id="toc_6">Shallow Water 1D</h3>
 
 <p>The basic structure of the example script is as follows.</p>
 
-<div><pre><code class="language-matlab">clc
+<div><pre><code class="language-matlab">CleanUp1D;
+
+clc
 clear all
 close all
 
@@ -650,11 +659,13 @@ SWEDriver1D;</code></pre></div>
 <li>The main driver script <code>SWEDriver1D</code> is called once all the flags have been set.</li>
 </ul>
 
-<h3 id="toc_5">Euler 1D</h3>
+<h3 id="toc_7">Euler 1D</h3>
 
 <p>The basic structure of the example script is as follows.</p>
 
-<div><pre><code class="language-matlab">clc
+<div><pre><code class="language-matlab">CleanUp1D;
+
+clc
 clear all
 close all
 
@@ -714,7 +725,7 @@ EulerDriver1D; </code></pre></div>
 <li>The main driver script <code>EulerDriver1D</code> is called once all the flags have been set. The troubled-cells flagged for each variable is pooled together.</li>
 </ul>
 
-<h2 id="toc_6">Using the MLP indicator</h2>
+<h2 id="toc_8">Using the MLP indicator</h2>
 
 <p>For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder <strong>Trained_networks</strong>. For each network, the following files exist:</p>
 
@@ -743,9 +754,16 @@ Y &amp;= \text{Softmax}(W_{out} X + b_{out})\\
 ind = \text{find}(Y(1,:) &gt; 0.5).
 \]</p>
 
-<p>The MATLAB script to read in the various weights and biases can be found unde the folder <strong>MLP_scripts</strong>. The script to use the MLP network is also available under the same folder.</p>
+<p>The MATLAB scripts to read and run the networks can be found under the folder <strong>MLP_scripts</strong>. For instance, the following scripts for 1D problems are available in the <strong>1D</strong> sub-directory:</p>
 
-<h3 id="toc_7">Network for 1D problems</h3>
+<ul>
+<li><strong>read_mlp_param1D.m</strong> reads the various weights and biases for a given network.</li>
+<li><strong>ind_MLP1D.m</strong> runs the network for a given input <code>x</code>.</li>
+</ul>
+
+<p>The <strong>Common</strong> sub-directory contains additional scripts needed to run the networks, such as the implementation if the leaky ReLU activation function.</p>
+
+<h3 id="toc_9">Network for 1D problems</h3>
 
 <p>The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.</p>
 

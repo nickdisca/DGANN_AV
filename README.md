@@ -17,6 +17,8 @@ After cloning the git repository, execute **mypath.m** from the parent directory
 The basic structure of the example script is as follows.
 
 ~~~matlab
+CleanUp1D;
+
 clc
 clear all
 close all
@@ -49,9 +51,10 @@ save_ind  = true;
 ScalarDriver1D; 
 ~~~
 
+* `CleanUp1D` removes temporary file paths added, which is especially important if the previous run of the script terminated prematurely. This must be the first line of every script. DO NOT REMOVE IT!
 * `Globals1D_DG` and `Globals1D_MLP` declare important global variables needed by the solver and the MLP network. 
 * The `model` flag sets the type of scalar model which is being solved. The following scalar models are currently available:
- * `'Advection'`: Linear advection equation with the advection speed st to 1.
+ * `'Advection'`: Linear advection equation with the advection speed set to 1.
  * `'Burgers'` : Burgers equation with the flux $$u^2/2$$.
  * `'BuckLev'`: Buckley-Leverett equation with flux contant  set to $$0.5$$.
 * `test_name` is used to declare the name of the test. This is used for creating various save files.
@@ -60,7 +63,7 @@ ScalarDriver1D;
 * `mesh_pert` is used to randomly perturb the interior cell-interfaces using the following algorithm
  
  $$
- x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,N-1
+ x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,Nelem-1
  $$
  
  where $$h$$ is the mesh size of the initial uniform grid.
@@ -91,6 +94,8 @@ ScalarDriver1D;
 The basic structure of the example script is as follows.
 
 ~~~matlab
+CleanUp1D;
+
 clc
 clear all
 close all
@@ -152,6 +157,8 @@ Most of the structure is similar to the Scalar 1D script. The differences are de
 The basic structure of the example script is as follows.
 
 ~~~matlab
+CleanUp1D;
+
 clc
 clear all
 close all
@@ -235,7 +242,13 @@ $$
 ind = \text{find}(Y(1,:) > 0.5).
 $$
 
-The MATLAB script to read in the various weights and biases can be found unde the folder **MLP_scripts**. The script to use the MLP network is also available under the same folder.
+The MATLAB scripts to read and run the networks can be found under the folder **MLP_scripts**. For instance, the following scripts for 1D problems are available in the **1D** sub-directory:
+
+* **read\_mlp\_param1D.m** reads the various weights and biases for a given network.
+* **ind\_MLP1D.m** runs the network for a given input `x`.
+
+
+The **Common** sub-directory contains additional scripts needed to run the networks, such as the implementation if the leaky ReLU activation function.
 
 ###Network for 1D problems
 The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.

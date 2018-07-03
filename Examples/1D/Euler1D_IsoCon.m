@@ -12,22 +12,22 @@ Globals1D_MLP;
 model     = 'Euler';
 gas_const = 1.0;
 gas_gamma = 1.4;
-test_name = 'Sine';
-rho_IC =@(x) 1+0.5*sin(10*pi*x);
-vel_IC =@(x) 0*x + 1;
-pre_IC =@(x) 0*x + 1;
+test_name = 'IsoCon';
+rho_IC =@(x) 1*(x<0) + 0.4*(x>=0.0);
+vel_IC =@(x) 1*(x<0) + 1*(x>=0.0);
+pre_IC =@(x) 1*(x<0) + 1*(x>=0.0);
 
 
 
 bnd_l     = -1.0;  
 bnd_r     = 1.0;
 mesh_pert = 0.0;
-bc_cond   = {'P',0,'P',0.0;
-             'P',0,'P',0.0;
-             'P',0,'P',0.0};  % For conserved variables
-FinalTime = 1;
+bc_cond   = {'N',1,'N',0.4;
+             'N',1,'N',1.0;
+             'N',1,'N',1.0};
+FinalTime = 0.5;
 CFL       = 0.4;
-Nelem     = 128;
+Nelem     = 200;
 N         = 1;
 
 
@@ -44,6 +44,8 @@ save_ind  = true;
 
 % Call code driver
 EulerDriver1D; 
+
+
 
 
 
