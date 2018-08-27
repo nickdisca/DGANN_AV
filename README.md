@@ -248,7 +248,7 @@ The MATLAB scripts to read and run the networks can be found under the folder **
 * **ind\_MLP1D.m** runs the network for a given input `x`.
 
 
-The **Common** sub-directory contains additional scripts needed to run the networks, such as the implementation if the leaky ReLU activation function.
+The **Common** sub-directory contains additional scripts needed to run the networks, such as the implementation of the leaky ReLU activation function.
 
 ###Network for 1D problems
 The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.
