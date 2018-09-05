@@ -5,8 +5,7 @@ global r s
 global Dr Ds LIFT Drw Dsw MassMatrix
 global Fx Fy nx ny jac Fscale J
 global vmapM vmapP vmapB mapB Fmask
-global BCType mapI mapO mapW mapF mapC mapS mapM mapP mapD mapN
-global vmapI vmapO vmapW vmapO vmapC vmapS vmapD vmapN
+global BCTag mapBC_list vmapBC_list
 global rx ry sx sy J sJ
 global rk4a rk4b rk4c
 global Nfaces EToE EToF EToV

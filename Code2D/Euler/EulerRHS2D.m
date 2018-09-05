@@ -27,9 +27,9 @@ for n=1:4
 end
 
 % 2.2 set boundary conditions by modifying positive traces
-% if(~isempty(ExactSolutionBC))
-%   QP = feval(ExactSolutionBC, Fx, Fy, nx, ny, mapI, mapO, mapW, mapC, QP, time);
-% end
+if(~isempty(mapBC_list))
+  QP = BC(nx, ny, mapBC_list, vmapBC_list, QP, x,y,time, gas_gamma, gas_const);
+end
 
 % 2.3 evaluate primitive variables & flux functions at '-' and '+' traces
 [fM,gM,rhoM,uM,vM,pM] = EulerExactFluxes2D(QM, gas_gamma);

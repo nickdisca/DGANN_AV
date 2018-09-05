@@ -53,7 +53,7 @@ xscale2D;
 % Build connectivity matrix
 %[EToE, EToF] = tiConnect2D(EToV);
 fprintf('... creating connectivity matrices\n')
-[EToE, EToF, PShift] = Connect2D(EToV,BFaces,PerBToB_map,PerBFToF_map,...
+[EToE, EToF, PShift, BCTag] = Connect2D(EToV,BFaces,PerBToB_map,PerBFToF_map,BC_flags,...
                                  UseMeshPerData,VX,VY);
 
 % Build connectivity maps

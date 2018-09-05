@@ -48,9 +48,9 @@ fL  = sqrt(fnx.^2 + fny.^2);
 fcx = [xv1+xv2; xv2+xv3; xv3+xv1]/2; fcy = [yv1+yv2; yv2+yv3; yv3+yv1]/2;
 
 % Find boundary faces for each face 
-id1 = find(BCType(:,1));
-id2 = find(BCType(:,2));
-id3 = find(BCType(:,3));
+id1 = find(BCTag(:,1));
+id2 = find(BCTag(:,2));
+id3 = find(BCTag(:,3));
 
 % Compute location of ghost neighbour vertices of reflected ghost elements at boundary faces
 A0 = AVG2D*J*2;

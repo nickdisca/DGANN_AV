@@ -27,7 +27,8 @@ else
     Ql              = V*Qm;
 end
 
-% Get cell averages of patch
+% Get cell averages of patch. For the time being, Neuman BC used (except 
+% for periodic BC)
 AVG0 = AVG2D*Ql;
 AVGn = [AVG0(E1); AVG0(E2); AVG0(E3)];
 
