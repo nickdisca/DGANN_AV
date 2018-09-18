@@ -1,5 +1,3 @@
-fprintf('... generating additional geometric data and ghost elements\n')
-
 % Find neighbors in patch
 E1 = EToE(:,1)'; E2 = EToE(:,2)'; E3 = EToE(:,3)';
 
@@ -67,6 +65,25 @@ H3 = 2*(A0(id3)./fL(3,id3));
 xvn3(id3) = xvn3(id3) + 2*(fnx(3,id3).*H3./fL(3,id3)); 
 yvn3(id3) = yvn3(id3) + 2*(fny(3,id3).*H3./fL(3,id3)); 
 
+% Generating ghost elements
+EToGE = zeros(size(EToE));
+KG    = length(id1) + length(id2) + length(id3);
+xG = zeros(Np,KG);
+yG = zeros(Np,KG);
+
+EToGE(id1,1) = (1:length(id1))';
+xG(:,1:length(id1)) = 0.5*(-(r+s)*xv1(id1)+(1+r)*xvn1(id1)+(1+s)*xv2(id1));
+yG(:,1:length(id1)) = 0.5*(-(r+s)*yv1(id1)+(1+r)*yvn1(id1)+(1+s)*yv2(id1));
+
+EToGE(id2,2) = (length(id1)+1:length(id1)+length(id2))';
+xG(:,length(id1)+1:length(id1)+length(id2)) = 0.5*(-(r+s)*xv2(id2)+(1+r)*xvn2(id2)+(1+s)*xv3(id2));
+yG(:,length(id1)+1:length(id1)+length(id2)) = 0.5*(-(r+s)*yv2(id2)+(1+r)*yvn2(id2)+(1+s)*yv3(id2));
+
+EToGE(id3,3) = (length(id1)+length(id2)+1:length(id1)+length(id2)+length(id3))';
+xG(:,length(id1)+length(id2)+1:length(id1)+length(id2)+length(id3)) = 0.5*(-(r+s)*xv3(id3)+(1+r)*xvn3(id3)+(1+s)*xv1(id3));
+yG(:,length(id1)+length(id2)+1:length(id1)+length(id2)+length(id3)) = 0.5*(-(r+s)*yv3(id3)+(1+r)*yvn3(id3)+(1+s)*yv1(id3));
+
+
 % compute centroids for 4 triangles in each patch (note that the ghost
 % nodes have been correctly evaluated at this point)
 vcx  = [xv1+xv2+xv3; xv1+xv2+xvn1; xv2+xv3+xvn2; xv3+xv1+xvn3]/3;
@@ -109,6 +126,23 @@ for i=1:K
     skew1(:,i) = (fnx(:,i)./fL(:,i)).*(cfx./cfL) + (fny(:,i)./fL(:,i)).*(cfy./cfL);
     skew2(:,i) = (fnx(:,i)./fL(:,i)).*(c2cx./c2cL) + (fny(:,i)./fL(:,i)).*(c2cy./c2cL); 
 end
+
+% Creating mirroring indices mapping for ghost elements using a dummy
+% triangle
+MMAP = zeros(Np,3);
+xx = [-1,1,-1]; yy=[-1,-1,1];
+vindm = [1,3,2;2,1,3;3,2,1];
+xo = 0.5*(-(r+s)*xx(1)+(1+r)*xx(2)+(1+s)*xx(3));
+yo = 0.5*(-(r+s)*yy(1)+(1+r)*yy(2)+(1+s)*yy(3));
+
+for i=1:3
+    xm = 0.5*(-(r+s)*xx(vindm(i,1))+(1+r)*xx(vindm(i,2))+(1+s)*xx(vindm(i,3)));
+    ym = 0.5*(-(r+s)*yy(vindm(i,1))+(1+r)*yy(vindm(i,2))+(1+s)*yy(vindm(i,3)));
+    D = (xo -xm').^2 + (yo-ym').^2;
+    [idM, idP] = find(sqrt(abs(D))<eps);
+    MMAP(:,i) = idM;
+end
+
 
 
 

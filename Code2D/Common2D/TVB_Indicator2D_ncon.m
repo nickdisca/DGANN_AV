@@ -1,4 +1,4 @@
-function ind = TVB_Indicator2D_ncon(Q)
+function ind = TVB_Indicator2D_ncon(Q,QG)
 
 % Purpose: find all the troubled-cells for variable Q using TBV-minmod 
 % indicator. We exclude almost constant cells.
@@ -19,18 +19,48 @@ E1 = EToE(:,1)'; E2 = EToE(:,2)'; E3 = EToE(:,3)';
 % Extracting linear part of solution for elements. 
 % We only keep the modes 1,2 and N+2
 if(N==1)
-    Ql = Q;
+    Ql  = Q;
+    QGl = QG;
 else
     Qm              = invV*Q;
     killmodes       = [3:N+1,N+3:Np];
     Qm(killmodes,:) = 0;
     Ql              = V*Qm;
+    
+    QGm              = invV*QG;
+    killmodes        = [3:N+1,N+3:Np];
+    QGm(killmodes,:) = 0;
+    QGl              = V*QGm;
 end
 
 % Get cell averages of patch. For the time being, Neuman BC used (except 
 % for periodic BC)
 AVG0 = AVG2D*Ql;
 AVGn = [AVG0(E1); AVG0(E2); AVG0(E3)];
+
+% Replacing boundary element neighbours with ghost neighbours
+AVGGE = AVG2D*QGl;
+GE1 = find(EToGE(:,1))';
+GE2 = find(EToGE(:,2))';
+GE3 = find(EToGE(:,3))';
+AVGn(1,GE1) = AVGGE(EToGE(GE1,1)); 
+AVGn(2,GE2) = AVGGE(EToGE(GE2,2)); 
+AVGn(3,GE3) = AVGGE(EToGE(GE3,3));
+
+% xavg = AVG2D*x;
+% yavg = AVG2D*y;
+% 
+% figure(100)
+% subplot(2,2,1)
+% scatter3(xavg,yavg,AVG0,'o')
+% subplot(2,2,2)
+% scatter3(xavg,yavg,AVG0,'o')
+% subplot(2,2,3)
+% scatter3(xavg,yavg,AVG0,'o')
+% subplot(2,2,4)
+% scatter3(xavg,yavg,AVG0,'o')
+
+
 
 % Get face averages (which is the face mid point value for linear
 % functions)

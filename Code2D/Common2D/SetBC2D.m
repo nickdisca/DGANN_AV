@@ -2,8 +2,7 @@ function BCind = SetBC2D(face_list,EToV)
 
 BCind  = false(size(EToV));
 Nfaces = 3; 
-
-for j = 1:length(face_list)
+for j = 1:length(face_list(:,1))
     
     f1                 = face_list(j,:);
     [elem_listA,dummy] = find(not(EToV - f1(1)));

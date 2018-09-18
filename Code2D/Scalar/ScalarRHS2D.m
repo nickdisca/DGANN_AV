@@ -23,10 +23,12 @@ rhsQ(:,:,1) = (rx.*dFdr + sx.*dFds) + (ry.*dGdr + sy.*dGds);
 QM(:,:,1) = Q(vmapM); QP(:,:,1) = Q(vmapP);
 
 
-% 2.2 set boundary conditions by modifying positive traces
-% if(~isempty(ExactSolutionBC))
-%   QP = feval(ExactSolutionBC, Fx, Fy, nx, ny, mapI, mapO, mapW, mapC, QP, time);
-% end
+% % 2.2 set boundary conditions by modifying positive traces
+if(~isempty(mapBC_list))
+        QPn = QP(:,:,1);
+        QPn(mapB) = QG(Fmask(:,Nfaces),:,1);
+        QP(:,:,1) = QPn;
+end
 
 % 2.3 evaluate primitive variables & flux functions at '-' and '+' traces
 [fM,gM] = ScalarFlux2D(QM, model, AdvectionVelocity);

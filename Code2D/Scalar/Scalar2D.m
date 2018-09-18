@@ -29,9 +29,11 @@ Save_times = [linspace(0,FinalTime,tstamps+1),FinalTime];
 
 tstep = 1; time = 0; stime = 1;
 
+QG   = ApplyBCScalar2D(Q,time);
+
 % limit initial condition
-ind  = Find_Tcells2D(Q(:,:,1),Indicator,Limiter);
-Q    = SlopeLimiter2D(Q(:,:,1),ind,Limiter);
+ind  = Find_Tcells2D(Q(:,:,1),QG(:,:,1),Indicator,Limiter);
+Q    = SlopeLimiter2D(Q(:,:,1),QG(:,:,1),ind,Limiter);
 
 % set up rendering
 [TRI,xout,yout,interp] = GenInterpolators2D(N, N, x, y, invV);
@@ -85,20 +87,23 @@ while (time<FinalTime)
     % SSP-RK3 Stage 1
     rhsQ = ScalarRHS2D(Q, time,  AdvectionVelocity);
     Q1   = Q + dt*rhsQ;
-    ind1 = Find_Tcells2D(Q1(:,:,1),Indicator,Limiter);
-    Q1   = SlopeLimiter2D(Q1(:,:,1),ind1,Limiter);
+    QG   = ApplyBCScalar2D(Q1,time);
+    ind1 = Find_Tcells2D(Q1(:,:,1),QG(:,:,1),Indicator,Limiter);
+    Q1   = SlopeLimiter2D(Q1(:,:,1),QG(:,:,1),ind1,Limiter);
     
     % SSP-RK3 Stage 2
     rhsQ = ScalarRHS2D(Q1, time,  AdvectionVelocity);
     Q2   = (3*Q + Q1 + dt*rhsQ)/4;
-    ind2 = Find_Tcells2D(Q2(:,:,1),Indicator,Limiter);
-    Q2   = SlopeLimiter2D(Q2(:,:,1),ind2,Limiter);
+    QG   = ApplyBCScalar2D(Q2,time);
+    ind2 = Find_Tcells2D(Q2(:,:,1),QG(:,:,1),Indicator,Limiter);
+    Q2   = SlopeLimiter2D(Q2(:,:,1),QG(:,:,1),ind2,Limiter);
     
     % SSP-RK3 Stage 3
     rhsQ = ScalarRHS2D(Q2, time,  AdvectionVelocity);
     Q    = (Q + 2*Q2 + 2*dt*rhsQ)/3;
-    ind3 = Find_Tcells2D(Q(:,:,1),Indicator,Limiter);
-    Q    = SlopeLimiter2D(Q(:,:,1),ind3,Limiter);
+    QG   = ApplyBCScalar2D(Q,time);
+    ind3 = Find_Tcells2D(Q(:,:,1),QG(:,:,1),Indicator,Limiter);
+    Q    = SlopeLimiter2D(Q(:,:,1),QG(:,:,1),ind3,Limiter);
     
     ind = unique([ind1,ind2, ind3]);
     

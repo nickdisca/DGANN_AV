@@ -6,7 +6,8 @@ function [rhsQ] = EulerRHS2D(Q,time, gas_gamma, gas_const)
 
 Globals2D_DG;
 
-vmapM = reshape(vmapM, Nfp*Nfaces, K); vmapP = reshape(vmapP, Nfp*Nfaces, K);
+% Apply boundary conditions
+QG = ApplyBCEuler2D(Q,time,gas_gamma);
 
 % 1. Compute volume contributions (NOW INDEPENDENT OF SURFACE TERMS)
 gamma = 1.4;
@@ -26,9 +27,13 @@ for n=1:4
   QM(:,:,n) = Qn(vmapM); QP(:,:,n) = Qn(vmapP);
 end
 
-% 2.2 set boundary conditions by modifying positive traces
+% % 2.2 set boundary conditions by modifying positive traces
 if(~isempty(mapBC_list))
-  QP = BC(nx, ny, mapBC_list, vmapBC_list, QP, x,y,time, gas_gamma, gas_const);
+    for n=1:4
+        QPn = QP(:,:,n);
+        QPn(mapB) = QG(Fmask(:,Nfaces),:,n);
+        QP(:,:,n) = QPn;
+    end
 end
 
 % 2.3 evaluate primitive variables & flux functions at '-' and '+' traces

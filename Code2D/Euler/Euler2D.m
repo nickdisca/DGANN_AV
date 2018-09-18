@@ -13,7 +13,8 @@ yavg = AVG2D*y;
 if(isempty(fixed_dt))
     dt = EulerDT2D(Q,gas_gamma);
 else
-    dt = fixed_dt;
+    dt  = fixed_dt;
+    CFL = EulerCFL2D(Q,dt,gas_gamma);
 end
 
 
@@ -26,14 +27,24 @@ Save_times = [linspace(0,FinalTime,tstamps+1),FinalTime];
 
 tstep = 1; time = 0; stime = 1;
 
+% set up rendering
+[TRI,xout,yout,interp] = GenInterpolators2D(N, N, x, y, invV);
+[TRIG,xGout,yGout,interpG] = GenInterpolators2D(N, N, xG, yG, invV);
+
 % limit initial condition
-ind         = Tcells_Euler_type2D(Q,gas_gamma, gas_const,Indicator,ind_var,Limiter);
-Q           = SlopeLimit_Euler_type2D(Q,gas_gamma,gas_const,Limiter,lim_var,ind);
+QG          = ApplyBCEuler2D(Q,time,gas_gamma);
+% figure(3)
+% PlotField2D(Q(:,:,1),interp,TRI,xout,yout); axis tight; drawnow;
+% hold all
+% figure(3)
+% PlotField2D(QG(:,:,1),interpG,TRIG,xGout,yGout); axis tight; drawnow;
+
+ind         = Tcells_Euler_type2D(Q,QG,gas_gamma, gas_const,Indicator,ind_var,Limiter);
+Q           = SlopeLimit_Euler_type2D(Q,QG,gas_gamma,gas_const,Limiter,lim_var,ind);
 [Q,ind_neg] = Euler_positivity_fix2D(Q,gas_gamma,AVG2D);
 
 
-% set up rendering
-[TRI,xout,yout,interp] = GenInterpolators2D(N, N, x, y, invV);
+
 
 figure(1)
 perc_tcells = length(ind)*100/K;
@@ -48,7 +59,7 @@ hold all
 drawnow
 
 figure(2);
-plot(xavg(ind), yavg(ind), 'ro');
+plot(xavg(ind), yavg(ind), 'r.');
 hold all
 plot(xavg(ind_neg), yavg(ind_neg), 'bx');
 xlim([min(min(x)),max(max(x))])
@@ -101,22 +112,23 @@ while (time<FinalTime)
     rhsQ = EulerRHS2D(Q, time, gas_gamma, gas_const);
     Q1   = Q + dt*rhsQ;
     %rhoprange = [min(min(Q1(:,:,1))), max(max(Q1(:,:,1))), min(min(Euler_Pressure2D(Q1,gas_gamma))), max(max(Euler_Pressure2D(Q1,gas_gamma)))]
-    ind1            = Tcells_Euler_type2D(Q1,gas_gamma, gas_const,Indicator,ind_var,Limiter);
-    Q1              = SlopeLimit_Euler_type2D(Q1,gas_gamma,gas_const,Limiter,lim_var,ind1);
+    QG              = ApplyBCEuler2D(Q1,time,gas_gamma);
+    ind1            = Tcells_Euler_type2D(Q1,QG,gas_gamma, gas_const,Indicator,ind_var,Limiter);
+    Q1              = SlopeLimit_Euler_type2D(Q1,QG,gas_gamma,gas_const,Limiter,lim_var,ind1);
     [Q1,ind_neg1]   = Euler_positivity_fix2D(Q1,gas_gamma,AVG2D);
     %rhoprange = [min(min(Q1(:,:,1))), max(max(Q1(:,:,1))), min(min(Euler_Pressure2D(Q1,gas_gamma))), max(max(Euler_Pressure2D(Q1,gas_gamma)))]
     
-    %     figure(2);
-    % plot(xavg(ind1), yavg(ind1), 'r.');
-    % xlim([min(min(x)),max(max(x))])
-    % ylim([min(min(y)),max(max(y))])
-    % title(['Troubled cells t=',num2str(time)]);
-    % drawnow;
-    %     figure(3)
-    % PlotField2D(Q1(:,:,1),interp,TRI,xout,yout); axis tight; drawnow;
-    %
-    % figure(4)
-    % PlotField2D(Euler_Pressure2D(Q1,gas_gamma),interp,TRI,xout,yout); axis tight; drawnow;
+%         figure(2);
+%     plot(xavg(ind1), yavg(ind1), 'r.');
+%     xlim([min(min(x)),max(max(x))])
+%     ylim([min(min(y)),max(max(y))])
+%     title(['Troubled cells t=',num2str(time)]);
+%     drawnow;
+%         figure(3)
+%     PlotField2D(Q1(:,:,1),interp,TRI,xout,yout); axis tight; drawnow;
+%     
+%     figure(4)
+%     PlotField2D(Euler_Pressure2D(Q1,gas_gamma),interp,TRI,xout,yout); axis tight; drawnow;
     
     assert(isempty(find(Q1(:,:,1) <= 0)));
     %     x(Euler_Pressure2D(Q1,gas_gamma) <= 0)
@@ -136,8 +148,9 @@ while (time<FinalTime)
     rhsQ = EulerRHS2D(Q1, time + dt, gas_gamma, gas_const);
     Q2   = (3*Q + Q1 + dt*rhsQ)/4;
     %rhoprange = [min(min(Q2(:,:,1))), max(max(Q2(:,:,1))), min(min(Euler_Pressure2D(Q2,gas_gamma))), max(max(Euler_Pressure2D(Q2,gas_gamma)))]
-    ind2            = Tcells_Euler_type2D(Q2,gas_gamma, gas_const,Indicator,ind_var,Limiter);
-    Q2              = SlopeLimit_Euler_type2D(Q2,gas_gamma,gas_const,Limiter,lim_var,ind2);
+    QG              = ApplyBCEuler2D(Q2,time+ dt,gas_gamma);
+    ind2            = Tcells_Euler_type2D(Q2,QG,gas_gamma, gas_const,Indicator,ind_var,Limiter);
+    Q2              = SlopeLimit_Euler_type2D(Q2,QG,gas_gamma,gas_const,Limiter,lim_var,ind2);
     [Q2,ind_neg2]   = Euler_positivity_fix2D(Q2,gas_gamma,AVG2D);
     %rhoprange = [min(min(Q2(:,:,1))), max(max(Q2(:,:,1))), min(min(Euler_Pressure2D(Q2,gas_gamma))), max(max(Euler_Pressure2D(Q2,gas_gamma)))]
     %     figure(2);
@@ -160,8 +173,9 @@ while (time<FinalTime)
     rhsQ = EulerRHS2D(Q2, time + 0.5*dt, gas_gamma, gas_const);
     Q    = (Q + 2*Q2 + 2*dt*rhsQ)/3;
     %rhoprange = [min(min(Q(:,:,1))), max(max(Q(:,:,1))), min(min(Euler_Pressure2D(Q,gas_gamma))), max(max(Euler_Pressure2D(Q,gas_gamma)))]
-    ind3           = Tcells_Euler_type2D(Q,gas_gamma, gas_const,Indicator,ind_var,Limiter);
-    Q              = SlopeLimit_Euler_type2D(Q,gas_gamma,gas_const,Limiter,lim_var,ind3);
+    QG             = ApplyBCEuler2D(Q,time+ 0.5*dt,gas_gamma);
+    ind3           = Tcells_Euler_type2D(Q,QG,gas_gamma, gas_const,Indicator,ind_var,Limiter);
+    Q              = SlopeLimit_Euler_type2D(Q,QG,gas_gamma,gas_const,Limiter,lim_var,ind3);
     [Q,ind_neg3]   = Euler_positivity_fix2D(Q,gas_gamma,AVG2D);
     %rhoprange = [min(min(Q(:,:,1))), max(max(Q(:,:,1))), min(min(Euler_Pressure2D(Q,gas_gamma))), max(max(Euler_Pressure2D(Q,gas_gamma)))]
     
@@ -227,12 +241,12 @@ while (time<FinalTime)
 
     
     % Render every 25 time steps
-    if(~mod(tstep,25) || time == FinalTime)
+    if(~mod(tstep,5) || time == FinalTime)
         
-        fprintf('   ---> Time = %f, dt = %f, number of time steps = %f\n',time,dt,tstep);
+        fprintf('   ---> Time = %f, CFL = %f, dt = %f, number of time steps = %f\n',time,CFL,dt,tstep);
         
         figure(2);
-        plot(xavg(ind), yavg(ind), 'ro');
+        plot(xavg(ind), yavg(ind), 'r.');
         hold all
         plot(xavg(ind_neg), yavg(ind_neg), 'bx');
         xlim([min(min(x)),max(max(x))])
@@ -270,6 +284,7 @@ while (time<FinalTime)
         dt = EulerDT2D(Q,gas_gamma);
     else
         dt = fixed_dt;
+        CFL = EulerCFL2D(Q,dt,gas_gamma);
     end
     
     tstep = tstep+1;

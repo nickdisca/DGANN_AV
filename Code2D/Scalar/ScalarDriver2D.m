@@ -10,15 +10,12 @@ ScalarStartDisp;
 % Generate necessary data structures
 StartUp2D;
 
-% Turning non-perioidic BC faces to BC to Neumann
-BCType = Neuman*(not(EToE - (1:K)'*ones(1,3)));
-
-% Generates geometric data needed by Indicators
-GetGeomIndData2D;
-
-Q = zeros(Np, K, 1);
+% Get essential BC_flags
+BC_ess_flags = BuildBCKeys2D(BC_flags,Periodic);
 
 BuildBCMaps2D;
+
+Q = zeros(Np, K, 1);
 
 %% compute initial condition (time=0)
 
@@ -29,7 +26,7 @@ Mlist = [10, 100, 200, 0];
 % Mlist = [10];
 % nn_model_List = {'MLP_v2'};
 
-for ilv = 1:3
+for ilv = 1:1
      close all
 %   
     Indicator = Ind_List{ilv}
@@ -57,6 +54,17 @@ for ilv = 1:3
     tic;
     [Q_save,ind_save,ptc_hist,t_hist,Save_times] = Scalar2D(Q,AdvectionVelocity,Save_soln);
     sim_time = toc;
+    
+    [TRI,xout,yout,interp] = GenInterpolators2D(N, N, x, y, invV);
+    Q_exact = feval(InitialCond, x-FinalTime, y-FinalTime);
+    figure(4)
+    PlotField2D(Q_exact(:,:,1),interp,TRI,xout,yout); axis tight; drawnow;
+    
+    ErrL2 = 0;
+    for i=1:K
+         ErrL2 = ErrL2 + J(1,i)*(Q_save{1,end}(:,i)-Q_exact(:,i))'*MassMatrix*(Q_save{1,end}(:,i)-Q_exact(:,i));
+    end
+    ErrL2 = sqrt(ErrL2)
     
     % Saving data
     Scalar_Save2D;

@@ -1,32 +1,47 @@
-function Qlim = BarthJespLimiter2D(Q,ind)
+function Qlim = BarthJespLimiter2D(Q,QG,ind)
 
 Globals2D_DG;
 
-if(isempty(ind))
-    Qlim = Q;
-else
+Qlim = Q;
+if(~isempty(ind))
     % Extracting linear part of solution for elements marked using indicator
     % These are listed in "ind"
     % We only keep the modes 1,2 and N+2
     if(N==1)
         Ql = Q;
+        QGl = QG;
     else
         Qm              = invV*Q;
         killmodes       = [3:N+1,N+3:Np];
         Qm(killmodes,ind) = 0;
         Ql              = V*Qm;
+        
+        QGm              = invV*QG;
+        killmodes        = [3:N+1,N+3:Np];
+        QGm(killmodes,:) = 0;
+        QGl              = V*QGm;
     end
-    Qlim = Ql;
-    
-    
-    % Working with only the flagged elements
+       
     % Find neighbors in patch
-    E1 = EToE(ind,1)'; E2 = EToE(ind,2)'; E3 = EToE(ind,3)';
+    E1 = EToE(:,1)'; E2 = EToE(:,2)'; E3 = EToE(:,3)';
     
     % Get cell averages of patch
     Qavg0  = AVG2D*Ql; Qavg1 = Qavg0(E1); Qavg2 = Qavg0(E2); Qavg3 = Qavg0(E3);
-    Qavg0  = Qavg0(ind);
+    
+    
+    % Replacing boundary element neighbours with ghost neighbours
+    QGavg = AVG2D*QGl;
+    GE1 = find(EToGE(:,1))';  GE2 = find(EToGE(:,2))'; GE3 = find(EToGE(:,3))';
+    Qavg1(GE1) = QGavg(EToGE(GE1,1));
+    Qavg2(GE2) = QGavg(EToGE(GE2,2));
+    Qavg3(GE3) = QGavg(EToGE(GE3,3));
+
+
+    % Switching to only flaggd cells
+    Qavg0  = Qavg0(ind); Qavg1  = Qavg1(ind); Qavg2  = Qavg2(ind); Qavg3  = Qavg3(ind);
     Ql     = Ql(:,ind);
+    
+    % Finding avg bounds
     MaxAvg = max([Qavg0;Qavg1;Qavg2;Qavg3],[],1);
     MinAvg = min([Qavg0;Qavg1;Qavg2;Qavg3],[],1);
     
@@ -75,8 +90,8 @@ else
     eps = 1.0e-10;
 %     min(min(Ql - ones(Np,1)*MinAvg))
 %     min(min(-Ql + ones(Np,1)*MaxAvg))
-    assert(min(min(Ql - ones(Np,1)*MinAvg))>-eps)
-    assert(min(min(-Ql + ones(Np,1)*MaxAvg))>-eps)
+%    assert(min(min(Ql - ones(Np,1)*MinAvg))>-eps)
+%    assert(min(min(-Ql + ones(Np,1)*MaxAvg))>-eps)
     % Updating Qlim
     Qlim(:,ind) = Ql;
     

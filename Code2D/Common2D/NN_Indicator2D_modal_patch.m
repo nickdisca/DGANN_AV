@@ -1,4 +1,4 @@
-function [ind] = NN_Indicator2D_modal_patch(Q)
+function [ind] = NN_Indicator2D_modal_patch(Q,QG)
 
 Globals2D_DG;
 Globals2D_MLP;
@@ -9,6 +9,14 @@ E1 = EToE(:,1)'; E2 = EToE(:,2)'; E3 = EToE(:,3)';
 
 % Get modal coefficients of patch
 Qm0 = invV*Q; Qm1 = invV*Q(:,E1); Qm2 = invV*Q(:,E2); Qm3 = invV*Q(:,E3);
+
+% Replacing boundary element neighbours with ghost neighbours
+GE1 = find(EToGE(:,1))';
+GE2 = find(EToGE(:,2))';
+GE3 = find(EToGE(:,3))';
+Qm1(:,GE1) = invV*QG(:,EToGE(GE1,1));
+Qm2(:,GE2) = invV*QG(:,EToGE(GE2,2));
+Qm3(:,GE3) = invV*QG(:,EToGE(GE3,3));
 
 % Filter out constants
 F_EPS    = 1e-2;

@@ -19,6 +19,7 @@ va = EToV(:,1)'; vb = EToV(:,2)'; vc = EToV(:,3)';
 x = 0.5*(-(r+s)*VX(va)+(1+r)*VX(vb)+(1+s)*VX(vc));
 y = 0.5*(-(r+s)*VY(va)+(1+r)*VY(vb)+(1+s)*VY(vc));
 
+
 % find all the nodes that lie on each edge
 fprintf('... generating cell face mask\n')
 fmask1   = find( abs(s+1) < NODETOL)'; 
@@ -54,8 +55,13 @@ xscale2D;
 %[EToE, EToF] = tiConnect2D(EToV);
 fprintf('... creating connectivity matrices\n')
 [EToE, EToF, PShift, BCTag] = Connect2D(EToV,BFaces,PerBToB_map,PerBFToF_map,BC_flags,...
-                                 UseMeshPerData,VX,VY);
+                                 UseMeshPerData,VX,VY,Periodic);
 
+% Build ghost elements for non-periodic boundary faces
+fprintf('... generating additional geometric data and ghost elements\n')
+GetGeomData2D;
+                             
+%%                             
 % Build connectivity maps
 fprintf('... building face maps\n')
 BuildMaps2D;

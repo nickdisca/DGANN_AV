@@ -1,5 +1,5 @@
 function [EToE, EToF, PShift, BCTag] = Connect2D(EToV,BFaces,PerBToB_map,PerBFToF_map,BC_flags,...
-                                  UseMeshPerData,VX,VY)
+                                  UseMeshPerData,VX,VY,Pflag)
 
 % function [EToE, EToF] = Connect2D(EToV,BFaces,PerBToB_map,PerBFToF_map,UseMeshPerData)
 % Purpose  : Build global connectivity arrays for grid based on
@@ -121,21 +121,18 @@ if(UseMeshPerData)
 end
 
 
-% Setting boundary conditions for remaining boundary triangles/faces
+% Setting boundary conditions for remaining boundary triangles/faces.
 % Periodic boundary face tag is kept as 0
 BFace_keys = keys(BFaces);
 BCTag      = zeros(size(EToV));
 for k = 1:length(BFace_keys)
     ckey   = BFace_keys{k};
     f_ind  = find(BC_flags(:,1)==ckey);
-    
-    if(~(BC_flags(f_ind,2) == 7))
+    if(~(BC_flags(f_ind,2) == Pflag))
        c_ind  = SetBC2D(BFaces(ckey),EToV); 
        BCTag  = BCTag + BC_flags(f_ind,1)*c_ind;
     end
 
 end    
-    
-
 
 return;

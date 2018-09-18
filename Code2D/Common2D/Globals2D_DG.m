@@ -5,7 +5,7 @@ global r s
 global Dr Ds LIFT Drw Dsw MassMatrix
 global Fx Fy nx ny jac Fscale J
 global vmapM vmapP vmapB mapB Fmask
-global BCTag mapBC_list vmapBC_list
+global BCTag mapBC_list vmapBC_list GEBC_list
 global rx ry sx sy J sJ
 global rk4a rk4b rk4c
 global Nfaces EToE EToF EToV
@@ -18,8 +18,9 @@ global AVG2D AVG1D_1 AVG1D_2 AVG1D_3 % Averaging matrices
 global ProjectFromNb2D CK % Needed for Fu-Shu indicator
 global Indicator Limiter ind_var lim_var
 global patch_alphas TVBM TVBnu dx CFL fixed_dt
+global EToGE KG xG yG MMAP BC_flags BC_ess_flags 
 
-In = 1; Out = 2; Slip = 3; Far = 4; Dirichlet = 5; Neuman = 6; Periodic=7;
+In = 1; Out = 2; Slip = 3; Far = 4; Dirichlet = 5; Sym = 6; Periodic=7;
 
 % Low storage Runge-Kutta coefficients
 rk4a = [            0.0 ...
