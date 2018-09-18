@@ -226,17 +226,17 @@ For those interested in using the trained indicator in their own solvers, we exp
 * ***b_out.dat***: Biases for the output layer.
 * ***Scaling.m***: Script for scaling the input data before passing it through the network.
 
-Consider the input $$X$$ to be an array of size $$m \times n$$, where $$m$$ is the dimension of each data sample, while $$n$$ is the number of samples. The algortihm for the network is as follows:
+Consider the input $$X$$ to be an array of size $$m \times n$$, where $$m$$ is the dimension of each data sample, while $$n$$ is the number of samples. The algortihm for the network with $$L$$ hidden-layers having $$N_l$$ neurons in the $$l$$-th hidden layer, is as follows:
 
 $$
 \begin{align}
-X &= \text{Scaling}(X) \\
-X &= \sum_{i=1}^{NHL} f_{\text{activation}}(W_i X + b_i)\\
-Y &= \text{Softmax}(W_{out} X + b_{out})\\
+X_0 &= \text{Scaling}(X), \quad N_0 = m\\
+X_l &= f_{\text{activation}}(W_l X_{l-1} + b_l \mathbb{1}(n)), \quad W_l \in \mathbb{R}^{N_l \times N_{l-1}}, \quad b_l \in \mathbb{R}^{N_l}, \qquad l=1,...,L\\
+Y &= \text{Softmax}(W_{out} X_L + b_{out} \mathbb{1}(n)), \quad W_{out} \in \mathbb{R}^{2 \times N_L}, \quad b_{out} \in \mathbb{R}^{2} \\
 \end{align}
 $$
 
-where the final output $$Y$$ is of dimension $$2 \times n$$. The activation function is chosen as a suitable non-linear function, such as the Logistic function, hyperbolic tangent, ReLU, etc. The Softmax function is used a the output function. The first row of $$Y$$ gives the probability of the sample corresponding to a troubled-cell, while the second row gives the probability of the sample corresponding to a good-cell. Note that the sum along each column of $$Y$$ equals $$1$$. The indices of the troubled-cells can be obtained as
+where the final output $$Y$$ is of dimension $$2 \times n$$, and $$\mathbb{1}(n)$$ is a row vector of $$n$$ ones. The activation function is chosen as a suitable non-linear function, such as the Logistic function, hyperbolic tangent, ReLU, etc. The Softmax function is used a the output function. The first row of $$Y$$ gives the probability of the sample corresponding to a troubled-cell, while the second row gives the probability of the sample corresponding to a good-cell. Note that the sum along each column of $$Y$$ equals $$1$$. The indices of the troubled-cells can be obtained as
 
 $$
 ind = \text{find}(Y(1,:) > 0.5).
