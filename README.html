@@ -485,11 +485,28 @@ pre[class*="language-"] {
 
 <p>Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">&quot;An artificial neural network as a troubled-cell indicator&quot;</a>.</p>
 
-<h2 id="toc_4">Running the code</h2>
+<p><strong>NOTE:</strong> If the math symbols do not display properly in README.md. have a look at README.pdf instead.</p>
+
+<h2 id="toc_4"><a name="TOC"></a>Table of contents</h2>
+
+<ul>
+<li><a href="#running">Running the code</a></li>
+    <ul>
+    <li><a href="#scalar1d">Scalar 1D</a></li>
+    <li><a href="#swe1d">Shallow water equations 1D</a></li>
+    <li><a href="#euler1d">Euler equations 1D</a></li>
+    </ul>
+<li><a href="#usemlp">Using the MLP indicator</a></li>
+    <ul>
+    <li><a href="#net1d">Network for 1D problems</a></li>
+    </ul>
+</ul>
+
+<h2 id="toc_5"><a name="running"></a>Running the code</h2>
 
 <p>After cloning the git repository, execute <strong>mypath.m</strong> from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the <strong>Examples</strong> directory.</p>
 
-<h3 id="toc_5">Scalar 1D</h3>
+<h3 id="toc_6"><a name="scalar1d"></a>Scalar 1D</h3>
 
 <p>The basic structure of the example script is as follows.</p>
 
@@ -519,9 +536,14 @@ indicator_type = &#39;minmod&#39;;
 nn_model       = &#39;MLP_v1&#39;;  
 rec_limiter    = &#39;minmod&#39;;
 
-plot_iter = 100;
-save_soln = true;
-save_ind  = true;
+plot_iter  = 50;
+save_soln  = true;
+save_ind   = true;
+save_plot  = true;
+ref_avail  = true;
+ref_fname  = &#39;ref_soln.dat&#39;;
+rk_comb    = false;
+var_ran    = [-1.2,1.5];
 
 % Call code driver
 ScalarDriver1D; </code></pre></div>
@@ -568,24 +590,30 @@ x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_
 <li><code>&#39;none&#39;</code>: No limiting is applied.</li>
 <li><code>&#39;minmod&#39;</code>: MUSCL reconstruction using minmod limiter.</li>
 </ul></li>
-<li><p>The flag <code>plot_iter</code> is used for visualization purposes. The solution is plots are shown after every <code>plot_iter</code> number of iterations during the simulation.</p></li>
-<li><p>If solution at the final time needs to be saved, the flag <code>save_soln</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The solution files are save in the directory <strong>User_output</strong>. The filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format: </p>
+<li><p>The flag <code>plot_iter</code> is used for visualization purposes. The solution is plots are shown after every <code>plot_iter</code> number of iterations during the simulation. This number also controls the frequency with which the time-history of the flagged troubled-cells is saved to file (see <code>save_ind</code>).</p></li>
+<li><p>If solution at the final time needs to be saved, the flag <code>save_soln</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The solution files are save in the directory <strong>OUTPUT</strong>. The filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format: </p>
 
 <ul>
 <li>Column 1: x-coordinates</li>
 <li>Column 2: solution value at corresponding x-coordinate </li>
 </ul></li>
-<li><p>If the time-history of the troubled-cells needs to be viewe/saved, the flag <code>save_indn</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The time-history files are also save in the directory <strong>User_output</strong>. The filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}_tcells.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format:</p>
+<li><p>If the time-history of the troubled-cells needs to be viewe/saved, the flag <code>save_ind</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The time-history files are also save in the directory <strong>OUTPUT</strong>. The filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}_tcells.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format:</p>
 
 <ul>
 <li>Each row of the file contains the time, followed by the mid-points of the cells flagged as troubled-cells at that time.</li>
 <li>The first row corresponds to the cell flagged at time \(t=0\). This is essentially done for the initial condition.</li>
 <li>Following the first row, the rows can be grouped in sets of size \(r\), to list the cells flagged after each sub-stage of the r-stage time-integration scheme. Since the current implementation of the code uses SSP-RK3, the rows will be grouped as triplets. </li>
 </ul></li>
+<li><p>If <code>save_plot</code> is set to <code>true</code>, then the solution plots are generated and saved in <strong>OUTPUT</strong>. NOTE: This needs <code>save_soln</code> and <code>save_ind</code> to be set as <code>true</code>. </p></li>
+<li><p>If a reference/exact solution data file is available, then set <code>ref_avail</code> to <code>true</code> and the (relative) file name of the referene solution in <code>ref_fname</code>. </p></li>
+<li><p>If the troubled-cell plots should be saved for each individual RK-stage, then set <code>rk_comb</code> to <code>false</code>. To save a unified plot, set this to <code>true</code>.</p></li>
+<li><p><code>var_ran</code> is used to set the ylim for the solution plot. This should be a array of size (1,2).</p></li>
 <li><p>The main driver script <code>ScalarDriver1D</code> is called once all the flags have been set.</p></li>
 </ul>
 
-<h3 id="toc_6">Shallow Water 1D</h3>
+<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+
+<h3 id="toc_7"><a name="swe1d"></a>Shallow Water 1D</h3>
 
 <p>The basic structure of the example script is as follows.</p>
 
@@ -620,9 +648,14 @@ nn_model       = &#39;MLP_v1&#39;;
 rec_limiter    = &#39;minmod&#39;;
 lim_var        = &#39;con&#39;;
 
-plot_iter = 100;
-save_soln = true;
-save_ind  = true;
+plot_iter  = 10;
+save_soln  = true;
+save_ind   = true;
+save_plot  = true;
+ref_avail  = true;
+ref_fname  = &#39;ref_soln.dat&#39;;
+rk_comb    = true;
+var_ran    = [1,3.2; 0,1];
 
 % Call code driver
 SWEDriver1D;</code></pre></div>
@@ -656,10 +689,13 @@ SWEDriver1D;</code></pre></div>
 <li>Column 2: the value of depth and velocity (in that order) at corresponding x-coordinate.</li>
 </ul></li>
 <li>The troubled-cell time-history filename has the format: <code>{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{ind_var}_{rec_limiter}_{rec_var}_tcells.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>.</li>
+<li><code>var_ran</code> is used to set the ylim for the solution plots, with the format <code>[depth_min,depth_max ; velocity_min, velocity_max]</code>.</li>
 <li>The main driver script <code>SWEDriver1D</code> is called once all the flags have been set.</li>
 </ul>
 
-<h3 id="toc_7">Euler 1D</h3>
+<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+
+<h3 id="toc_8"><a name="euler1d"></a>Euler 1D</h3>
 
 <p>The basic structure of the example script is as follows.</p>
 
@@ -698,9 +734,14 @@ nn_model       = &#39;MLP_v1&#39;;
 rec_limiter    = &#39;minmod&#39;;
 lim_var        = &#39;con&#39;;
 
-plot_iter = 100;
-save_soln = true;
-save_ind  = true;
+plot_iter  = 100;
+save_soln  = true;
+save_ind   = true;
+save_plot  = true;
+ref_avail  = true;
+ref_fname  = &#39;ref_soln.dat&#39;;
+rk_comb    = true;
+var_ran    = [0,1.2; -0.2,1.5; 0,1.2];
 
 % Call code driver
 EulerDriver1D; </code></pre></div>
@@ -722,10 +763,13 @@ EulerDriver1D; </code></pre></div>
 <li><code>&#39;energy&#39;</code>: Only the energy is used.</li>
 <li><code>&#39;de&#39;</code>: Density and energy are used.</li>
 </ul></li>
+<li><code>var_ran</code> is used to set the ylim for the solution plots, with the format <code>[rho_min,rho_max ; velocity_min, velocity_max ; pressure_min, pressure_max]</code>.</li>
 <li>The main driver script <code>EulerDriver1D</code> is called once all the flags have been set. The troubled-cells flagged for each variable is pooled together.</li>
 </ul>
 
-<h2 id="toc_8">Using the MLP indicator</h2>
+<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+
+<h2 id="toc_9"><a name="usemlp"></a>Using the MLP indicator</h2>
 
 <p>For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder <strong>Trained_networks</strong>. For each network, the following files exist:</p>
 
@@ -763,7 +807,9 @@ ind = \text{find}(Y(1,:) &gt; 0.5).
 
 <p>The <strong>Common</strong> sub-directory contains additional scripts needed to run the networks, such as the implementation of the leaky ReLU activation function.</p>
 
-<h3 id="toc_9">Network for 1D problems</h3>
+<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+
+<h3 id="toc_10"><a name="net1d"></a>Network for 1D problems</h3>
 
 <p>The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.</p>
 
@@ -776,6 +822,8 @@ f_{\text{activation}}(U) = max(0,U) - \nu(0,-U),
 
 <p>with the parameter \(\nu\). The details and results with this indicator are published <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">here</a>.</p></li>
 </ul>
+
+<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/> </p>
 
 
 

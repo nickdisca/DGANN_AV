@@ -1,7 +1,7 @@
 % Purpose  : Generate a equidistant grid with K elements. If mesh_pert > 0
 % then the mesh is perturbed randomly
 
-function [Nv, VX, K, hK] = MeshGen1D(xmin,xmax,K,mesh_pert)
+function [Nv, VX, hK] = MeshGen1D(xmin,xmax,K,mesh_pert)
 
 Nv         = K+1; 
 h          = (xmax - xmin)/K;

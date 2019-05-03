@@ -1,15 +1,15 @@
-function q = SWECtoU1D(Char,qc,gravity)
+function q = SWECtoU1D(Char,qc,gravity,Mesh)
 
 % function to converts charactersitic variables to the conserved variables
 % for the shallow water equations, using the cell average values of the 
 % conserved variables
 
-Globals1D_DG;
+%Globals1D_DG;
 
 NTC = size(qc(1,:,1)); % All cells  on which q is defined. This may contain 
                        % ghost cells
 
-q = zeros(Np,NTC,2);
+q = zeros(Mesh.Np,NTC,2);
 
 % Compute conserved variables
 for i=1:NTC

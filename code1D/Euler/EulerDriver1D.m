@@ -1,42 +1,64 @@
+% Check parameters
+EulerCheckParam1D;
+
+% Display paramaters
+EulerStartDisp1D;
+
 % Find relative path
 Find_relative_path;
 
 % Generate simple mesh
-[Nv, VX, K, hK] = MeshGen1D(bnd_l,bnd_r,Nelem, mesh_pert);
+[Mesh.Nv, Mesh.VX, Mesh.hK] = MeshGen1D(Mesh.bnd_l,Mesh.bnd_r,Mesh.K, Mesh.mesh_pert);
 
 % generate various matrix operators and maps
 StartUp1D;
 
 % Extract MLP weights, biases and other parameters
-if(strcmp(indicator_type,'NN'))
-    [n_input,n_output,n_hidden_layer,leaky_alpha,WEIGHTS,BIASES,NN_Dir] = ...
-        read_mlp_param1D(nn_model,REL_PATH);
+if(strcmp(Limit.Indicator,'NN'))
+    Net = read_mlp_param1D(Limit.nn_model,REL_PATH);
+else
+    Net.avail = false;
 end
 
-% Assert BC condition is valid
-Check_BC1D(bc_cond,3);
 
 % Generate mass matrix and initialize solution
-cx = ones(Np,1)*sum(M*x,1)/2;  
-% depth = depth_IC(cx);
-% vel   = vel_IC(cx);
-rho        = rho_IC(x);
-vel        = vel_IC(x);
-pre        = pre_IC(x);
+rho        = Problem.rho_IC(Mesh.x);
+vel        = Problem.vel_IC(Mesh.x);
+pre        = Problem.pre_IC(Mesh.x);
 mmt        = rho.*vel;
-energy     = 0.5*rho.*vel.^2 + pre/(gas_gamma - 1);
+energy     = 0.5*rho.*vel.^2 + pre/(Problem.gas_gamma - 1);
 
 % Creating vector of conserved variables
-q = zeros(Np,K,3); q(:,:,1) = rho; q(:,:,2) = mmt;  q(:,:,3) = energy;
+q = zeros(Mesh.Np,Mesh.K,3); q(:,:,1) = rho; q(:,:,2) = mmt;  q(:,:,3) = energy;
 
-% Creating file name for storing troubled-cell markers
-ind_fname = Euler_ind_fname1D(REL_PATH);
+% Creating file name base for saving solution
+Output.fname_base = Euler_fnamebase1D(Problem,Mesh.N,Mesh.K,Limit,Mesh.mesh_pert);
+
+
+if(Output.save_plot)
+    assert(Output.save_soln && Output.save_ind,'To be able to save plots, set save_soln and save_ind as true');
+end
 
 % Solve Problem
-q = Euler1D(q,gas_gamma, gas_const,ind_fname);
+fprintf('... starting main solve\n')
+q = Euler1D(q,Problem,Mesh,Limit,Net,Output);
 
 % Save final solution
-Save_Euler_soln1D(q,gas_gamma, gas_const,REL_PATH);
+Save_Euler_soln1D(q,Mesh.x,Problem.gas_gamma,Output.fname_base);
+
+%%
+if(Output.save_plot)
+    fprintf('... generating and saving plots in directory OUTPUT\n')
+    if(Output.ref_avail)
+        PlotEuler1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],Output.rk_comb,true,Output.ref_fname); 
+    else
+        PlotEulerE1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],Output.rk_comb,false);
+    end
+end
 
 % Clean up
+fprintf('... cleaning up\n')
 CleanUp1D;
+
+fprintf('------------ Solver has finished -------------\n')
+

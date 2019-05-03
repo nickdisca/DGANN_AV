@@ -10,10 +10,27 @@
 
 Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper ["An artificial neural network as a troubled-cell indicator"](https://www.sciencedirect.com/science/article/pii/S0021999118302547).
 
-##Running the code
-After cloning the git repository, execute **mypath.m** from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the **Examples** directory.
+**NOTE:** If the math symbols do not display properly in README.md. have a look at README.html instead.
 
-###Scalar 1D
+## <a name="TOC"></a>Table of contents
+<ul>
+<li><a href="#running">Running the code</a></li>
+    <ul>
+    <li><a href="#scalar1d">Scalar 1D</a></li>
+    <li><a href="#swe1d">Shallow water equations 1D</a></li>
+    <li><a href="#euler1d">Euler equations 1D</a></li>
+    </ul>
+<li><a href="#usemlp">Using the MLP indicator</a></li>
+    <ul>
+    <li><a href="#net1d">Network for 1D problems</a></li>
+    </ul>
+</ul>
+
+
+##<a name="running"></a>Running the code
+After cloning the git repository, execute **mypath.m** from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the **Examples** directory or its sub-directories.
+
+###<a name="scalar1d"></a>Scalar 1D
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -36,16 +53,21 @@ mesh_pert = 0.0;
 bc_cond   = {'P',0.0,'P',0.0};
 FinalTime = 1.4;
 CFL       = 0.2;
-Nelem     = 100;
+K         = 100;
 N         = 4;
 
 indicator_type = 'minmod';
 nn_model       = 'MLP_v1';	
 rec_limiter    = 'minmod';
 
-plot_iter = 100;
-save_soln = true;
-save_ind  = true;
+plot_iter  = 50;
+save_soln  = true;
+save_ind   = true;
+save_plot  = true;
+ref_avail  = true;
+ref_fname  = 'ref_soln.dat';
+rk_comb    = false;
+var_ran    = [-1.2,1.5];
 
 % Call code driver
 ScalarDriver1D; 
@@ -63,7 +85,7 @@ ScalarDriver1D;
 * `mesh_pert` is used to randomly perturb the interior cell-interfaces using the following algorithm
  
  $$
- x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,Nelem-1
+ x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,K-1
  $$
  
  where $$h$$ is the mesh size of the initial uniform grid.
@@ -73,24 +95,34 @@ ScalarDriver1D;
  * `'N'`: Neumann boundary condition.
  * `'D'`: Dirichlet boundary condition, with the imposed Dirichlet value given by `BC_VAL`. Note that `BC_VAL` is ignored if `BC_TYPE` is not set to `'D'`. 
 * The final simulation time is set using `FinalTime`, while the time step is chosen using `CFL`.
+* `K` is the number of elements/cells in the mesh.
+* `N` sets the order of the basis.
 * The troubled-cell indicator is set using `indicator_type`. The following options are currently available:
+ * `'none'`: No cells are flagged.
+ * `'all'`: All cells are flagged.
  * `'minmod'`: Uses the basic minmod limiter.
- * `'TVB'`: Uses the modified minmod-type TVB limiter. If this is chosen, then one aslo needs to set the variable `TVB_M` to a positive number. Note that if this constant is set to 0, then the limiter reduces to the usual minmod limiter.
+ * `'TVB'`: Uses the modified minmod-type TVB limiter. If this is chosen, then one aslo needs to set the variable `TVBM` to a positive number. Note that if this constant is set to 0, then the limiter reduces to the usual minmod limiter.
  * '`NN`': Uses the trained neural network. The network name is set using the variable `nn_model`. The available networks are described below in the section **Using the MLP indicator**.
 * The limiter usd to reconstruct the solution in each troubled-cell,is set using `rec_limiter`. The following options are currently available:
  * `'none'`: No limiting is applied.
  * `'minmod'`: MUSCL reconstruction using minmod limiter.
-* The flag `plot_iter` is used for visualization purposes. The solution is plots are shown after every `plot_iter` number of iterations during the simulation.
-* If solution at the final time needs to be saved, the flag `save_soln` must be set to `true`. If this is not the case, set this flag to `false`. The solution files are save in the directory **User_output**. The filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format: 
+* The flag `plot_iter` is used for visualization purposes. The solution is plots are shown after every `plot_iter` number of iterations during the simulation. This number also controls the frequency with which the time-history of the flagged troubled-cells is saved to file (see `save_ind`).
+* If solution at the final time needs to be saved, the flag `save_soln` must be set to `true`. If this is not the case, set this flag to `false`. The solution files are save in the directory **OUTPUT**. The filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format: 
  * Column 1: x-coordinates
  * Column 2: solution value at corresponding x-coordinate 
-* If the time-history of the troubled-cells needs to be viewe/saved, the flag `save_indn` must be set to `true`. If this is not the case, set this flag to `false`. The time-history files are also save in the directory **User_output**. The filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}_tcells.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format:
+* If the time-history of the troubled-cells needs to be viewe/saved, the flag `save_ind` must be set to `true`. If this is not the case, set this flag to `false`. The time-history files are also save in the directory **OUTPUT**. The filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}_tcells.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format:
  * Each row of the file contains the time, followed by the mid-points of the cells flagged as troubled-cells at that time.
  * The first row corresponds to the cell flagged at time $$t=0$$. This is essentially done for the initial condition.
  * Following the first row, the rows can be grouped in sets of size $$r$$, to list the cells flagged after each sub-stage of the r-stage time-integration scheme. Since the current implementation of the code uses SSP-RK3, the rows will be grouped as triplets. 
+* If `save_plot` is set to `true`, then the solution plots are generated and saved in **OUTPUT**. NOTE: This needs `save_soln` and `save_ind` to be set as `true`. 
+* If a reference/exact solution data file is available, then set `ref_avail` to `true` and the (relative) file name of the referene solution in `ref_fname`. 
+* If the troubled-cell plots should be saved for each individual RK-stage, then set `rk_comb` to `false`. To save a unified plot, set this to `true`.
+* `var_ran` is used to set the ylim for the solution plot. This should be a array of size (1,2).
 * The main driver script `ScalarDriver1D` is called once all the flags have been set.
 
-###Shallow Water 1D 
+<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+
+###<a name="swe1d"></a>Shallow Water 1D 
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -116,7 +148,7 @@ bc_cond   = {'N',0.0,'N',0.0;
              'N',0.0,'N',0.0};  % For conserved variables
 FinalTime = 1;
 CFL       = 0.4;
-Nelem     = 100;
+K         = 100;
 N         = 4;
 
 indicator_type = 'minmod';
@@ -125,9 +157,14 @@ nn_model       = 'MLP_v1';
 rec_limiter    = 'minmod';
 lim_var        = 'con';
 
-plot_iter = 100;
-save_soln = true;
-save_ind  = true;
+plot_iter  = 10;
+save_soln  = true;
+save_ind   = true;
+save_plot  = true;
+ref_avail  = true;
+ref_fname  = 'ref_soln.dat';
+rk_comb    = true;
+var_ran    = [1,3.2; 0,1];
 
 % Call code driver
 SWEDriver1D;
@@ -138,10 +175,9 @@ Most of the structure is similar to the Scalar 1D script. The differences are de
 * The acceleration due to gravity is set using `gravity`.
 * The initial depth and velocity are set using `depth_IC` and `velocity_IC`.
 * The `bc_cond` has the same format as earlier, although now it has two rows of parameters. The first row corresponds to depth, while the second corresponds to the discharge (depth*velocity). Note that the boundary condition are set for the conserved variables.
-* For systems of conservation laws, there are various choices for the variables to be used for troubled-cell detection. For the shallow water equations, this choice is made via the flag `ind_var`, with the following options:
- * `'depth'`: Only the depth variable is used
- * `'velocity'`: Only the velocity variable is used
- * `'prim'`: The primitive variables i.e., depth and velocity, are used. The troubled-cells flagged for each variable is pooled together.
+* For systems of conservation laws, there are various choices for the variables to be used for troubled-cell detection. For the shallow water equations, this choice is made via the flag `ind_var`, with the following options (the troubled-cells flagged for each variable is pooled together):
+ * `'prim'`: The primitive variables i.e., depth and velocity, are used. 
+ * `'con'`:  The conserved variables i.e., depth and discharge, are used.
 * As was the case with detection, there are several options for the variables which can be reconstructed. This is set using the flag `rec_var`, with the following options:
  * `'prim'`:  The primitive variables i.e., depth and velocity, are recontructed.
  * `'con'`:  The conserved variables i.e., depth and discharge, are recontructed.
@@ -151,9 +187,12 @@ Most of the structure is similar to the Scalar 1D script. The differences are de
  * Column 1: x-coordinates
  * Column 2: the value of depth and velocity (in that order) at corresponding x-coordinate.
 * The troubled-cell time-history filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{ind_var}_{rec_limiter}_{rec_var}_tcells.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`.
+* `var_ran` is used to set the ylim for the solution plots, with the format `[depth_min,depth_max ; velocity_min, velocity_max]`.
 * The main driver script `SWEDriver1D` is called once all the flags have been set.
+
+<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
  
-###Euler 1D 
+###<a name="euler1d"></a>Euler 1D 
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -183,7 +222,7 @@ bc_cond   = {'D',3.857143,'N',0.0;
              'D',39.166661,'N',0.0};  % For conserved variables
 FinalTime = 1.8;
 CFL       = 0.1;
-Nelem     = 200;
+K         = 200;
 N         = 4;
 
 indicator_type = 'minmod';
@@ -192,9 +231,14 @@ nn_model       = 'MLP_v1';
 rec_limiter    = 'minmod';
 lim_var        = 'con';
 
-plot_iter = 100;
-save_soln = true;
-save_ind  = true;
+plot_iter  = 100;
+save_soln  = true;
+save_ind   = true;
+save_plot  = true;
+ref_avail  = true;
+ref_fname  = 'ref_soln.dat';
+rk_comb    = true;
+var_ran    = [0,1.2; -0.2,1.5; 0,1.2];
 
 % Call code driver
 EulerDriver1D; 
@@ -206,17 +250,18 @@ Most of the structure is similar to the shallow water 1D script. The differences
 * The gas constant and ratio of specific heats is set using `gas_const` and `gas_gamma`.
 * The initial density, velocity and pressure are set using `rho_IC`, `vel_IC` and `pre_IC`.
 * The `bc_cond` has the same format as earlier, although now it has three rows of parameters. The first row corresponds to density, the second corresponds to the momentum, and the third to energy. Note that the boundary condition are set for the conserved variables.
-* For the Euler equations, `ind_var` can be set as:
+* For the Euler equations, `ind_var` can be set as (the troubled-cells flagged for each variable is pooled together):
  * `'density'`: Only the density is used
  * `'velocity'`: Only the velocity is used
  * `'pressure'`: Only the pressure is used
- * `'prim'`: The primitive variables i.e., depth, velocity and pressure, are used. The troubled-cells flagged for each variable is pooled together.
- * `'energy'`: Only the energy is used.
- * `'de'`: Density and energy are used.
+ * `'prim'`: The primitive variables i.e., density, velocity and pressure, are used.
+ * `'con'`: The conserved variables i.e., density, momentum and energy, are used. 
+* `var_ran` is used to set the ylim for the solution plots, with the format `[rho_min,rho_max ; velocity_min, velocity_max ; pressure_min, pressure_max]`.
 * The main driver script `EulerDriver1D` is called once all the flags have been set. The troubled-cells flagged for each variable is pooled together.
 
+<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
 
-##Using the MLP indicator 
+##<a name="usemlp"></a>Using the MLP indicator 
 For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder **Trained_networks**. For each network, the following files exist:
 
 * ***model_parameters.dat***: Lists the dimensions of the input (IDIM) and output (ODIM) layers for the network, the number of hidden layers (NHL), and network hyperparameters (the Leaky ReLU factor, etc.).
@@ -250,7 +295,9 @@ The MATLAB scripts to read and run the networks can be found under the folder **
 
 The **Common** sub-directory contains additional scripts needed to run the networks, such as the implementation of the leaky ReLU activation function.
 
-###Network for 1D problems
+<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+
+###<a name="net1d"></a>Network for 1D problems
 The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.
 
 * **MLP_v1**: This network has an input layer of size 5. In particular, the input for the classification of cell $$i$$ is $$X=[\overline{u}_{i-1}, \overline{u}_{i}, \overline{u}_{i+1}, u_{i-\frac{1}{2}}^+, u_{i+\frac{1}{2}}^-]$$, where the first 3 quantities are the cell averages of the solution in the cells $$i-1,i,i+1$$ and the last two entries are the left and right cell interface values of the approximating polynomial in cell $$i$$. There are 5 hidden layers, whose widths are 256, 128, 64, 32 and 16, going from the input to the output layer. The activation function is taken to be the Leaky ReLU activation function 
@@ -260,3 +307,5 @@ f_{\text{activation}}(U) = max(0,U) - \nu(0,-U),
 $$
 
  with the parameter $$\nu$$. The details and results with this indicator are published [here](https://www.sciencedirect.com/science/article/pii/S0021999118302547).
+ 
+<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/> 

@@ -1,22 +1,22 @@
-function [q_lim] = SWE_cstencil1D(q,gravity,ind)
+function [q_lim] = SWE_cstencil1D(q,gravity,ind,Limiter,Mesh)
 
 % Function converts conserved variable to characteristic variables
 % locally on each 3-cell stencil, applies the limiter, and
 % converts back to conserved variales
 % q includes ghost cell values
 
-Globals1D_DG;
+%Globals1D_DG;
 
-q_lim = q(:,2:K+1,:);
+q_lim = q(:,2:Mesh.K+1,:);
 
 % Compute cell averages
 % depthh = invV*q(:,:,1); depthh(2:Np,:)=0;
 % deptha = V*depthh; depthc = deptha(1,:);
-depthc = AVG1D*q(:,:,1);
+depthc = Mesh.AVG1D*q(:,:,1);
 
 % dischageh = invV*q(:,:,2); dischageh(2:Np,:)=0;
 % dischargea = V*dischageh; dischargec = dischargea(1,:);
-dischargec = AVG1D*q(:,:,2);
+dischargec = Mesh.AVG1D*q(:,:,2);
 
 % Compute characterisic variables
 if(~isempty(ind))
@@ -27,12 +27,12 @@ if(~isempty(ind))
         Char  = invL*[q(:,ind(i),1)', q(:,ind(i)+1,1)', q(:,ind(i)+2,1)';
                       q(:,ind(i),2)', q(:,ind(i)+1,2)', q(:,ind(i)+2,2)'];
         
-        Char1 = SlopeLimit3(reshape(Char(1,:,:),[Np,3]),x(:,ind(i)));
-        Char2 = SlopeLimit3(reshape(Char(2,:,:),[Np,3]),x(:,ind(i)));
+        Char1 = SlopeLimit3(reshape(Char(1,:,:),[Mesh.Np,3]),Mesh.x(:,ind(i)),Limiter,Mesh);
+        Char2 = SlopeLimit3(reshape(Char(2,:,:),[Mesh.Np,3]),Mesh.x(:,ind(i)),Limiter,Mesh);
         
         U     = L*[Char1(:)';Char2(:)'];
-        q_lim(:,ind(i),1) = reshape(U(1,:,:),[Np,1]);
-        q_lim(:,ind(i),2) = reshape(U(2,:,:),[Np,1]);
+        q_lim(:,ind(i),1) = reshape(U(1,:,:),[Mesh.Np,1]);
+        q_lim(:,ind(i),2) = reshape(U(2,:,:),[Mesh.Np,1]);
         
     end
 end

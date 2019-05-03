@@ -1,33 +1,33 @@
-function ulimit = SlopeLimit3(u,xl)
+function ulimit = SlopeLimit3(u,xl,Limiter,Mesh)
 
 % Purpose: Apply slopelimiter (Pi^N) to u assuming u an N'th order polynomial 
 % The input is the date for three cells only, with the limiting performed
 % for the central cell. This funciton is used when the limiting needs
 % to be done cell-by-cell
 
-Globals1D_DG;
+%Globals1D_DG;
 
 [m,n] = size(u);
 assert(n == 3);
 ulimit = u;
 
-if strcmp(rec_limiter,'none')
+if strcmp(Limiter,'none')
     return
 else
     % Getting modal values
-    uh = invV*u; 
+    uh = Mesh.invV*u; 
         
     % getting cell averages
-    uavg = uh; uavg(2:Np,:)=0; uavg = V*uavg; v = uavg(1,:);
+    uavg = uh; uavg(2:end,:)=0; uavg = Mesh.V*uavg; v = uavg(1,:);
         
     % create piecewise linear solution for limiting on specified elements
-    uh(3:Np,:)=0; ul = V*uh(:,2);
+    uh(3:end,:)=0; ul = Mesh.V*uh(:,2);
         
     % apply slope limiter to selected elements
-    if strcmp(rec_limiter,'minmod')
-        ulimit = SlopeLimitLin(ul,xl,v(1),v(2),v(3));
+    if strcmp(Limiter,'minmod')
+        ulimit = SlopeLimitLin(ul,xl,v(1),v(2),v(3),Mesh);
     else
-        error('Limiter %s not available!!',rec_limiter)
+        error('Limiter %s not available!!',Limiter)
     end
 
 end
