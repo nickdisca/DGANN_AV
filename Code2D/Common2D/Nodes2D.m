@@ -26,13 +26,18 @@ for n=1:N+1
   end
 end
 L2 = 1.0-L1-L3;
-x = -L2+L3; y = (-L2-L3+2*L1)/sqrt(3.0);
+x = -L2+L3; 
+y = (-L2-L3+2*L1)/sqrt(3.0);
 
 % Compute blending function at each node for each edge
-blend1 = 4*L2.*L3; blend2 = 4*L1.*L3; blend3 = 4*L1.*L2;
+blend1 = 4*L2.*L3;
+blend2 = 4*L1.*L3;
+blend3 = 4*L1.*L2;
 
 % Amount of warp for each node, for each edge
-warpf1 = Warpfactor(N,L3-L2); warpf2 = Warpfactor(N,L1-L3); warpf3 = Warpfactor(N,L2-L1);
+warpf1 = Warpfactor(N,L3-L2);
+warpf2 = Warpfactor(N,L1-L3);
+warpf3 = Warpfactor(N,L2-L1);
 
 % Combine blend & warp
 warp1 = blend1.*warpf1.*(1 + (alpha*L1).^2);

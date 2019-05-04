@@ -1,14 +1,14 @@
-function [F,G] = ScalarFlux2D(Q,model,c)
+function [F,G] = ScalarFlux2D(Q,Problem)
 
-switch model
+switch Problem.model
     case 'Advection'
-        F = c(1)*Q;
-        G = c(2)*Q;
+        F = Problem.AdvectionVelocity(1)*Q;
+        G = Problem.AdvectionVelocity(2)*Q;
     case 'Burgers'
         F = Q.*Q/2;
         G = Q.*Q/2;    
     otherwise
-        error('Unknown scalar model %s',model)
+        error('Unknown scalar model %s',Problem.model)
 end
 
 return

@@ -33,11 +33,16 @@ for n=1:Nout+1
 end
 
 % build triangulation for all equally spaced nodes on all elements
-TRI = [];
+% TRI = [];
+% [dim1,dim2] = size(xin);
+% for k=1:dim2
+%   TRI = [TRI; tri+(k-1)*Npout];
+% end
 [dim1,dim2] = size(xin);
-for k=1:dim2
-  TRI = [TRI; tri+(k-1)*Npout];
-end
+TRI   = repmat(tri,dim2,1);
+shift = ones(length(tri(:,1)),1)*(Npout*(0:dim2-1));
+TRI   = TRI + repmat(shift(:),1,3);
+
 
 % interpolate node coordinates to equally spaced nodes
 xout = interp*xin; yout = interp*yin;

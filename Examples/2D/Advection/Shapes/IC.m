@@ -1,0 +1,13 @@
+function Q = IC(x, y)
+ 
+% function Q = IC(x, y)
+% Purpose: Set Initial conditio for 2D Advection. Simple sinecos wave
+
+Q(:,:,1) = -1 ...
+          +10*(sqrt(0.04 - (x+0.5).^2 - (y-0.5).^2)).*( (x+0.5).^2 + (y-0.5).^2<= 0.04)...
+          +2*(-sqrt(((x-0.5).^2 + (y-0.5).^2)/0.04) + 1).*( (x-0.5).^2 + (y-0.5).^2<= 0.04)...
+          +2*(abs(x+0.5)<0.2).*(abs(y+0.5)<0.2)...
+          +2*(abs(x-0.5) + abs(y+0.5)<0.2);
+return
+
+

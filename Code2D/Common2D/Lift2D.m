@@ -1,29 +1,30 @@
-function [LIFT, massEdge1, massEdge2, massEdge3] = Lift2D()
-
-% function [LIFT] = Lift2D()
 % Purpose  : Compute surface to volume lift term for DG formulation
 
-Globals2D_DG;
-Emat = zeros(Np, Nfaces*Nfp);
+Emat = zeros(Mesh.Np, Mesh.Nfaces*Mesh.Nfp);
+Vmid1D = Vandermonde1D(Mesh.N,0*Mesh.r);
 
 % face 1
-faceR = r(Fmask(:,1));
-V1D = Vandermonde1D(N, faceR); 
-massEdge1 = inv(V1D*V1D');
-Emat(Fmask(:,1),1:Nfp) = massEdge1;
+faceR = Mesh.r(Mesh.Fmask(:,1));
+V1D = Vandermonde1D(Mesh.N, faceR); 
+Mesh.M1D_1 = inv(V1D*V1D');
+Emat(Mesh.Fmask(:,1),1:Mesh.Nfp) = Mesh.M1D_1;
+Mesh.facemid1 = Vmid1D(1,:)/V1D;
 
 % face 2
-faceR = r(Fmask(:,2));
-V1D = Vandermonde1D(N, faceR);
-massEdge2 = inv(V1D*V1D');
-Emat(Fmask(:,2),Nfp+1:2*Nfp) = massEdge2;
+faceR = Mesh.r(Mesh.Fmask(:,2));
+V1D = Vandermonde1D(Mesh.N, faceR);
+Mesh.M1D_2 = inv(V1D*V1D');
+Emat(Mesh.Fmask(:,2),Mesh.Nfp+1:2*Mesh.Nfp) = Mesh.M1D_2;
+Mesh.facemid2 = Vmid1D(1,:)/V1D;
 
 % face 3
-faceS = s(Fmask(:,3));
-V1D = Vandermonde1D(N, faceS); 
-massEdge3 = inv(V1D*V1D');
-Emat(Fmask(:,3),2*Nfp+1:3*Nfp) = massEdge3;
+faceS = Mesh.s(Mesh.Fmask(:,3));
+V1D = Vandermonde1D(Mesh.N, faceS); 
+Mesh.M1D_3 = inv(V1D*V1D');
+Emat(Mesh.Fmask(:,3),2*Mesh.Nfp+1:3*Mesh.Nfp) = Mesh.M1D_3;
+Mesh.facemid3 = Vmid1D(1,:)/V1D;
 
 % inv(mass matrix)*\I_n (L_i,L_j)_{edge_n}
-LIFT = V*(V'*Emat);
-return
+Mesh.LIFT = Mesh.V*(Mesh.V'*Emat);
+
+%LIFT,M1D_1, M1D_2, M1D_3, facemid1, facemid2, facemid3

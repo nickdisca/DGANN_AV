@@ -1,5 +1,5 @@
 % set up rendering
-function Genplots_Scalar2D(datapath_base,N,xran,yran,clines,viewval,tol)
+function Genplots_Scalar2D(datapath_base,N,xran,yran,clines,viewval,tol,TRI,xout,yout,interp)
 close all
 datapath = sprintf('%s_DATA',datapath_base);
 load(datapath);
@@ -7,8 +7,6 @@ load(datapath);
 K  = length(x(1,:));
 Np = length(x(:,1));
 assert(Np==(N+1)*(N+2)/2,'Incorrect order prescribed for chosen data')
-
-%[TRI,xout,yout,interp] = GenInterpolators2D(N, N, x, y, invV);
 
 MassMatrix = invV'*invV;
 AVG2D      = sum(MassMatrix)/2;
@@ -114,6 +112,12 @@ print(fname,'-dpdf')
 figure(3)
 grid on
 fname = sprintf('%s_contour_hist.pdf',datapath_base);
+print(fname,'-dpdf')
+
+figure(100)
+grid on
+PlotField2D(QC,interp,TRI,xout,yout); axis tight; drawnow;
+fname = sprintf('%s_soln_final.pdf',datapath_base);
 print(fname,'-dpdf')
 
 

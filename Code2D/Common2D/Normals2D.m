@@ -1,27 +1,24 @@
-function [nx, ny, sJ] = Normals2D()
-
-% function [nx, ny, sJ] = Normals2D()
 % Purpose : Compute outward pointing normals at elements faces and surface Jacobians
 
-Globals2D_DG;
-xr = Dr*x; yr = Dr*y; xs = Ds*x; ys = Ds*y; J = xr.*ys-xs.*yr;
+xr = Mesh.Dr*Mesh.x; yr = Mesh.Dr*Mesh.y; xs = Mesh.Ds*Mesh.x; ys = Mesh.Ds*Mesh.y; 
+%Mesh.J  = xr.*ys-xs.*yr;
 
 % interpolate geometric factors to face nodes
-fxr = xr(Fmask, :); fxs = xs(Fmask, :); fyr = yr(Fmask, :); fys = ys(Fmask, :);
+fxr = xr(Mesh.Fmask, :); fxs = xs(Mesh.Fmask, :); fyr = yr(Mesh.Fmask, :); fys = ys(Mesh.Fmask, :);
 
 % build normals
-nx = zeros(3*Nfp, K); ny = zeros(3*Nfp, K);
-fid1 = (1:Nfp)'; fid2 = (Nfp+1:2*Nfp)'; fid3 = (2*Nfp+1:3*Nfp)';
+Mesh.nx = zeros(3*Mesh.Nfp, Mesh.K); Mesh.ny = zeros(3*Mesh.Nfp, Mesh.K);
+fid1 = (1:Mesh.Nfp)'; fid2 = (Mesh.Nfp+1:2*Mesh.Nfp)'; fid3 = (2*Mesh.Nfp+1:3*Mesh.Nfp)';
 
 % face 1
-nx(fid1, :) =  fyr(fid1, :); ny(fid1, :) = -fxr(fid1, :);
+Mesh.nx(fid1, :) =  fyr(fid1, :); Mesh.ny(fid1, :) = -fxr(fid1, :);
 
 % face 2
-nx(fid2, :) =  fys(fid2, :)-fyr(fid2, :); ny(fid2, :) = -fxs(fid2, :)+fxr(fid2, :);
+Mesh.nx(fid2, :) =  fys(fid2, :)-fyr(fid2, :); Mesh.ny(fid2, :) = -fxs(fid2, :)+fxr(fid2, :);
 
 % face 3
-nx(fid3, :) = -fys(fid3, :); ny(fid3, :) =  fxs(fid3, :);
+Mesh.nx(fid3, :) = -fys(fid3, :); Mesh.ny(fid3, :) =  fxs(fid3, :);
 
 % normalise
-sJ = sqrt(nx.*nx+ny.*ny); nx = nx./sJ; ny = ny./sJ;
-return;
+Mesh.sJ = sqrt(Mesh.nx.^2+Mesh.ny.^2); Mesh.nx = Mesh.nx./Mesh.sJ; Mesh.ny = Mesh.ny./Mesh.sJ;
+

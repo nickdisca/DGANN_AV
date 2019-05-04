@@ -1,40 +1,43 @@
-function Qlim = BarthJespLimiter2D(Q,QG,ind)
-
-Globals2D_DG;
+function Qlim = BarthJespLimiter2D(Q,QG,ind,Mesh)
 
 Qlim = Q;
 if(~isempty(ind))
     % Extracting linear part of solution for elements marked using indicator
     % These are listed in "ind"
     % We only keep the modes 1,2 and N+2
-    if(N==1)
+    if(Mesh.N==1)
         Ql = Q;
         QGl = QG;
     else
-        Qm              = invV*Q;
-        killmodes       = [3:N+1,N+3:Np];
+        Qm              = Mesh.invV*Q;
+        killmodes       = [3:Mesh.N+1,Mesh.N+3:Mesh.Np];
         Qm(killmodes,ind) = 0;
-        Ql              = V*Qm;
+        Ql              = Mesh.V*Qm;
         
-        QGm              = invV*QG;
-        killmodes        = [3:N+1,N+3:Np];
+        QGm              = Mesh.invV*QG;
+        killmodes        = [3:Mesh.N+1,Mesh.N+3:Mesh.Np];
         QGm(killmodes,:) = 0;
-        QGl              = V*QGm;
+        QGl              = Mesh.V*QGm;
     end
-       
+     
+%     [TRI,xout,yout,interp] = GenInterpolators2D(N, N, x, y, invV);
+%     figure(10)
+%     PlotField2D(Ql,interp,TRI,xout,yout); axis tight; drawnow;
+%     hold all
+    
     % Find neighbors in patch
-    E1 = EToE(:,1)'; E2 = EToE(:,2)'; E3 = EToE(:,3)';
+    E1 = Mesh.EToE(:,1)'; E2 = Mesh.EToE(:,2)'; E3 = Mesh.EToE(:,3)';
     
     % Get cell averages of patch
-    Qavg0  = AVG2D*Ql; Qavg1 = Qavg0(E1); Qavg2 = Qavg0(E2); Qavg3 = Qavg0(E3);
+    Qavg0  = Mesh.AVG2D*Ql; Qavg1 = Qavg0(E1); Qavg2 = Qavg0(E2); Qavg3 = Qavg0(E3);
     
     
     % Replacing boundary element neighbours with ghost neighbours
-    QGavg = AVG2D*QGl;
-    GE1 = find(EToGE(:,1))';  GE2 = find(EToGE(:,2))'; GE3 = find(EToGE(:,3))';
-    Qavg1(GE1) = QGavg(EToGE(GE1,1));
-    Qavg2(GE2) = QGavg(EToGE(GE2,2));
-    Qavg3(GE3) = QGavg(EToGE(GE3,3));
+    QGavg = Mesh.AVG2D*QGl;
+    GE1 = find(Mesh.EToGE(:,1))';  GE2 = find(Mesh.EToGE(:,2))'; GE3 = find(Mesh.EToGE(:,3))';
+    Qavg1(GE1) = QGavg(Mesh.EToGE(GE1,1));
+    Qavg2(GE2) = QGavg(Mesh.EToGE(GE2,2));
+    Qavg3(GE3) = QGavg(Mesh.EToGE(GE3,3));
 
 
     % Switching to only flaggd cells
@@ -46,21 +49,22 @@ if(~isempty(ind))
     MinAvg = min([Qavg0;Qavg1;Qavg2;Qavg3],[],1);
     
     % Get local x,y node coordinates, and local jacobian factors
-    xl  = x(:,ind);  yl  = y(:,ind);
-    rxl = rx(:,ind); sxl = sx(:,ind);  ryl = ry(:,ind); syl = sy(:,ind);
+    xl  = Mesh.x(:,ind);  yl  = Mesh.y(:,ind);
+    rxl = Mesh.rx(:,ind); sxl = Mesh.sx(:,ind);  ryl = Mesh.ry(:,ind); syl = Mesh.sy(:,ind);
     
     
     
     % Finding alphas of Barth Jesperson limiter
-    AvgArray   = ones(3*Nfp,1)*Qavg0;
-    MaxArray   = ones(3*Nfp,1)*MaxAvg;
-    MinArray   = ones(3*Nfp,1)*MinAvg;
+    AvgArray   = ones(3*Mesh.Nfp,1)*Qavg0;
+    MaxArray   = ones(3*Mesh.Nfp,1)*MaxAvg;
+    MinArray   = ones(3*Mesh.Nfp,1)*MinAvg;
     Num1       = MaxArray - AvgArray;
     Num2       = MinArray - AvgArray;
-    Den        = Ql(Fmask(:),:) - AvgArray;
+    Den        = Ql(Mesh.Fmask(:),:) - AvgArray;
     
-    ind1 = find(Ql(Fmask(:),:) - MaxArray > 0);
-    ind2 = find(Ql(Fmask(:),:) - MinArray < 0);
+    eps = 1.0e-12;
+    ind1 = find(Ql(Mesh.Fmask(:),:) - MaxArray > -eps);
+    ind2 = find(Ql(Mesh.Fmask(:),:) - MinArray < -eps);
     
     AlphaArray       = ones(size(Num1));
     AlphaArray(ind1) = Num1(ind1)./Den(ind1);
@@ -68,32 +72,52 @@ if(~isempty(ind))
     AlphaMin         = min(AlphaArray,[],1);
     
 
-    % Only limit gradients if AplhaMin<1.
-    indl            = find(AlphaMin < 1);
+    % Only limit if AplhaMin<1.
+
+    %indl            = find(AlphaMin < 1);
+    indnl           = find(abs(AlphaMin-1)<eps);
+    indl            = setdiff(1:length(AlphaMin),indnl);
+    ind             = ind(indl);
     
     % Limit gradient
     if(~isempty(indl))
         
         % Find Gradient of cells with AlphaMin < 1
-        Qr = Dr*Ql(:,indl);
-        Qs = Ds*Ql(:,indl);
+        Qr = Mesh.Dr*Ql(:,indl);
+        Qs = Mesh.Ds*Ql(:,indl);
         Qx = rxl(:,indl).*Qr + sxl(:,indl).*Qs;
         Qy = ryl(:,indl).*Qr + syl(:,indl).*Qs;
         
+%         xf = x(:,ind);
+%         yf = y(:,ind);
+%         QQ = Ql(:,indl);
+%         figure(400)
+%         scatter3(xf(:),yf(:),QQ(:))
+%         hold all
         
-        Ql(:,indl) = ones(Np,1)*Qavg0(indl) ...
-            + ((ones(Np,1)*AlphaMin(indl))).*(((eye(Np) - AVG2D)*xl(:,indl)).*Qx...
-            + ((eye(Np) - AVG2D)*yl(:,indl)).*Qy);
+        Ql(:,indl) = ones(Mesh.Np,1)*Qavg0(indl) ...
+            + ((ones(Mesh.Np,1)*AlphaMin(indl))).*(((eye(Mesh.Np) - Mesh.AVG2D)*xl(:,indl)).*Qx...
+            + ((eye(Mesh.Np) - Mesh.AVG2D)*yl(:,indl)).*Qy);
+        
+%         QQ = Ql(:,indl);
+%         scatter3(xf(:),yf(:),QQ(:))
+%         hold off
+        %assert(min(min(Ql(:,indl) - ones(Np,1)*MinAvg(indl)))>-eps)
+        %assert(min(min(-Ql(:,indl) + ones(Np,1)*MaxAvg(indl)))>-eps)
     end
 %     size(MinArray)
 %     size(Ql)
-    eps = 1.0e-10;
+    
 %     min(min(Ql - ones(Np,1)*MinAvg))
 %     min(min(-Ql + ones(Np,1)*MaxAvg))
 %    assert(min(min(Ql - ones(Np,1)*MinAvg))>-eps)
 %    assert(min(min(-Ql + ones(Np,1)*MaxAvg))>-eps)
     % Updating Qlim
-    Qlim(:,ind) = Ql;
+    %Qlim(:,ind) = Ql;
+    Qlim(:,ind) = Ql(:,indl);
+    
+%     figure(11)
+%     PlotField2D(Qlim,interp,TRI,xout,yout); axis tight; drawnow;
     
 end
 

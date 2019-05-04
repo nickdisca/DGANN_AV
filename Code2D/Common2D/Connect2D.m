@@ -18,14 +18,24 @@ TotalFaces = Nfaces*K;
 vn = [[1,2];[2,3];[1,3]];
 
 % Build global face to node sparse array
-SpFToV = spalloc(TotalFaces, Nv, 2*TotalFaces);
-sk = 1;
-for k=1:K
-  for face=1:Nfaces
-    SpFToV( sk, EToV(k, vn(face,:))) = 1;
-    sk = sk+1;
-  end
-end
+% tic
+% SpFToV = spalloc(TotalFaces, Nv, 2*TotalFaces);
+% sk = 1;
+% for k=1:K
+%   for face=1:Nfaces
+%     SpFToV( sk, EToV(k, vn(face,:))) = 1;
+%     sk = sk+1;
+%   end
+% end
+% toc
+
+i       = [(1:K*Nfaces);(1:K*Nfaces)];
+i       = i(:);
+j       = [EToV(:,1)';EToV(:,2)';EToV(:,2)';EToV(:,3)';EToV(:,1)';EToV(:,3)'];
+j       = j(:);
+vals    = ones(2*TotalFaces,1);
+SpFToV  = sparse(i,j,vals);
+
 
 % Build global face to global face sparse array
 SpFToF = SpFToV*SpFToV' - 2*speye(TotalFaces);

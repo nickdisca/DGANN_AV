@@ -1,29 +1,27 @@
-function QG = ApplyBCScalar2D(Q,time)
+function QG = ApplyBCScalar2D(Q,time,Mesh)
  
 % function  QG = ApplyBCScalar2D(Q,time,gas_gamma)
 % Purpose: Set Boundary Condition in ghost elements. 
 
-Globals2D_DG;
+QG = zeros(Mesh.Np,Mesh.KG,1);
 
-QG = zeros(Np,KG,1);
-
-BC_keys = BC_ess_flags(:,1);
+BC_keys = Mesh.BC_ess_flags(:,1);
 
 % Applying BC on triangles
 for k=1:length(BC_keys)
     ckey   = BC_keys(k);
-    bctype = BC_ess_flags(k,2);
+    bctype = Mesh.BC_ess_flags(k,2);
     
-    QBC = BC(ckey,time);
+    QBC    = BC(ckey,time);
     
     for f=1:3
-        bc_ind = find(BCTag(:,f) == ckey);
-        gc_ind = EToGE(bc_ind,f)';
+        bc_ind = find(Mesh.BCTag(:,f) == ckey);
+        gc_ind = Mesh.EToGE(bc_ind,f)';
         
-        if(bctype==Sym)
-            QG(:,gc_ind,1) = Q(MMAP(:,f),bc_ind',1);
-        elseif(bctype==Dirichlet)
-            QG(:,gc_ind,1) = QBC(xG(:,gc_ind),yG(:,gc_ind),1);  
+        if(bctype==Mesh.BC_ENUM.Sym)
+            QG(:,gc_ind,1) = Q(Mesh.MMAP(:,f),bc_ind',1);
+        elseif(bctype==Mesh.BC_ENUM.irichlet)
+            QG(:,gc_ind,1) = QBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind),1);  
         end 
     end
 end

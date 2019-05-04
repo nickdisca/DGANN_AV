@@ -22,6 +22,11 @@ if(~isempty(ind))
         QGl              = V*QGm;
     end
        
+%     [TRI,xout,yout,interp] = GenInterpolators2D(N, N, x, y, invV);
+%     figure(10)
+%     PlotField2D(Ql,interp,TRI,xout,yout); axis tight; drawnow;
+%     hold all
+    
     % Find neighbors in patch
     E1 = EToE(:,1)'; E2 = EToE(:,2)'; E3 = EToE(:,3)';
     
@@ -60,8 +65,9 @@ if(~isempty(ind))
     Num2       = MinArray - AvgArray;
     Den        = Ql(Fmask(:),:) - AvgArray;
     
-    ind1 = find(Ql(Fmask(:),:) - MaxArray > 0);
-    ind2 = find(Ql(Fmask(:),:) - MinArray < 0);
+    eps = 1.0e-12;
+    ind1 = find(Ql(Fmask(:),:) - MaxArray > -eps);
+    ind2 = find(Ql(Fmask(:),:) - MinArray < -eps);
     
     AlphaArray       = ones(size(Num1));
     AlphaArray(ind1) = phi(Num1(ind1)./Den(ind1));
@@ -69,8 +75,10 @@ if(~isempty(ind))
     AlphaMin         = min(AlphaArray,[],1);
     
 
-    % Only limit gradients if AplhaMin<1.
-    indl            = find(AlphaMin < 1);
+    %indl            = find(AlphaMin < 1);
+    indnl           = find(abs(AlphaMin-1)<eps);
+    indl            = setdiff(1:length(AlphaMin),indnl);
+    ind             = ind(indl);
     
     % Limit gradient
     if(~isempty(indl))
@@ -81,20 +89,26 @@ if(~isempty(ind))
         Qx = rxl(:,indl).*Qr + sxl(:,indl).*Qs;
         Qy = ryl(:,indl).*Qr + syl(:,indl).*Qs;
         
-        
         Ql(:,indl) = ones(Np,1)*Qavg0(indl) ...
             + ((ones(Np,1)*AlphaMin(indl))).*(((eye(Np) - AVG2D)*xl(:,indl)).*Qx...
             + ((eye(Np) - AVG2D)*yl(:,indl)).*Qy);
+        
+        %assert(min(min(Ql(:,indl) - ones(Np,1)*MinAvg(indl)))>-eps)
+        %assert(min(min(-Ql(:,indl) + ones(Np,1)*MaxAvg(indl)))>-eps)
     end
 %     size(MinArray)
 %     size(Ql)
-    eps = 1.0e-10;
+    
 %     min(min(Ql - ones(Np,1)*MinAvg))
 %     min(min(-Ql + ones(Np,1)*MaxAvg))
 %    assert(min(min(Ql - ones(Np,1)*MinAvg))>-eps)
 %    assert(min(min(-Ql + ones(Np,1)*MaxAvg))>-eps)
     % Updating Qlim
-    Qlim(:,ind) = Ql;
+    %Qlim(:,ind) = Ql;
+    Qlim(:,ind) = Ql(:,indl);
+    
+%     figure(11)
+%     PlotField2D(Qlim,interp,TRI,xout,yout); axis tight; drawnow;
     
 end
                              
