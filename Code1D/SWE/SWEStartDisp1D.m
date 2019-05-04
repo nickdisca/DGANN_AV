@@ -2,7 +2,8 @@ fprintf('Starting solve with DGANN for %s model, with the following parameters:\
 fprintf('   test               : %s\n',Problem.test_name)
 fprintf('   gravity            : %.2f\n',Problem.gravity)
 fprintf('   mesh               : [%.3f,%.3f] with %d elements\n',Mesh.bnd_l,Mesh.bnd_r,Mesh.K)
-fprintf('   N                  : %d\n',N)
+fprintf('   FinalTime          : %.2f\n',Problem.FinalTime)
+fprintf('   CFL                : %.2f\n',Problem.CFL)
 
 if(strcmp(Indicator,'none') || strcmp(Indicator,'all') || strcmp(Indicator,'minmod'))
     fprintf('   Indicator          : %s \n',Limit.Indicator)

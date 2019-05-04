@@ -1,13 +1,15 @@
 fprintf('Starting solve with DGANN for %s model, with the following parameters:\n',Problem.model)
 fprintf('   test               : %s\n',Problem.test_name)
 fprintf('   mesh               : [%.3f,%.3f] with %d elements\n',Mesh.bnd_l,Mesh.bnd_r,Mesh.K)
-fprintf('   N                  : %d\n',N)
+fprintf('   N                  : %d\n',Mesh.N)
+fprintf('   FinalTime          : %.2f\n',Problem.FinalTime)
+fprintf('   CFL                : %.2f\n',Problem.CFL)
 
-if(strcmp(Indicator,'none') || strcmp(Indicator,'all') || strcmp(Indicator,'minmod'))
+if(strcmp(Limit.Indicator,'none') || strcmp(Limit.Indicator,'all') || strcmp(Limit.Indicator,'minmod'))
     fprintf('   Indicator          : %s \n',Limit.Indicator)
-elseif(strcmp(Indicator,'NN'))
+elseif(strcmp(Limit.Limit.Indicator,'NN'))
     fprintf('   Indicator          : %s (%s)\n',Limit.Indicator, Limit.nn_model)
-elseif(strcmp(Indicator,'TVB'))
+elseif(strcmp(Limit.Indicator,'TVB'))
     fprintf('   Indicator          : %s (M=%.2f)\n',Limit.Indicator,Limit.TVBM)
 end
 

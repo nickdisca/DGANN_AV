@@ -1,5 +1,7 @@
 function Net = read_mlp_param1D(nn_model,REL_PATH)
 
+fprintf('... loading network weights\n')
+
 Net.avail    = true;
 Net.nn_model = nn_model;
 Net.NN_Dir   = horzcat(REL_PATH,'Trained_networks/1D/',nn_model);
