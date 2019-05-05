@@ -16,28 +16,16 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
 ## <a name="toc"></a> Table of contents 
 
 * [Running the code](#running)
-
-<ul>
-<li><a href="#running">Running the code</a></li>
-    <ul>
-    <li><a href="#1d"> Scripts for 1D problems</a></li>
-    <ul>
-        <li><a href="#scalar1d">Scalar 1D</a></li>
-        <li><a href="#swe1d">Shallow water equations 1D</a></li>
-        <li><a href="#euler1d">Euler equations 1D</a></li>
-    </ul>
-    <li><a href="#2d"> Scripts for 2D problems</a></li>
-    <ul>
-        <li><a href="#scalar2d">Scalar 2D</a></li>
-        <li><a href="#euler2d">Euler equations 2D</a></li>
-    </ul>
-    </ul>
-<li><a href="#usemlp">Using the MLP indicator</a></li>
-    <ul>
-    <li><a href="#net1d">Network for 1D problems</a></li>
-    <li><a href="#net1d">Network for 2D problems</a></li>
-    </ul>
-</ul>
+   * [Scripts for 1D](#1d)
+      * [Scalar 1D](#scalar1d)
+      * [Shallow water equations 1D](#swe1d)
+      * [Euler equations 1D](#euler1d)
+   * [Scripts for 2D](#1d)
+      * [Scalar 2D](#scalar2d)
+      * [Euler equations 2D](#euler2d) 
+* [Using the MLP indicator](#usemlp)
+   * [Network for 1D](#net1d) 
+   * [Network for 2D](#net2d) 
 
 
 ##<a name="running"></a>Running the code 
