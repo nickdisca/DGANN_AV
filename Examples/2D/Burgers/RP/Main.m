@@ -20,7 +20,6 @@ N                = 3;
 %Indicator       = 'TVB'; TVBM = 10; TVBnu = 1.5;
 Indicator       = 'NN';
 Filter_const    = true;
-Remove_iso      = false;
 nn_model        = 'MLP_v1';
 Limiter         = 'BJES';
 
@@ -30,10 +29,11 @@ msh_file        = 'square.msh';
 
 % Output flags
 plot_iter  = 50;
-save_soln  = true;
+show_plot  = true;
 xran       = [-0.5,0.5]; 
 yran       = [-0.5,0.5]; 
 clines     = linspace(-0.98,0.78,30);
+save_soln  = true;
 
 % Call main driver
 ScalarDriver2D;

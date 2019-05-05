@@ -28,12 +28,12 @@ end
 
 
 
-if(Limit.Remove_iso)
-%     niso_ind = FindNonIsoFlaggedCells2D(ind);
-% else
-%     nconst_ind = 1:Mesh.K;
-   error('To DO');
-end
+% if(Limit.Remove_iso)
+% %     niso_ind = FindNonIsoFlaggedCells2D(ind);
+% % else
+% %     nconst_ind = 1:Mesh.K;
+%    error('To DO');
+% end
 
         
 return

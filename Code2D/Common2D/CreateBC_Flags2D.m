@@ -4,13 +4,13 @@ BC_flags = zeros(m,n);
 
 In = 1; Out = 2; Slip = 3; Far = 4; Dirichlet = 5; Sym = 6; Periodic=7;
 
-BC_ENUM.In       = 1;
-BC_ENUM.Out      = 2;
-BC_ENUM.Slip     = 3;
-BC_ENUM.Far      = 4;
-BC_ENUM.Dirchlet = 5;
-BC_ENUM.Sym      = 6;
-BC_ENUM.Periodic = 7;
+BC_ENUM.In        = 1;
+BC_ENUM.Out       = 2;
+BC_ENUM.Slip      = 3;
+BC_ENUM.Far       = 4;
+BC_ENUM.Dirichlet = 5;
+BC_ENUM.Sym       = 6;
+BC_ENUM.Periodic  = 7;
 
 for i=1:m
     BC_flags(i,1) = BC_cond{i,1};

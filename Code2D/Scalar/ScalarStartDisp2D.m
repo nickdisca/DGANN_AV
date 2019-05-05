@@ -14,7 +14,7 @@ else
 end
 fprintf('   tstamps            : %d\n',Problem.tstamps)
 
-if(strcmp(Limit.Indicator,'none') || strcmp(Limit.Indicator,'all') || strcmp(Limit.Indicator,'minmod'))
+if(strcmp(Limit.Indicator,'NONE') || strcmp(Limit.Indicator,'ALL'))
     fprintf('   Indicator          : %s \n',Limit.Indicator)
 elseif(strcmp(Limit.Indicator,'NN'))
     fprintf('   Indicator          : %s (%s)\n',Limit.Indicator, Limit.nn_model)

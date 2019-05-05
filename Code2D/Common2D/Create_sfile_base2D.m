@@ -17,9 +17,9 @@ else
     if(Limit.Filter_const)
         data_fname = sprintf('%s_ConstFilt',data_fname);
     end
-    if(Limit.Remove_iso)
-        data_fname = sprintf('%s_IsoFilt',data_fname);
-    end
+%     if(Limit.Remove_iso)
+%         data_fname = sprintf('%s_IsoFilt',data_fname);
+%     end
     if(~isempty(Limit.ind_var))
         data_fname = sprintf('%s_IVAR_%s',data_fname,Limit.ind_var);
     end

@@ -18,7 +18,17 @@ else
     dt = Problem.fixed_dt;
 end
 
+if(Output.show_plot)
+    % set up rendering
+    [TRI,xout,yout,interp] = GenInterpolators2D(Mesh.N, Mesh.N, Mesh.x, Mesh.y, Mesh.invV);
+    Nq = 400;
+    xmax = max(max(Mesh.x)); xmin = min(min(Mesh.x));
+    ymax = max(max(Mesh.y)); ymin = min(min(Mesh.y));
+    hx = (xmax-xmin)/Nq; hy = (ymax-ymin)/Nq;
+    [xq,yq]=meshgrid(xmin:hx:xmax,ymin:hy:ymax);
+end
 
+% Initializing save arrays
 Q_save     = cell(1,Problem.tstamps+2); % Save at approximated final time and actual final time
 ind_save   = cell(1,Problem.tstamps+2); % Save at approximated final time and actual final time
 ptc_hist   = [];
@@ -34,49 +44,45 @@ QG   = ApplyBCScalar2D(Q,time,Mesh);
 ind  = Find_Tcells2D(Q(:,:,1),QG(:,:,1),Limit,Mesh,Net);
 Q    = SlopeLimiter2D(Q(:,:,1),QG(:,:,1),ind,Limit.Limiter,Mesh);
 
-% set up rendering
-[TRI,xout,yout,interp] = GenInterpolators2D(Mesh.N, Mesh.N, Mesh.x, Mesh.y, Mesh.invV);
-Nq = 400;
-xmax = max(max(Mesh.x)); xmin = min(min(Mesh.x));
-ymax = max(max(Mesh.y)); ymin = min(min(Mesh.y));
-hx = (xmax-xmin)/Nq; hy = (ymax-ymin)/Nq;
-[xq,yq]=meshgrid(xmin:hx:xmax,ymin:hy:ymax);
 
-%plot solutions
-figure(1)
 perc_tcells = length(ind)*100/Mesh.K;
 maxp_tcells = perc_tcells;
-plot(time,perc_tcells,'r.')
-xlim([0,Problem.FinalTime])
-ylim([0,100])
-xlabel('time')
-ylabel('Percentage of cells flagged')
-title(['Max = ',num2str(maxp_tcells),'%',' of ',num2str(Mesh.K),' cells'])
-hold all
-drawnow
-
-figure(2);
-plot(xavg(ind), yavg(ind), 'r.');
-xlim(Output.xran)
-ylim(Output.yran)
-title(['Troubled cells t=',num2str(time)]);
-drawnow;
-
-figure(3)
-QC = Q(:,:,1);
-F  = scatteredInterpolant(Mesh.x(:),Mesh.y(:),QC(:)); interpc=F(xq,yq);
-contour(xq,yq,interpc,Output.clines,'k-','LineWidth',1);
-xlim(Output.xran)
-ylim(Output.yran)
-xlabel('x')
-ylabel('y')
-%PlotField2D(Q(:,:,1),interp,TRI,xout,yout); axis tight; drawnow;
-
-% figure(4)
-% trisurf(triplot, xplot, yplot, interpplot*Q(:,:,1));
-% shading interp; view(2); title(['Solution, t=',num2str(time)]); axis tight; drawnow;
-
-pause(0.5);
+if(Output.show_plot)
+    %plot solutions
+    figure(1)
+    plot(time,perc_tcells,'r.')
+    xlim([0,Problem.FinalTime])
+    ylim([0,100])
+    xlabel('time')
+    ylabel('Percentage of cells flagged')
+    title(['Max = ',num2str(maxp_tcells),'%',' of ',num2str(Mesh.K),' cells'])
+    hold all
+    drawnow
+    
+    figure(2);
+    plot(xavg(ind), yavg(ind), 'r.');
+    xlim(Output.xran)
+    ylim(Output.yran)
+    title(['Troubled cells t=',num2str(time)]);
+    drawnow;
+    
+    figure(3)
+    QC = Q(:,:,1);
+    F  = scatteredInterpolant(Mesh.x(:),Mesh.y(:),QC(:)); interpc=F(xq,yq);
+    contour(xq,yq,interpc,Output.clines,'k-','LineWidth',1);
+    xlim(Output.xran)
+    ylim(Output.yran)
+    xlabel('x')
+    ylabel('y')
+    %PlotField2D(Q(:,:,1),interp,TRI,xout,yout); axis tight; drawnow;
+    
+    figure(4)
+    PlotField2D(Q(:,:,1),interp,TRI,xout,yout); xlim(Output.xran)
+    ylim(Output.yran)
+    drawnow;
+    
+    pause(0.5);
+end
 
 if(Output.save_soln)
     Q_save{1,stime}   = Q;
@@ -123,45 +129,51 @@ while (time<Problem.FinalTime)
     
     
     
-    figure(1)
-    perc_tcells = length(ind)*100/Mesh.K;
     
+    perc_tcells = length(ind)*100/Mesh.K;
     maxp_tcells = max(maxp_tcells,perc_tcells);
-    plot(time,perc_tcells,'r.')
-    xlim([0,Problem.FinalTime])
-    ylim([0,100])
-    xlabel('time')
-    ylabel('Percentage of cells flagged')
-    title(['Max = ',num2str(maxp_tcells),'%',' of ',num2str(Mesh.K),' cells'])
-    hold all
+    if(Output.show_plot)
+        figure(1)
+        plot(time,perc_tcells,'r.')
+        xlim([0,Problem.FinalTime])
+        ylim([0,100])
+        xlabel('time')
+        ylabel('Percentage of cells flagged')
+        title(['Max = ',num2str(maxp_tcells),'%',' of ',num2str(Mesh.K),' cells'])
+        hold all
+    end
     
     % Render every 25 time steps
     if(~mod(tstep,Output.plot_iter) || time == Problem.FinalTime)
         
         fprintf('   ---> Time = %f, dt = %f, number of time steps = %f\n',time,dt,tstep);
         
-        figure(2);
-        plot(xavg(ind), yavg(ind), 'r.');
-        xlim(Output.xran)
-        ylim(Output.yran)
-        title(['Troubled cells t=',num2str(time)]);
-        
-        figure(3)
-        QC = Q(:,:,1);
-        F  = scatteredInterpolant(Mesh.x(:),Mesh.y(:),QC(:)); interpc=F(xq,yq);
-        contour(xq,yq,interpc,Output.clines,'k-','LineWidth',1);
-        xlim(Output.xran)
-        ylim(Output.yran)
-        xlabel('x')
-        ylabel('y')
-        %PlotField2D(Q(:,:,1),interp,TRI,xout,yout); axis tight; drawnow;
-        
-        %         figure(4)
-        %         trisurf(triplot, xplot, yplot, interpplot*Q(:,:,1));
-        %         shading interp; view(2); title(['Solution, t=',num2str(time)]); axis tight;
-        
-        
-        pause(0.1);
+        if(Output.show_plot)
+            figure(2);
+            plot(xavg(ind), yavg(ind), 'r.');
+            xlim(Output.xran)
+            ylim(Output.yran)
+            title(['Troubled cells t=',num2str(time)]);
+            
+            figure(3)
+            QC = Q(:,:,1);
+            F  = scatteredInterpolant(Mesh.x(:),Mesh.y(:),QC(:)); interpc=F(xq,yq);
+            contour(xq,yq,interpc,Output.clines,'k-','LineWidth',1);
+            xlim(Output.xran)
+            ylim(Output.yran)
+            xlabel('x')
+            ylabel('y')
+            
+            
+            figure(4)
+            PlotField2D(Q(:,:,1),interp,TRI,xout,yout);
+            xlim(Output.xran)
+            ylim(Output.yran)
+            drawnow;
+            
+            
+            pause(0.1);
+        end
         
     end
     

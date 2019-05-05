@@ -42,16 +42,16 @@ assert((isnumeric(FinalTime) & FinalTime >= 0.0),...
 
 % CFL and fixed_dt
 assert((exist('CFL','var')==1 & exist('fixed_dt','var')==0) | ...
-       (exist('CFL','var')==0 & exist('fixed_dt','var')==1),...
-       'ERROR: Either ''CFL'' or ''fixed_dt'' must be defined')
+    (exist('CFL','var')==0 & exist('fixed_dt','var')==1),...
+    'ERROR: Either ''CFL'' or ''fixed_dt'' must be defined')
 
 if(exist('CFL','var')==1)
     assert((isnumeric(CFL) & CFL > 0.0),...
-           'ERROR: ''CFL'' must be a positive number')
+        'ERROR: ''CFL'' must be a positive number')
     fixed_dt = [];
 else
     assert((isnumeric(fixed_dt) & fixed_dt > 0.0),...
-           'ERROR: ''fixed_dt'' must be a positive number')
+        'ERROR: ''fixed_dt'' must be a positive number')
     CFL = [];
 end
 
@@ -94,29 +94,13 @@ elseif(strcmp(Limiter,'BJES') || strcmp(Limiter,'VENK'))
             assert((isnumeric(TVBnu) & TVBnu > 1.0),...
                 'ERROR: ''TVBnu'' must be a number greater than 1')
             
-            %         case 'TVB2'
-            %             assert(exist('TVBM','var')==1,...
-            %                 'ERROR: ''TVBM'' variable must be defined since Indicator = TVB2')
-            %             assert((isnumeric(TVBM) & TVBM >= 0.0),...
-            %                 'ERROR: ''TVBM'' must be a non-negative number')
-            %
-            %             assert(exist('TVBnu','var')==1,...
-            %                 'ERROR: ''TVBnu'' variable must be defined since Indicator = TVB2')
-            %             assert((isnumeric(TVBnu) & TVBnu > 1.0),...
-            %                 'ERROR: ''TVBnu'' must be a number greater than 1')
+            
             
         case 'NN'
             
             assert(exist('nn_model','var')==1,...
                 'ERROR: ''nn_model'' variable must be defined since Indicator = NN')
             
-            %         case 'NN_Pwise'
-            %             assert(exist('nn_model','var')==1,...
-            %                 'ERROR: ''nn_model'' variable must be defined since Indicator = NN_Pwise')
-            %
-            %         case 'NN_modal_Pwise'
-            %             assert(exist('nn_model','var')==1,...
-            %                 'ERROR: ''nn_model'' variable must be defined since Indicator = NN_modal_Pwise')
             %
             %         case 'NN_modal_patch_Pwise'
             %             assert(exist('nn_model','var')==1,...
@@ -132,10 +116,10 @@ elseif(strcmp(Limiter,'BJES') || strcmp(Limiter,'VENK'))
         assert(islogical(Filter_const),...
             'ERROR: ''Filter_const'' must be a logical variable')
         
-        assert(exist('Remove_iso','var')==1,...
-            'ERROR: ''Remove_iso'' variable must be defined')
-        assert(islogical(Remove_iso),...
-            'ERROR: ''Remove_iso'' must be a logical variable')
+        %         assert(exist('Remove_iso','var')==1,...
+        %             'ERROR: ''Remove_iso'' variable must be defined')
+        %         assert(islogical(Remove_iso),...
+        %             'ERROR: ''Remove_iso'' must be a logical variable')
         
     end
     
@@ -147,7 +131,7 @@ end
 assert(exist('msh_file','var')==1,...
     'ERROR: ''msh_file'' variable must be defined')
 assert(exist(msh_file,'file')==2,...
-    'ERROR: Specified ''msh_file'' not found') 
+    'ERROR: Specified ''msh_file'' not found')
 
 
 % Plot and solution saving
@@ -161,20 +145,27 @@ assert(exist('save_soln','var')==1,...
 assert(islogical(save_soln),...
     'ERROR: ''save_soln'' must be a logical variable')
 
-assert(exist('xran','var')==1,...
-    'ERROR: ''xran'' variable must be defined to save plots')
-assert((isnumeric(xran) & length(xran) == 2),...
-    'ERROR: ''xran'' must be a numeric array of length 2')
+assert(exist('show_plot','var')==1,...
+    'ERROR: ''show_plot'' variable must be defined')
+assert(islogical(show_plot),...
+    'ERROR: ''show_plot'' must be a logical variable')
 
-assert(exist('yran','var')==1,...
-    'ERROR: ''yran'' variable must be defined to save plots')
-assert((isnumeric(yran) & length(yran) == 2),...
-    'ERROR: ''yran'' must be a numeric array of length 2')
-
-assert(exist('clines','var')==1,...
-    'ERROR: ''clines'' variable must be defined to save plots')
-assert((isnumeric(clines) & length(clines) >=2),...
-    'ERROR: ''clines'' must be a numeric array of size >= 2')
+if(show_plot)
+    assert(exist('xran','var')==1,...
+        'ERROR: ''xran'' variable must be defined to save plots')
+    assert((isnumeric(xran) & length(xran) == 2),...
+        'ERROR: ''xran'' must be a numeric array of length 2')
+    
+    assert(exist('yran','var')==1,...
+        'ERROR: ''yran'' variable must be defined to save plots')
+    assert((isnumeric(yran) & length(yran) == 2),...
+        'ERROR: ''yran'' must be a numeric array of length 2')
+    
+    assert(exist('clines','var')==1,...
+        'ERROR: ''clines'' variable must be defined to save plots')
+    assert((isnumeric(clines) & length(clines) >=2),...
+        'ERROR: ''clines'' must be a numeric array of size >= 2')
+end
 
 
 %% Assigning data to structure object
@@ -199,7 +190,7 @@ Mesh.BC_flags  = BC_flags;
 Mesh.UseMeshPerData = UseMeshPerData;
 
 Limit.Limiter    = Limiter;
-if(~strcmp(Limiter,'none'))
+if(~strcmp(Limiter,'NONE'))
     Limit.Indicator  = Indicator;
     if(strcmp(Indicator,'TVB'))
         Limit.TVBM  = TVBM;
@@ -211,13 +202,16 @@ end
 Limit.ind_var      = [];
 Limit.lim_var      = [];
 Limit.Filter_const = Filter_const;
-Limit.Remove_iso   = Remove_iso;
+%Limit.Remove_iso   = Remove_iso;
 
 
 
 Output.plot_iter  = plot_iter;
 Output.save_soln  = save_soln;
-Output.xran       = xran;
-Output.yran       = yran;
-Output.clines     = clines;
+Output.show_plot  = show_plot;
+if(show_plot)
+    Output.xran       = xran;
+    Output.yran       = yran;
+    Output.clines     = clines;
+end
 

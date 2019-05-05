@@ -63,7 +63,7 @@ if(~isempty(ind))
     Den        = Ql(Mesh.Fmask(:),:) - AvgArray;
     
     eps = 1.0e-12;
-    ind1 = find(Ql(Mesh.Fmask(:),:) - MaxArray > -eps);
+    ind1 = find(Ql(Mesh.Fmask(:),:) - MaxArray > eps);
     ind2 = find(Ql(Mesh.Fmask(:),:) - MinArray < -eps);
     
     AlphaArray       = ones(size(Num1));
