@@ -497,7 +497,7 @@ pre[class*="language-"] {
 
 <ul>
 <li><a href="#markdown-header-scalar-1d">Scalar 1D</a></li>
-<li><a href="#smarkdown-header-shallow-water-1d">Shallow water equations 1D</a></li>
+<li><a href="#markdown-header-shallow-water-1d">Shallow water equations 1D</a></li>
 <li><a href="#markdown-header-euler-1d">Euler equations 1D</a></li>
 </ul></li>
 <li><a href="#markdown-header-scripts-for-2d-problems">Scripts for 2D</a>
@@ -1145,7 +1145,7 @@ f_{\text{activation}}(U) = max(0,U) - \nu(0,-U),
 <p>The following is a list of the available networks for 2D problems. The latest recommended network is MLP_v1.</p>
 
 <ul>
-<li><strong>MLP_v1</strong>: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. The details and results with this indicator are available <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">here</a>.</li>
+<li><strong>MLP_v1</strong>: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. This network should be used with the filter to remove almost constant cells. The details and results with this indicator are available <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">here</a>.</li>
 </ul>
 
 <p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>

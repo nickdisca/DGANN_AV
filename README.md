@@ -585,6 +585,6 @@ $$
 ###Network for 2D problems
 The following is a list of the available networks for 2D problems. The latest recommended network is MLP_v1.
 
-* **MLP_v1**: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. The details and results with this indicator are available [here](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf).
+* **MLP_v1**: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. This network should be used with the filter to remove almost constant cells. The details and results with this indicator are available [here](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf).
  
 [back to table of contents](#markdown-header-table-of-contents)
