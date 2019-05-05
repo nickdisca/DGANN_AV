@@ -1,4 +1,4 @@
-function [F,G,rho,u,v,p] = EulerFluxes2D(Q, gas_gamma)
+function [F,G,rho,u,v,p] = EulerExactFluxes2D(Q, gas_gamma)
      
 % function [F,G,rho,u,v,p] = EulerFluxes2D(Q, gas_gamma)
 % Purpose: evaluate primitive variables and Euler flux functions

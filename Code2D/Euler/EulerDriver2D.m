@@ -1,75 +1,56 @@
+% Create BC_flag
+CreateBC_Flags2D;
+
 % Check parameters
 EulerCheckParam2D;
 
 % Display paramaters
-EulerStartDisp;
+EulerStartDisp2D;
 
 % Initialize solver and construct grid and metric
-[VX,VY,K,Nv,EToV,BFaces,PerBToB_map,PerBFToF_map] = read_gmsh_file(msh_file);
+[Mesh.VX,Mesh.VY,Mesh.K,Mesh.Nv,Mesh.EToV,Mesh.BFaces,Mesh.PerBToB_map,Mesh.PerBFToF_map] ...
+                                          = read_gmsh_file(Mesh.msh_file);
+
 
 % Generate necessary data structures
 StartUp2D;
 
 % Get essential BC_flags
-BC_ess_flags = BuildBCKeys2D(BC_flags,Periodic);
+Mesh.BC_ess_flags = BuildBCKeys2D(Mesh.BC_flags,Mesh.BC_ENUM.Periodic);
 
 BuildBCMaps2D;
 
-% Turning non-perioidic BC faces to BC to Neumann
-% BCType = Neuman*(not(EToE - (1:K)'*ones(1,3)));
-
-%%
-
-Q = zeros(Np, K, 4);
-
-
-
-
-Ind_List = {'TVB2','TVB2', 'TVB2', 'NN_modal_patch_Pwise'};
-Mlist = [10, 100, 200, 0];
-nn_model_List = {'','','','MLP_modal_patch_P1_v1'};
-
-% Ind_List = {'TVB'};
-% Mlist = [10];
-% nn_model_List = {'MLP_v2'};
-
-for ilv = 1:4
-    close all
-
-    Indicator = Ind_List{ilv}
-    TVBM      = Mlist(ilv)
-    nn_model  = nn_model_List{ilv}
-    EulerCheckParam2D;
+%% compute initial condition (time=0)
+Q = feval(Problem.InitialCond, Mesh.x, Mesh.y, Problem.gas_gamma, Problem.gas_const);
     
-    % compute initial condition (time=0)
-    Q = feval(InitialCond, x, y, gas_gamma, gas_const);
+% Find relative path
+Find_relative_path;
     
-    % Find relative path
-    Find_relative_path;
-    
-    % Extract MLP weights, biases and other parameters
-    if(strcmp(Indicator,'NN') || ...
-       strcmp(Indicator,'NN_Pwise') || ...
-       strcmp(Indicator,'NN_modal_Pwise') || ...
-       strcmp(Indicator,'NN_modal_patch_Pwise'))
-        [n_input,n_output,n_hidden_layer,leaky_alpha,WEIGHTS,BIASES,NN_Dir] = ...
-            read_mlp_param2D(nn_model,REL_PATH);
-    end
-    
-    % Solve Problem
-    fprintf('... starting main solve\n')
-    tic
-    [Q_save,ind_save,ptc_hist,pnc_hist,t_hist,Save_times] = Euler2D(Q,gas_gamma,gas_const,Save_soln);
-    sim_time = toc;
-    
-    % Creating save file base names
-    Create_sfile_base2D;
-    
-    % Saving data
-    Euler_Save2D;
-    
-    % Clean up processes
-    fprintf('... cleaning up\n')
-    CleanUp2D;
+% Extract MLP weights, biases and other parameters
+if(strcmp(Limit.Indicator,'NN'))
+    Net = read_mlp_param2D(Limit.nn_model,REL_PATH);
+else
+    Net.avail = false;
 end
+    
+% Creating save file base names
+Create_sfile_base2D;
+    
+%% Solve Problem
+fprintf('... starting main solve\n')
+tic
+[Q_save,ind_save,ptc_hist,pnc_hist,t_hist,Save_times] = Euler2D(Q,Problem,Mesh,Limit,Net,Output);
+sim_time = toc;
+    
+%% Saving data
+if(Output.save_soln)
+   Euler_Save2D;
+end
+    
+% Clean up processes
+fprintf('... cleaning up\n')
+CleanUp2D;
+
+fprintf('------------ Solver has finished -------------\n')
+
 

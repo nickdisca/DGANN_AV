@@ -33,16 +33,34 @@ hx = (xran(2)-xran(1))/Nq; hy = (yran(2)-yran(1))/Nq;
 zoom_ratio = 0.5*Nt/FinalTime*min(xran(2)-xran(1),yran(2)-yran(1));
 
 figure(1)
+plot(t_hist,ptc_hist,'LineWidth',2)
 xlim([0,FinalTime])
 ylim([0,100])
-plot(t_hist,ptc_hist,'LineWidth',2)
-set(gca,'FontSize',20)
+set(gca,'FontSize',15)
 max_mark = max(ptc_hist);
 avg_mark = mean(ptc_hist);
 title(['Max cells marked = ',num2str(max_mark),'%, ',...
     'Avg cells marked = ',num2str(avg_mark),'%, ']);
-fname = sprintf('%s_tcell_perc_hist.pdf',datapath_base);
-print(fname,'-dpdf')
+% fname = sprintf('%s_tcell_perc_hist.pdf',datapath_base);
+% print(fname,'-dpdf')
+fname = sprintf('%s_tcell_perc_hist.png',datapath_base);
+print(fname,'-dpng')
+
+% figure(100)
+% plot(t_hist,pnc_hist,'LineWidth',2)
+% xlim([0,FinalTime])
+% ylim([0,100])
+% set(gca,'FontSize',20)
+% max_mark = max(pnc_hist);
+% avg_mark = mean(pnc_hist);
+% [max_mark,avg_mark]*K/100
+% K
+% title(['Max cells marked = ',num2str(max_mark),'%, ',...
+%     'Avg cells marked = ',num2str(avg_mark),'%, ']);
+% % fname = sprintf('%s_tcell_perc_hist.pdf',datapath_base);
+% % print(fname,'-dpdf')
+% fname = sprintf('%s_ncell_perc_hist.png',datapath_base);
+% print(fname,'-dpng')
 
 
 nvar = length(Plot_var);
@@ -67,6 +85,7 @@ for t = 1:Nt
     
     figure(4)
     plot(xavg(ind_save{1,t}), yavg(ind_save{1,t}), 'k.');
+    axis equal
     xlim(xran)
     ylim(yran)
     xlabel('x')
@@ -118,7 +137,12 @@ for t = 1:Nt
         set(gca,'FontSize',15)
         
         figure(4 + 2*vind)
+        %[xnew,ynew] = meshgrid(linspace(xran(1),xran(2),100),linspace(yran(1),yran(2),100));
+        %interpc_new = interp2(xq,yq,interpc,xnew,ynew,'spline');
+        %contour(xnew,ynew,interpc_new,clines{1,vind},'k-');
         contour(xq,yq,interpc,clines{1,vind},'k-');
+        colormap('jet')
+        axis equal
         xlim(xran)
         ylim(yran)
         xlabel('x')
@@ -126,6 +150,8 @@ for t = 1:Nt
         set(gca,'FontSize',20)
         fname = sprintf('%s_%s_contour_bnw_t%d.pdf',datapath_base,vname,t-1);
         print(fname,'-dpdf')
+%         fname = sprintf('%s_%s_contour_bnw_t%d.png',datapath_base,vname,t-1);
+%         print(fname,'-dpng')
         
         
         

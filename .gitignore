@@ -2,6 +2,7 @@ User_output
 ARCH
 Examples/*/*/*/MISC
 Examples/*/*/*/OUTPUT
+Examples/*/*/*/OUTPUT2
 Examples/*/*/*/*.msh
 Examples/2D/Advection/Shapes2
 Examples/2D/Burgers/Sinewaves_shocks
