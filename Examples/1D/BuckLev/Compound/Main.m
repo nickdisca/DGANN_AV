@@ -21,7 +21,7 @@ N         = 2;
 
 Indicator = 'NN';
 nn_model       = 'MLP_v1';
-Limiter    = 'minmod';
+Limiter    = 'MINMOD';
 
 
 plot_iter  = 10;

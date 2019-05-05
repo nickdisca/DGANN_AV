@@ -64,7 +64,9 @@ for k=1:length(BC_keys)
             rhoG(:,gc_ind) = rhoBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind));
             uG(:,gc_ind)   = uBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind));
             vG(:,gc_ind)   = vBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind));
-            preG(:,gc_ind) = preBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind));    
+            preG(:,gc_ind) = preBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind)); 
+        else
+            error('Unknown boundary condition for Euler equations');
         end 
     end
 end

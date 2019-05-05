@@ -23,9 +23,9 @@ K         = 100;
 N         = 4;
 
 
-Indicator  = 'all';
+Indicator  = 'ALL';
 nn_model   = 'MLP_v1';	
-Limiter    = 'minmod';
+Limiter    = 'MINMOD';
 
 
 plot_iter  = 50;
@@ -35,7 +35,7 @@ save_plot  = true;
 ref_avail  = true;
 ref_fname  = 'ref_soln.dat';
 rk_comb    = false;
-var_ran    = [-1.2,1.5];
+var_ran    = [-0.2,1.5];
 
 % Call code driver
 ScalarDriver1D; 

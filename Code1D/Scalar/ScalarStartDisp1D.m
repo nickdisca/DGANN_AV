@@ -5,7 +5,7 @@ fprintf('   N                  : %d\n',Mesh.N)
 fprintf('   FinalTime          : %.2f\n',Problem.FinalTime)
 fprintf('   CFL                : %.2f\n',Problem.CFL)
 
-if(strcmp(Limit.Indicator,'none') || strcmp(Limit.Indicator,'all') || strcmp(Limit.Indicator,'minmod'))
+if(strcmp(Limit.Indicator,'NONE') || strcmp(Limit.Indicator,'ALL') || strcmp(Limit.Indicator,'MINMOD'))
     fprintf('   Indicator          : %s \n',Limit.Indicator)
 elseif(strcmp(Limit.Limit.Indicator,'NN'))
     fprintf('   Indicator          : %s (%s)\n',Limit.Indicator, Limit.nn_model)

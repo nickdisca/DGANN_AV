@@ -80,9 +80,9 @@ assert((isnumeric(CFL) & CFL > 0.0),...
 % Indicator and Limiter
 assert(exist('Limiter','var')==1,...
     'ERROR: ''Limiter'' variable must be defined')
-if(strcmp(Limiter,'none'))
+if(strcmp(Limiter,'NONE'))
     
-elseif(strcmp(Limiter,'minmod'))
+elseif(strcmp(Limiter,'MINMOD'))
     
     assert(exist('lim_var','var')==1,...
         'ERROR: ''lim_var'' variable must be defined')
@@ -108,11 +108,11 @@ elseif(strcmp(Limiter,'minmod'))
     
     switch Indicator
         
-        case 'none'
+        case 'NONE'
             
-        case 'all'
+        case 'ALL'
             
-        case 'minmod'
+        case 'MINMOD'
             
             ind_var_req = true;
             
@@ -226,7 +226,7 @@ Mesh.mesh_pert = mesh_pert;
 Mesh.K         = K;
 
 Limit.Limiter    = Limiter;
-if(~strcmp(Limiter,'none'))
+if(~strcmp(Limiter,'NONE'))
     Limit.Indicator  = Indicator;
     if(strcmp(Indicator,'TVB'))
         Limit.TVBM = TVBM;
@@ -235,11 +235,11 @@ if(~strcmp(Limiter,'none'))
     end
 end
 
-if(~strcmp(Limiter,'none'))
+if(~strcmp(Limiter,'NONE'))
     Limit.lim_var = lim_var;
 end
 
-if(~strcmp(Indicator,'none') && ~strcmp(Indicator,'all'))
+if(~strcmp(Indicator,'NONE') && ~strcmp(Indicator,'ALL'))
     Limit.ind_var = ind_var;
 end
 

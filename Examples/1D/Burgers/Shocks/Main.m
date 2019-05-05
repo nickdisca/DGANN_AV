@@ -21,9 +21,9 @@ K     = 200;
 N         = 1;
 
 
-Indicator = 'minmod';
+Indicator = 'MINMOD';
 nn_model       = 'MLP_v1';
-Limiter    = 'minmod';
+Limiter    = 'MINMOD';
 
 
 plot_iter  = 100;

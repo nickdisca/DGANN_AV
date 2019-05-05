@@ -25,7 +25,7 @@ Limiter         = 'BJES';
 
 
 % Mesh file
-msh_file        = 'square.msh';
+msh_file        = 'square_trans.msh';
 
 % Output flags
 plot_iter  = 50;

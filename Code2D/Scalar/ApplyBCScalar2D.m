@@ -20,8 +20,10 @@ for k=1:length(BC_keys)
         
         if(bctype==Mesh.BC_ENUM.Sym)
             QG(:,gc_ind,1) = Q(Mesh.MMAP(:,f),bc_ind',1);
-        elseif(bctype==Mesh.BC_ENUM.irichlet)
+        elseif(bctype==Mesh.BC_ENUM.Dirichlet)
             QG(:,gc_ind,1) = QBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind),1);  
+        else
+            error('Unknown boundary condition for Scalar problems');
         end 
     end
 end

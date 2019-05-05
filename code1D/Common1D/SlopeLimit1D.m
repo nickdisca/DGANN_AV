@@ -7,7 +7,7 @@ function ulimit = SlopeLimit1D(u,ind,Limiter,Mesh)
 
 ulimit = u(:,2:end-1);
 
-if strcmp(Limiter,'none')
+if strcmp(Limiter,'NONE')
     return
 else
      % Check to see if any elements require limiting
@@ -29,7 +29,7 @@ else
         uh(3:end,:)=0; ul = Mesh.V*uh(:,ind_k);
         
         % apply slope limiter to selected elements
-        if strcmp(Limiter,'minmod')
+        if strcmp(Limiter,'MINMOD')
             ulimit(:,ind) = SlopeLimitLin(ul,Mesh.x(:,ind),vkm1,vk,vkp1,Mesh);
         else
             error('Limiter %s not available!!',Limiter)

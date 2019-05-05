@@ -29,7 +29,7 @@ N         = 4;
 Indicator = 'NN';
 ind_var        = 'prim';
 nn_model       = 'MLP_v1';
-Limiter    = 'minmod';
+Limiter    = 'MINMOD';
 lim_var        = "char_stencil";
 
 

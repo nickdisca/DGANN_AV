@@ -19,11 +19,11 @@ ue1 = u(1,2:end-1); ue2 = u(end,2:end-1);
 vk = v(2:Mesh.K+1); vkm1 = v(1:Mesh.K); vkp1 = v(3:Mesh.K+2);
 
 % Find elements in need of limiting
-if(strcmp(Limit.Indicator,'none'))
+if(strcmp(Limit.Indicator,'NONE'))
     ind = [];
-elseif(strcmp(Limit.Indicator,'all'))
+elseif(strcmp(Limit.Indicator,'ALL'))
     ind = 1:Mesh.K;    
-elseif(strcmp(Limit.Indicator,'minmod'))
+elseif(strcmp(Limit.Indicator,'MINMOD'))
     ve1 = vk - minmod([(vk-ue1);vk-vkm1;vkp1-vk]);
     ve2 = vk + minmod([(ue2-vk);vk-vkm1;vkp1-vk]);
     ind = find(abs(ve1-ue1)>eps0 | abs(ve2-ue2)>eps0);

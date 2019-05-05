@@ -4,11 +4,11 @@ mkdir('OUTPUT');
 
 fname = sprintf('OUTPUT/%s1D_%s_P%d_N%d',Problem.model,Problem.test_name,...
                  N,K);
-if(strcmp(Limit.Indicator,'none'))
+if(strcmp(Limit.Indicator,'NONE'))
     fname = sprintf('%s_IND_%s',fname,Limit.Indicator);
-elseif(strcmp(Limit.Indicator,'all'))
+elseif(strcmp(Limit.Indicator,'ALL'))
     fname = sprintf('%s_IND_%s',fname,Limit.Indicator);    
-elseif(strcmp(Limit.Indicator,'minmod'))
+elseif(strcmp(Limit.Indicator,'MINMOD'))
     fname = sprintf('%s_IND_%s',fname,Limit.Indicator);
 elseif(strcmp(Limit.Indicator,'TVB'))
     fname = sprintf('%s_IND_%s_%d',fname,Limit.Indicator,Limit.TVBM);

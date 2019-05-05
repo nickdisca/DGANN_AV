@@ -8,21 +8,30 @@
 1. Nodal Disontinuous Galerkin methods, by Jan S. Hesthaven and Tim Warburton. 
 2. Numerical Methods for Conservation Laws: From Analysis to Algorithms, by Jan S. Hesthaven.
 
-Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper ["An artificial neural network as a troubled-cell indicator"](https://www.sciencedirect.com/science/article/pii/S0021999118302547).
+Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper ["An artificial neural network as a troubled-cell indicator"](https://www.sciencedirect.com/science/article/pii/S0021999118302547). Details about the 2D network are available [here](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf).
 
-**NOTE:** If the math symbols do not display properly in README.md. have a look at README.html instead.
+**NOTE:** If the math symbols do not display properly in README.md. have a look at README.html or README.pdf instead.
 
 ## <a name="TOC"></a>Table of contents
 <ul>
 <li><a href="#running">Running the code</a></li>
     <ul>
-    <li><a href="#scalar1d">Scalar 1D</a></li>
-    <li><a href="#swe1d">Shallow water equations 1D</a></li>
-    <li><a href="#euler1d">Euler equations 1D</a></li>
+    <li><a href="#1d"> Scripts for 1D problems</a></li>
+    <ul>
+        <li><a href="#scalar1d">Scalar 1D</a></li>
+        <li><a href="#swe1d">Shallow water equations 1D</a></li>
+        <li><a href="#euler1d">Euler equations 1D</a></li>
+    </ul>
+    <li><a href="#2d"> Scripts for 2D problems</a></li>
+    <ul>
+        <li><a href="#scalar2d">Scalar 2D</a></li>
+        <li><a href="#euler2d">Euler equations 2D</a></li>
+    </ul>
     </ul>
 <li><a href="#usemlp">Using the MLP indicator</a></li>
     <ul>
     <li><a href="#net1d">Network for 1D problems</a></li>
+    <li><a href="#net1d">Network for 2D problems</a></li>
     </ul>
 </ul>
 
@@ -30,7 +39,10 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
 ##<a name="running"></a>Running the code
 After cloning the git repository, execute **mypath.m** from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the **Examples** directory or its sub-directories.
 
-###<a name="scalar1d"></a>Scalar 1D
+###<a name="1d"></a>Scripts for 1D problems
+Currently, the 1D solver supports linear advection, Burgers' equation, the shallow water equations and the compressible Euler equations.
+
+####<a name="scalar1d"></a>Scalar 1D
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -40,8 +52,6 @@ clc
 clear all
 close all
 
-Globals1D_DG;
-Globals1D_MLP;
 
 model = 'Advection';
 test_name = 'Sine';
@@ -56,9 +66,9 @@ CFL       = 0.2;
 K         = 100;
 N         = 4;
 
-indicator_type = 'minmod';
-nn_model       = 'MLP_v1';	
-rec_limiter    = 'minmod';
+Indicator = 'MINMOD';
+nn_model  = 'MLP_v1';	
+Limiter   = 'MINMOD';
 
 plot_iter  = 50;
 save_soln  = true;
@@ -74,7 +84,6 @@ ScalarDriver1D;
 ~~~
 
 * `CleanUp1D` removes temporary file paths added, which is especially important if the previous run of the script terminated prematurely. This must be the first line of every script. DO NOT REMOVE IT!
-* `Globals1D_DG` and `Globals1D_MLP` declare important global variables needed by the solver and the MLP network. 
 * The `model` flag sets the type of scalar model which is being solved. The following scalar models are currently available:
  * `'Advection'`: Linear advection equation with the advection speed set to 1.
  * `'Burgers'` : Burgers equation with the flux $$u^2/2$$.
@@ -97,20 +106,20 @@ ScalarDriver1D;
 * The final simulation time is set using `FinalTime`, while the time step is chosen using `CFL`.
 * `K` is the number of elements/cells in the mesh.
 * `N` sets the order of the basis.
-* The troubled-cell indicator is set using `indicator_type`. The following options are currently available:
- * `'none'`: No cells are flagged.
- * `'all'`: All cells are flagged.
- * `'minmod'`: Uses the basic minmod limiter.
- * `'TVB'`: Uses the modified minmod-type TVB limiter. If this is chosen, then one aslo needs to set the variable `TVBM` to a positive number. Note that if this constant is set to 0, then the limiter reduces to the usual minmod limiter.
- * '`NN`': Uses the trained neural network. The network name is set using the variable `nn_model`. The available networks are described below in the section **Using the MLP indicator**.
-* The limiter usd to reconstruct the solution in each troubled-cell,is set using `rec_limiter`. The following options are currently available:
- * `'none'`: No limiting is applied.
- * `'minmod'`: MUSCL reconstruction using minmod limiter.
-* The flag `plot_iter` is used for visualization purposes. The solution is plots are shown after every `plot_iter` number of iterations during the simulation. This number also controls the frequency with which the time-history of the flagged troubled-cells is saved to file (see `save_ind`).
-* If solution at the final time needs to be saved, the flag `save_soln` must be set to `true`. If this is not the case, set this flag to `false`. The solution files are save in the directory **OUTPUT**. The filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format: 
+* The troubled-cell indicator is set using `Indicator`. The following options are currently available:
+ * `'NONE'`: No cells are flagged.
+ * `'ALL'`: All cells are flagged.
+ * `'MINMOD'`: Uses the basic minmod limiter.
+ * `'TVB'`: Uses the modified minmod-type TVB limiter. If this is chosen, then one also needs to set the variable `TVBM` to a positive number. Note that if this constant is set to 0, then the limiter reduces to the usual minmod limiter.
+ * `'NN'`: Uses the trained neural network. The network name is set using the variable `nn_model`. The available networks are described below in the section **Using the MLP indicator**.
+* The limiter usd to reconstruct the solution in each troubled-cell,is set using `Limiter`. The following options are currently available:
+ * `'NONE'`: No limiting is applied.
+ * `'MINMOD'`: MUSCL reconstruction using minmod limiter.
+* The flag `plot_iter` is used for visualization purposes. The solution plots are shown after every `plot_iter` number of iterations during the simulation. This number also controls the frequency with which the time-history of the flagged troubled-cells is saved to file (see `save_ind`).
+* If solution at the final time needs to be saved, the flag `save_soln` must be set to `true`. If this is not the case, set this flag to `false`. The solution files are save in the directory **OUTPUT**. The filename has the format: `<model>1D_<test_name>_P<N>_N<K>_IND_<Indicator>_LIM_<Limiter>.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format: 
  * Column 1: x-coordinates
  * Column 2: solution value at corresponding x-coordinate 
-* If the time-history of the troubled-cells needs to be viewe/saved, the flag `save_ind` must be set to `true`. If this is not the case, set this flag to `false`. The time-history files are also save in the directory **OUTPUT**. The filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{rec_limiter}_tcells.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format:
+* If the time-history of the troubled-cells needs to be viewe/saved, the flag `save_ind` must be set to `true`. If this is not the case, set this flag to `false`. The time-history files are also save in the directory **OUTPUT**. The filename has the format: `<model>1D_<test_name>_P<N>_N<K>_IND_<Indicator>_LIM_<Limiter>_tcells.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format:
  * Each row of the file contains the time, followed by the mid-points of the cells flagged as troubled-cells at that time.
  * The first row corresponds to the cell flagged at time $$t=0$$. This is essentially done for the initial condition.
  * Following the first row, the rows can be grouped in sets of size $$r$$, to list the cells flagged after each sub-stage of the r-stage time-integration scheme. Since the current implementation of the code uses SSP-RK3, the rows will be grouped as triplets. 
@@ -122,7 +131,7 @@ ScalarDriver1D;
 
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
 
-###<a name="swe1d"></a>Shallow Water 1D 
+####<a name="swe1d"></a>Shallow Water 1D 
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -151,10 +160,10 @@ CFL       = 0.4;
 K         = 100;
 N         = 4;
 
-indicator_type = 'minmod';
+Indicator      = 'TVB';  TVBM = 100;
 ind_var        = 'depth';
 nn_model       = 'MLP_v1'; 
-rec_limiter    = 'minmod';
+Limiter        = 'MINMOD';
 lim_var        = 'con';
 
 plot_iter  = 10;
@@ -178,21 +187,21 @@ Most of the structure is similar to the Scalar 1D script. The differences are de
 * For systems of conservation laws, there are various choices for the variables to be used for troubled-cell detection. For the shallow water equations, this choice is made via the flag `ind_var`, with the following options (the troubled-cells flagged for each variable is pooled together):
  * `'prim'`: The primitive variables i.e., depth and velocity, are used. 
  * `'con'`:  The conserved variables i.e., depth and discharge, are used.
-* As was the case with detection, there are several options for the variables which can be reconstructed. This is set using the flag `rec_var`, with the following options:
+* As was the case with detection, there are several options for the variables which can be reconstructed. This is set using the flag `lim_var`, with the following options:
  * `'prim'`:  The primitive variables i.e., depth and velocity, are recontructed.
  * `'con'`:  The conserved variables i.e., depth and discharge, are recontructed.
  * `'char_cell'`: The local characterictic variables are reconstructed. These are obtained cell-by-cell using the linearized transformation operators. More precisely, the transformation matrix in each cell is evaluated using the cell-average value, following which the conserved variables are transformed to the characteristic variables in that cell. The same transformation is used to retrieve the conserved variables after limiting the characteristic variables. 
  * `'char_stencil'`: The local characterictic variables obtained cell-by-cell can introduce spurious oscillations in the solution. One can also obtain the local characteristic variables, stencil-by stencil. More precisely, for a given reconstruction stencil of 3-cells, the transformation matrix is evaluated using the cell-average value of the central cell, following which the conserved variables are transformed to the characteristic variables in every cell of that stencil. The transformed variables are used to obtain the reconstructed characteristic variables in the central cell. Note that this approach can be 3 times more expensive than the `'char_cell'` approach.
-* The solution filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{ind_var}_{rec_limiter}_{rec_var}.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format: 
+* The solution filename has the format: `<model>1D_<test_name>_P<N>_N<K>_IND_<Indicator>_IVAR_<ind_var>_LIM_<Limiter>_LVAR_<lim_var>.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`. The data in the file has the following format: 
  * Column 1: x-coordinates
  * Column 2: the value of depth and velocity (in that order) at corresponding x-coordinate.
-* The troubled-cell time-history filename has the format: `{model}1D_{test_name}_{N}_{Nelem}_{indicator_type}_{ind_var}_{rec_limiter}_{rec_var}_tcells.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`.
+* The troubled-cell time-history filename has the format: `<model>1D_<test_name>_P<N>_N<K>_IND_<Indicator>_IVAR_<ind_var>_LIM_<Limiter>_LVAR_<lim_var>_tcells.dat`. If mesh perturbation is used, then the filename will end with the tag `pert`.
 * `var_ran` is used to set the ylim for the solution plots, with the format `[depth_min,depth_max ; velocity_min, velocity_max]`.
 * The main driver script `SWEDriver1D` is called once all the flags have been set.
 
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
  
-###<a name="euler1d"></a>Euler 1D 
+####<a name="euler1d"></a>Euler 1D 
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -225,11 +234,11 @@ CFL       = 0.1;
 K         = 200;
 N         = 4;
 
-indicator_type = 'minmod';
-ind_var        = 'prim';
-nn_model       = 'MLP_v1';
-rec_limiter    = 'minmod';
-lim_var        = 'con';
+Indicator = 'NN';
+ind_var   = 'prim';
+nn_model  = 'MLP_v1';
+Limiter   = 'MINMOD';
+lim_var   = 'con';
 
 plot_iter  = 100;
 save_soln  = true;
@@ -258,6 +267,286 @@ Most of the structure is similar to the shallow water 1D script. The differences
  * `'con'`: The conserved variables i.e., density, momentum and energy, are used. 
 * `var_ran` is used to set the ylim for the solution plots, with the format `[rho_min,rho_max ; velocity_min, velocity_max ; pressure_min, pressure_max]`.
 * The main driver script `EulerDriver1D` is called once all the flags have been set. The troubled-cells flagged for each variable is pooled together.
+
+<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+
+###<a name="2d"></a>Scripts for 2D problems
+Currently, the 1D solver supports linear advection, Burgers' equation and the compressible Euler equations. For each problem, we need the following files:
+
+* A main script (with the default name `Main.m`) to set the various problem parameters. 
+* The initial condition is defined using the script/function (with the default name `IC.m`).
+* When physical boundary conditions are used, an additional script/function (**must** be named `BC.m`) needs to be created. This file is not needed when all boundary conditions are periodic.
+* Finally, a mesh file is needed, which is currently generated using [Gmsh](http://gmsh.info/). Each example is already provided with the Gmsh geometry file (with the extension `.geo`). To generate the mesh file (with the extension `.msh`), you could either use the Gmsh GUI or create the file non-interactively from the terminal 
+ 
+  ~~~bash
+  $ gmsh -2 mymeshfile.geo
+  ~~~
+  
+  
+
+
+####<a name="scalar2d"></a>Scalar 2D
+The basic structure of the various scripts are as follows:
+##### Main.m
+
+~~~matlab
+CleanUp2D;
+
+close all
+clear all
+clc
+
+model             = 'Advection';
+AdvectionVelocity = [1,1]; % Used for linear advection only
+test_name         = 'Shapes'; 
+InitialCond       = @IC;
+BC_cond           = {100001,'P'; 100002,'P'; 100003,'P'; 100004,'P'};
+
+
+FinalTime        = 1;
+CFL              = 0.6;
+% fixed_dt        = 1.0e-3;
+tstamps          = 2;
+N                = 1;
+
+% Set type of indicator
+Indicator       = 'TVB'; TVBM = 10; TVBnu = 1.5;
+Filter_const    = true;
+nn_model        = 'MLP_v1';
+Limiter         = 'BJES';
+
+
+% Mesh file
+msh_file        = 'square_trans.msh';
+
+% Output flags
+plot_iter  = 50;
+show_plot  = true;
+xran       = [-1,1]; 
+yran       = [-1,1]; 
+clines     = linspace(-0.98,0.98,30);
+save_soln  = true;
+
+% Call main driver
+ScalarDriver2D;
+~~~
+
+* `CleanUp2D` removes temporary file paths added, which is especially important if the previous run of the script terminated prematurely. This must be the first line of every script. DO NOT REMOVE IT!
+* The `model` flag sets the type of scalar model which is being solved. The following scalar models are currently available:
+ * `'Advection'`: Linear advection equation with the advection speed set set using `AdvectionVelocity`.
+ * `'Burgers'` : Simple extension of the Burgers' equation to 2D, with the flux $$u^2/2$$ in each coordinate direction. NOTE: `AdvectionVelocity` not required for this model.
+* `test_name` is used to declare the name of the test. This is used for creating various save files.
+* `InitialCond` is used to set the initial condition for the problem (see the description of IC.m below).
+* `BC_cond` is used to specify the boundary conditions for each face of the domain. This must be a MATLAB cell array of size $$NBfaces \times 2$$, where $$NBfaces$$ is the number of boundary curves specified in the mesh geometry file (with file-extension `.geo`). The first element of each row must be the physical face tag of a boundary curve in the geometry file, while the second element must be one of the following flags 
+  * `'P'`: Periodic boundary conditions. Note there must be an even number of periodic boundary faces.
+  * `'D'`: Dirichlet boundary condition. The actual Dirichlet conditions are specified in BC.m
+  * `'Sym'`: Symmteric boundary conditions.  
+
+  Boundary conditions require the creation of ghost cells, with the value of the solution in these cells depending on the type of boundary condition. 
+* The final simulation time is set using `FinalTime`, while the time step is chosen using a constant `CFL` or a setting a step `fixed_dt`. NOTE: Either `CFL` can be mentioned or the fixed time-step `fixed_dt`, but not both at the same time.
+* `tstamps` is used to specify the number of uniform time-instances (exluding the initial time) at which the solution files are saved. This must be a positive integer. For instance if `tstamps=2` and `FinalTime = 2`, then the solution evaluated at times closest (less than half the local time-step) to $$t=0,1,2$$ are saved. NOTE: It might happen that pen-ultimate time instance in the simulation is very close to `FinalTime`, with the difference being much smaller than the pen-ultimate time-step. In this case, the solver saves the solution at this pen-ultimate as the solution representing the final solution. Thus, we also save the solution at the actual `FinalTime`, leading to a total of `tstamps`+2 save points in time. This becomes crucial when comparing the troubled-cells flagged at the final time-step, since the number of cell flagged is sensitive to the size of the time-step taken.
+* `N` sets the order of the basis.
+* The troubled-cell indicator is set using `Indicator`. The following options are currently available:
+ * `'NONE'`: No cells are flagged.
+ * `'ALL'`: All cells are flagged.
+ * `'TVB'`: Uses the 2D minmod-type TVB limiter. If this is chosen, then one also needs to set the variables `TVBM` and `TVBnu` as positive numbers. See the [paper](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf) for details. 
+ * `'NN'`: Uses the trained neural network. The network name is set using the variable `nn_model`. The available networks are described below in the section **Using the MLP indicator**.
+* Set `Filter_const` to `true`, if you want to avoid flagging almost constant cells. This is especially important for speeding up the performance with the network. See the [paper](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf) for details. 
+* The limiter usd to reconstruct the solution in each troubled-cell,is set using `Limiter`. The following options are currently available:
+ * `'NONE'`: No limiting is applied.
+ * `'BJES'`: Barth-Jespersen limiter.
+* The flag `plot_iter` is used for visualization/verbose purposes. The solution plots (and simulation time etc) are shown after every `plot_iter` number of iterations during the simulation.
+* Set `show_plot` to `true` if you want solution plots to be generated during the simulation.
+* `xran` and `yran` are used to crop the x and y axes of the solution plots (if `show_plot` is set to `true`). This is particulalry helpful when an extended domain is used to impose artificial boundary conditions, for instance when solving 2D Riemann problem.
+* `clines` is used to set the contour lines for the solution contour plots (if `show_plot` is set to `true`). 
+* The solution variables are saved in the **OUTPUT** directory if `save_soln` is set to `true`. The filename has the format: `<model>2D_<test_name>_P<N>_IND_<Indicator>_LIM_<Limiter>_DATA.mat`. If `Filter_const` is set to `true`, then `ConstFilt` also appears in the filename. The following MATLAB variables are saved:
+ * The `x` and `y` coordinates of all degrees of freedom in the mesh.
+ * Inverse of the Vandermonde matrix `invV`
+ * `Save_times` is the array of exact time-instances at which the solution is saved. This is of length `tstamps`+2.
+ * The solutions evaluated at the time-instances listed in `Save_times` is stored in the MATLAB-cell `Q_save`.
+ * The troubled-cells flagged in the mesh at each time-instance listed in `Save_times` is stored in the MATLAB-cell `ind_save`.
+ * `ptc_cell` stores the time-history of the percentage of the total number mesh cells flaged as troubled-cells. `t_hist` stores all the time-instances attained during the simulation. Both these arrays have the same size. 
+ * `sim_time` stores the full simulation time (excludes time taken to generate mesh data structures).
+ 
+* The main driver script `ScalarDriver2D` is called once all the flags have been set.
+
+####IC.m
+The initial condition function must take as input the arrays x and y, where each of these is of the shape $$m \times n$$. The output should be a array of dimension $$m \times n \times 1$$. Almost always, $$m$$ will denote the number of DOFs per cell in the mesh, while $$n$$ will be the number of cells. We give an example of this function below:
+
+~~~matlab
+function Q = IC(x, y)
+
+    Q(:,:,1) = sin(4*pi*x).*cos(4*pi*y);
+
+return;
+~~~  
+
+####BC.m
+When using non-periodic boundary conditions, a function script called BC.m is also needed. An example function is as follows:
+
+~~~matlab
+function uG = BC(ckey,time)
+
+	u1 = 1.0;  u2 = -1.0, c=3.0;
+	
+	if(ckey == 101 || ckey == 103)
+	    uG   =@(x,y) u1*ones(size(x));
+	elseif(ckey == 102)
+	    uG =@(x,y) u2*ones(size(x));
+	elseif(ckey == 104)
+	    rhoG =@(x,y) u1*(y > x+c*time) + u1*(y < x+c*time);
+	end
+
+return;
+~~~
+where the function takes in as input a boundary physical tag `ckey` and the curent simulation-time. The output is a function of x and y (and perhaps implicitly of time).
+
+<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+
+####<a name="euler2d"></a>Euler 2D
+The basic structure of the various scripts are as follows:
+##### Main.m
+
+~~~matlab
+% Remove NN diretory paths if they still exist
+CleanUp2D;
+
+close all
+clear all
+clc
+
+%Model
+model          = 'Euler';
+gas_const      = 1.0;
+gas_gamma      = 1.4;
+test_name      = 'DoubleMach';
+InitialCond    = @IC;
+BC_cond        = {101,'I'; 102,'O'; 103,'O'; 104,'S'; 105,'D'};
+
+FinalTime      = 0.2;
+fixed_dt       = 2e-5;
+tstamps        = 1;
+N              = 1;
+
+% Set type of indicator
+Indicator     = 'NN';
+ind_var       = 'con';
+nn_model      = 'MLP_v1';	
+Limiter       = 'BJES'; 
+lim_var       = 'con';
+Filter_const  = true;
+
+
+% Mesh file
+msh_file      = 'domain.msh';
+
+
+plot_iter  = 50;
+show_plot  = true;
+xran       = [0,4]; 
+yran       = [0,1];
+plot_var   = {'density','pressure'};
+clines     = {linspace(0.255,1.9,30),linspace(0.36,2.15,30)};
+save_soln  = true;
+
+% Call main driver
+EulerDriver2D;
+~~~
+Most of the structure is similar to the scalar 2D script. The differences are described below.
+
+* The `model` flag must be set to `Euler`.
+* The gas constant and ratio of specific heats is set using `gas_const` and `gas_gamma`.
+* The following flags 
+  * `'P'`: Periodic boundary conditions. 
+  * `'D'`: Dirichlet boundary condition. 
+  * `'S'`: Slip boundary conditions.  
+  * `'I'`: Inflow boundary.
+  * `'O'`: Outflow boundary
+* The troubled-cells are detected using the variables mentioned in `ind_var`. The following options are available :
+ * `'density'`
+ * `'pressure'`
+ * `'velocity'`: Both components of velocity are use.
+ * `'prim'`: The primitive variables are used. 
+ * `'con'`:  The conserved variables are used.
+* The limiting variables are set using the flag `lim_var`, with the following options being avaialable:
+ * `'prim'`  
+ * `'con'` 
+
+* `plot_var` is a MATLAB-cell which listing the variables that should be plotted. The following options are available:
+ * `'density'`
+ * `'pressure`
+ * `'velx'`: x-velocity component.
+ * `'vely'`: y-velocity component.
+ * `'energy'`
+   
+* `clines` is also a MATLAB-cell array, with each element setting the contour lines for each variable mentioned in `plot_var`. 
+* The solution variables are saved in the **OUTPUT** directory, with the filename now also mentioning the `lim_var` and `ind_var` used. The `gas_const` and `gas_gamma` variables are also saved in the file. Furthermore, the variable `Q_save` saves all the conserved variables.
+ 
+* The main driver script `EulerDriver2D` is called once all the flags have been set.
+
+####IC.m
+The initial condition function must take as input the arrays `x`,`y`,`gas_gamma`, and `gas_const`, where `x` and `y` are of the shape $$m \times n$$. The output should be the conserved variables array `Q` of dimension $$m \times n \times 4$$. Once again, $$m$$ generally denotes the number of DOFs per cell in the mesh, while $$n$$ will be the number of cells. We give an example of this function below:
+
+~~~matlab
+function Q = IC(x, y, gas_gamma, gas_const)
+
+	xc = 1/6; yc = 0; aos = pi/3;
+	
+	p1 = 116.5;  rho1 = 8.0;    u1 = 7.14471;     v1 = -4.125;
+	p2 = 1.0;    rho2 = 1.4;    u2 = 0.0;     v2 = 0;
+	
+	% Initial profile
+	pre = p1*(y>(x-xc)*tan(aos) + yc) + p2*(y<=(x-xc)*tan(aos) + yc);
+	u   = u1*(y>(x-xc)*tan(aos) + yc) + u2*(y<=(x-xc)*tan(aos) + yc);
+	v   = v1*(y>(x-xc)*tan(aos) + yc) + v2*(y<=(x-xc)*tan(aos) + yc);
+	rho = rho1*(y>(x-xc)*tan(aos) + yc) + rho2*(y<=(x-xc)*tan(aos) + yc);
+	
+	Q(:,:,1) = rho; 
+	Q(:,:,2) = rho.*u; 
+	Q(:,:,3) = rho.*v;
+	Q(:,:,4) = Euler_Energy2D(rho,u,v,pre,gas_gamma);
+
+return;
+~~~
+where the function `Euler_Energy2D` is an available custom function used to determine the total energy from the primitive variables. Similarly, the function `Euler_Pressure2D(Q,gas_gamma)` is available to evaluate the pressure from the conserved variables.
+
+####BC.m
+When using non-periodic boundary conditions, a function script called BC.m is also needed. An example function is as follows:
+
+~~~matlab
+function [rhoG,uG,vG,preG] = BC(ckey,time,gas_gamma,gas_const)
+
+	xc = 1/6; yc = 0; aos = pi/3; M = 10;
+	pre1 = 116.5;  rho1 = 8.0;    u1 = 7.14471; v1 = -4.125;
+	pre2 = 1.0;    rho2 = 1.4;    u2 = 0.0;     v2 = 0;
+	
+	xs = time*M/sin(aos);
+	
+	if(ckey == 101 || ckey == 103)
+	    rhoG =@(x,y) rho1*ones(size(x));
+	    uG   =@(x,y) u1*ones(size(x));
+	    vG   =@(x,y) v1*ones(size(x));
+	    preG =@(x,y) pre1*ones(size(x));
+	elseif(ckey == 102)
+	    rhoG =@(x,y) rho2*ones(size(x));
+	    uG   =@(x,y) u2*ones(size(x));
+	    vG   =@(x,y) v2*ones(size(x));
+	    preG =@(x,y) pre2*ones(size(x));
+	elseif(ckey == 104)
+	    rhoG =@(x,y) 0*x;
+	    uG   =@(x,y) 0*x;
+	    vG   =@(x,y) 0*x;
+	    preG =@(x,y) 0*x;
+	elseif(ckey == 105)
+	    rhoG =@(x,y) rho1*(y>(x-xc-xs)*tan(aos) + yc) + rho2*(y<=(x-xc-xs)*tan(aos) + yc);
+	    uG   =@(x,y) u1*(y>(x-xc-xs)*tan(aos) + yc) + u2*(y<=(x-xc-xs)*tan(aos) + yc);
+	    vG   =@(x,y) v1*(y>(x-xc-xs)*tan(aos) + yc) + v2*(y<=(x-xc-xs)*tan(aos) + yc);
+	    preG =@(x,y) pre1*(y>(x-xc-xs)*tan(aos) + yc) + pre2*(y<=(x-xc-xs)*tan(aos) + yc);
+	end
+
+return;
+~~~
+where the function takes in as input a boundary physical tag ckey, the curent simulation-time, `gas_gamma` and `gas_const`. The output is four functions to determine each of the primitive variables on the boundary.
 
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
 
@@ -307,5 +596,10 @@ f_{\text{activation}}(U) = max(0,U) - \nu(0,-U),
 $$
 
  with the parameter $$\nu$$. The details and results with this indicator are published [here](https://www.sciencedirect.com/science/article/pii/S0021999118302547).
+ 
+###<a name="net2d"></a>Network for 2D problems
+The following is a list of the available networks for 2D problems. The latest recommended network is MLP_v1.
+
+* **MLP_v1**: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. The details and results with this indicator are available [here](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf).
  
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/> 

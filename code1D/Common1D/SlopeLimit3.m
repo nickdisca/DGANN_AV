@@ -11,7 +11,7 @@ function ulimit = SlopeLimit3(u,xl,Limiter,Mesh)
 assert(n == 3);
 ulimit = u;
 
-if strcmp(Limiter,'none')
+if strcmp(Limiter,'NONE')
     return
 else
     % Getting modal values
@@ -24,7 +24,7 @@ else
     uh(3:end,:)=0; ul = Mesh.V*uh(:,2);
         
     % apply slope limiter to selected elements
-    if strcmp(Limiter,'minmod')
+    if strcmp(Limiter,'MINMOD')
         ulimit = SlopeLimitLin(ul,xl,v(1),v(2),v(3),Mesh);
     else
         error('Limiter %s not available!!',Limiter)
