@@ -16,24 +16,24 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
 
 * [Running the code](#markdown-header-running-the-code)
    * [Scripts for 1D](#markdown-header-scripts-for-1d-problems)
-      * [Scalar 1D](#scalar1d)
-      * [Shallow water equations 1D](#swe1d)
-      * [Euler equations 1D](#euler1d)
-   * [Scripts for 2D](#1d)
-      * [Scalar 2D](#scalar2d)
-      * [Euler equations 2D](#euler2d) 
-* [Using the MLP indicator](#usemlp)
-   * [Network for 1D](#net1d) 
-   * [Network for 2D](#net2d) 
+      * [Scalar 1D](#markdown-header-scalar-1d)
+      * [Shallow water equations 1D](#smarkdown-header-shallow-water-1d)
+      * [Euler equations 1D](#markdown-header-euler-1d)
+   * [Scripts for 2D](#markdown-header-scripts-for-2d-problems)
+      * [Scalar 2D](#markdown-header-scalar-2d)
+      * [Euler equations 2D](#markdown-header-euler-2d) 
+* [Using the MLP indicator](#markdown-header-using-the-mlp-indicator)
+   * [Network for 1D](#markdown-header-network-for-1d-problems) 
+   * [Network for 2D](#markdown-header-network-for-2d-problems) 
 
 
 ##Running the code 
 After cloning the git repository, execute **mypath.m** from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the **Examples** directory or its sub-directories.
 
-###<a name="1d"></a>Scripts for 1D problems
+###Scripts for 1D problems
 Currently, the 1D solver supports linear advection, Burgers' equation, the shallow water equations and the compressible Euler equations.
 
-####<a name="scalar1d"></a>Scalar 1D
+####Scalar 1D
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -122,7 +122,7 @@ ScalarDriver1D;
 
 [back to table of contents](#markdown-header-table-of-contents)
 
-####<a name="swe1d"></a>Shallow Water 1D 
+####Shallow Water 1D 
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -192,7 +192,7 @@ Most of the structure is similar to the Scalar 1D script. The differences are de
 
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
  
-####<a name="euler1d"></a>Euler 1D 
+####Euler 1D 
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -261,7 +261,7 @@ Most of the structure is similar to the shallow water 1D script. The differences
 
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
 
-###<a name="2d"></a>Scripts for 2D problems
+###Scripts for 2D problems
 Currently, the 1D solver supports linear advection, Burgers' equation and the compressible Euler equations. For each problem, we need the following files:
 
 * A main script (with the default name `Main.m`) to set the various problem parameters. 
@@ -276,7 +276,7 @@ Currently, the 1D solver supports linear advection, Burgers' equation and the co
   
 
 
-####<a name="scalar2d"></a>Scalar 2D
+####Scalar 2D
 The basic structure of the various scripts are as follows:
 ##### Main.m
 
@@ -394,7 +394,7 @@ where the function takes in as input a boundary physical tag `ckey` and the cure
 
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
 
-####<a name="euler2d"></a>Euler 2D
+####Euler 2D
 The basic structure of the various scripts are as follows:
 ##### Main.m
 
@@ -541,7 +541,7 @@ where the function takes in as input a boundary physical tag ckey, the curent si
 
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
 
-##<a name="usemlp"></a>Using the MLP indicator 
+##Using the MLP indicator 
 For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder **Trained_networks**. For each network, the following files exist:
 
 * ***model_parameters.dat***: Lists the dimensions of the input (IDIM) and output (ODIM) layers for the network, the number of hidden layers (NHL), and network hyperparameters (the Leaky ReLU factor, etc.).
@@ -577,7 +577,7 @@ The **Common** sub-directory contains additional scripts needed to run the netwo
 
 <a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
 
-###<a name="net1d"></a>Network for 1D problems
+###Network for 1D problems
 The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.
 
 * **MLP_v1**: This network has an input layer of size 5. In particular, the input for the classification of cell $$i$$ is $$X=[\overline{u}_{i-1}, \overline{u}_{i}, \overline{u}_{i+1}, u_{i-\frac{1}{2}}^+, u_{i+\frac{1}{2}}^-]$$, where the first 3 quantities are the cell averages of the solution in the cells $$i-1,i,i+1$$ and the last two entries are the left and right cell interface values of the approximating polynomial in cell $$i$$. There are 5 hidden layers, whose widths are 256, 128, 64, 32 and 16, going from the input to the output layer. The activation function is taken to be the Leaky ReLU activation function 
@@ -588,7 +588,7 @@ $$
 
  with the parameter $$\nu$$. The details and results with this indicator are published [here](https://www.sciencedirect.com/science/article/pii/S0021999118302547).
  
-###<a name="net2d"></a>Network for 2D problems
+###Network for 2D problems
 The following is a list of the available networks for 2D problems. The latest recommended network is MLP_v1.
 
 * **MLP_v1**: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. The details and results with this indicator are available [here](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf).
