@@ -3,3 +3,5 @@ ARCH
 Examples/*/*/*/MISC
 Examples/*/*/*/OUTPUT
 Examples/*/*/*/*.msh
+Examples/2D/Advection/Shapes2
+Examples/2D/Burgers/Sinewaves_shocks
