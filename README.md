@@ -83,12 +83,12 @@ ScalarDriver1D;
 * `u_IC` is used to set the initial condition for the problem.
 * `bnd_l` and `bnd_r` define the left and right domain boundaries, which is descritized using `Nelem` number of elements. The degree of the polynomial in each element/cell is set using `N`. 
 * `mesh_pert` is used to randomly perturb the interior cell-interfaces using the following algorithm
- 
  $$
  x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,K-1
  $$
  
  where $$h$$ is the mesh size of the initial uniform grid.
+
 * `bc_cond` is used to set the left and right boundary conditions. It is a cell of the form
  `{LEFT_BC_TYPE, LEFT_BC_VAL, RIGHT_BC_TYPE,RIGHT_BC_VAL}`. The `BC_TYPES` can be set as:
  * `'P'`: Periodic boundary conditions. In this case, both boundary type must be set to `'P'`.
@@ -190,7 +190,7 @@ Most of the structure is similar to the Scalar 1D script. The differences are de
 * `var_ran` is used to set the ylim for the solution plots, with the format `[depth_min,depth_max ; velocity_min, velocity_max]`.
 * The main driver script `SWEDriver1D` is called once all the flags have been set.
 
-<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+[back to table of contents](#markdown-header-table-of-contents)
  
 ####Euler 1D 
 The basic structure of the example script is as follows.
@@ -259,7 +259,7 @@ Most of the structure is similar to the shallow water 1D script. The differences
 * `var_ran` is used to set the ylim for the solution plots, with the format `[rho_min,rho_max ; velocity_min, velocity_max ; pressure_min, pressure_max]`.
 * The main driver script `EulerDriver1D` is called once all the flags have been set. The troubled-cells flagged for each variable is pooled together.
 
-<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+[back to table of contents](#markdown-header-table-of-contents)
 
 ###Scripts for 2D problems
 Currently, the 1D solver supports linear advection, Burgers' equation and the compressible Euler equations. For each problem, we need the following files:
@@ -269,7 +269,7 @@ Currently, the 1D solver supports linear advection, Burgers' equation and the co
 * When physical boundary conditions are used, an additional script/function (**must** be named `BC.m`) needs to be created. This file is not needed when all boundary conditions are periodic.
 * Finally, a mesh file is needed, which is currently generated using [Gmsh](http://gmsh.info/). Each example is already provided with the Gmsh geometry file (with the extension `.geo`). To generate the mesh file (with the extension `.msh`), you could either use the Gmsh GUI or create the file non-interactively from the terminal 
  
-  ~~~bash
+  ~~~text
   $ gmsh -2 mymeshfile.geo
   ~~~
   
@@ -332,8 +332,8 @@ ScalarDriver2D;
   * `'P'`: Periodic boundary conditions. Note there must be an even number of periodic boundary faces.
   * `'D'`: Dirichlet boundary condition. The actual Dirichlet conditions are specified in BC.m
   * `'Sym'`: Symmteric boundary conditions.  
-
   Boundary conditions require the creation of ghost cells, with the value of the solution in these cells depending on the type of boundary condition. 
+
 * The final simulation time is set using `FinalTime`, while the time step is chosen using a constant `CFL` or a setting a step `fixed_dt`. NOTE: Either `CFL` can be mentioned or the fixed time-step `fixed_dt`, but not both at the same time.
 * `tstamps` is used to specify the number of uniform time-instances (exluding the initial time) at which the solution files are saved. This must be a positive integer. For instance if `tstamps=2` and `FinalTime = 2`, then the solution evaluated at times closest (less than half the local time-step) to $$t=0,1,2$$ are saved. NOTE: It might happen that pen-ultimate time instance in the simulation is very close to `FinalTime`, with the difference being much smaller than the pen-ultimate time-step. In this case, the solver saves the solution at this pen-ultimate as the solution representing the final solution. Thus, we also save the solution at the actual `FinalTime`, leading to a total of `tstamps`+2 save points in time. This becomes crucial when comparing the troubled-cells flagged at the final time-step, since the number of cell flagged is sensitive to the size of the time-step taken.
 * `N` sets the order of the basis.
@@ -392,7 +392,7 @@ return;
 ~~~
 where the function takes in as input a boundary physical tag `ckey` and the curent simulation-time. The output is a function of x and y (and perhaps implicitly of time).
 
-<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+[back to table of contents](#markdown-header-table-of-contents)
 
 ####Euler 2D
 The basic structure of the various scripts are as follows:
@@ -539,7 +539,7 @@ return;
 ~~~
 where the function takes in as input a boundary physical tag ckey, the curent simulation-time, `gas_gamma` and `gas_const`. The output is four functions to determine each of the primitive variables on the boundary.
 
-<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+[back to table of contents](#markdown-header-table-of-contents)
 
 ##Using the MLP indicator 
 For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder **Trained_networks**. For each network, the following files exist:
@@ -575,7 +575,7 @@ The MATLAB scripts to read and run the networks can be found under the folder **
 
 The **Common** sub-directory contains additional scripts needed to run the networks, such as the implementation of the leaky ReLU activation function.
 
-<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+[back to table of contents](#markdown-header-table-of-contents)
 
 ###Network for 1D problems
 The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.
@@ -593,4 +593,4 @@ The following is a list of the available networks for 2D problems. The latest re
 
 * **MLP_v1**: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. The details and results with this indicator are available [here](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf).
  
-<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/> 
+[back to table of contents](#markdown-header-table-of-contents)

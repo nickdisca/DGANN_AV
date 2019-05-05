@@ -485,41 +485,45 @@ pre[class*="language-"] {
 
 <p>Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">&quot;An artificial neural network as a troubled-cell indicator&quot;</a>. Details about the 2D network are available <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">here</a>.</p>
 
-<p><strong>NOTE:</strong> If the math symbols do not display properly in README.md. have a look at README.html or README.pdf instead.</p>
+<p><strong>NOTE:</strong> If the math symbols do not display properly in README.md, have a look at README.html or README.pdf instead.</p>
 
-<h2 id="toc_4"><a name="TOC"></a>Table of contents</h2>
+<h2 id="toc_4">Table of contents</h2>
 
 <ul>
-<li><a href="#running">Running the code</a></li>
-    <ul>
-    <li><a href="#1d"> Scripts for 1D problems</a></li>
-    <ul>
-        <li><a href="#scalar1d">Scalar 1D</a></li>
-        <li><a href="#swe1d">Shallow water equations 1D</a></li>
-        <li><a href="#euler1d">Euler equations 1D</a></li>
-    </ul>
-    <li><a href="#2d"> Scripts for 2D problems</a></li>
-    <ul>
-        <li><a href="#scalar2d">Scalar 2D</a></li>
-        <li><a href="#euler2d">Euler equations 2D</a></li>
-    </ul>
-    </ul>
-<li><a href="#usemlp">Using the MLP indicator</a></li>
-    <ul>
-    <li><a href="#net1d">Network for 1D problems</a></li>
-    <li><a href="#net1d">Network for 2D problems</a></li>
-    </ul>
+<li><a href="#markdown-header-running-the-code">Running the code</a>
+
+<ul>
+<li><a href="#markdown-header-scripts-for-1d-problems">Scripts for 1D</a>
+
+<ul>
+<li><a href="#markdown-header-scalar-1d">Scalar 1D</a></li>
+<li><a href="#smarkdown-header-shallow-water-1d">Shallow water equations 1D</a></li>
+<li><a href="#markdown-header-euler-1d">Euler equations 1D</a></li>
+</ul></li>
+<li><a href="#markdown-header-scripts-for-2d-problems">Scripts for 2D</a>
+
+<ul>
+<li><a href="#markdown-header-scalar-2d">Scalar 2D</a></li>
+<li><a href="#markdown-header-euler-2d">Euler equations 2D</a> </li>
+</ul></li>
+</ul></li>
+<li><a href="#markdown-header-using-the-mlp-indicator">Using the MLP indicator</a>
+
+<ul>
+<li><a href="#markdown-header-network-for-1d-problems">Network for 1D</a> </li>
+<li><a href="#markdown-header-network-for-2d-problems">Network for 2D</a> </li>
+</ul></li>
 </ul>
 
-<h2 id="toc_5"><a name="running"></a>Running the code</h2>
+<h2 id="toc_5">Running the code</h2>
 
 <p>After cloning the git repository, execute <strong>mypath.m</strong> from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the <strong>Examples</strong> directory or its sub-directories.</p>
 
-<h3 id="toc_6"><a name="1d"></a>Scripts for 1D problems</h3>
+<h3 id="toc_6">Scripts for 1D problems</h3>
 
 <p>Currently, the 1D solver supports linear advection, Burgers&#39; equation, the shallow water equations and the compressible Euler equations.</p>
 
-<h4 id="toc_7"><a name="scalar1d"></a>Scalar 1D</h4>
+<h4 id="toc_7">Scalar 1D</h4>
 
 <p>The basic structure of the example script is as follows.</p>
 
@@ -571,11 +575,10 @@ ScalarDriver1D; </code></pre></div>
 <li><code>test_name</code> is used to declare the name of the test. This is used for creating various save files.</li>
 <li><code>u_IC</code> is used to set the initial condition for the problem.</li>
 <li><code>bnd_l</code> and <code>bnd_r</code> define the left and right domain boundaries, which is descritized using <code>Nelem</code> number of elements. The degree of the polynomial in each element/cell is set using <code>N</code>. </li>
-<li><p><code>mesh_pert</code> is used to randomly perturb the interior cell-interfaces using the following algorithm</p>
-
-<p>\[
+<li><p><code>mesh_pert</code> is used to randomly perturb the interior cell-interfaces using the following algorithm
+\(
 x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,K-1
-\]</p>
+\)</p>
 
 <p>where \(h\) is the mesh size of the initial uniform grid.</p></li>
 <li><p><code>bc_cond</code> is used to set the left and right boundary conditions. It is a cell of the form
@@ -625,9 +628,9 @@ x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_
 <li><p>The main driver script <code>ScalarDriver1D</code> is called once all the flags have been set.</p></li>
 </ul>
 
-<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
-<h4 id="toc_8"><a name="swe1d"></a>Shallow Water 1D</h4>
+<h4 id="toc_8">Shallow Water 1D</h4>
 
 <p>The basic structure of the example script is as follows.</p>
 
@@ -708,7 +711,7 @@ SWEDriver1D;</code></pre></div>
 
 <p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
 
-<h4 id="toc_9"><a name="euler1d"></a>Euler 1D</h4>
+<h4 id="toc_9">Euler 1D</h4>
 
 <p>The basic structure of the example script is as follows.</p>
 
@@ -781,7 +784,7 @@ EulerDriver1D; </code></pre></div>
 
 <p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
 
-<h3 id="toc_10"><a name="2d"></a>Scripts for 2D problems</h3>
+<h3 id="toc_10">Scripts for 2D problems</h3>
 
 <p>Currently, the 1D solver supports linear advection, Burgers&#39; equation and the compressible Euler equations. For each problem, we need the following files:</p>
 
@@ -791,10 +794,10 @@ EulerDriver1D; </code></pre></div>
 <li>When physical boundary conditions are used, an additional script/function (<strong>must</strong> be named <code>BC.m</code>) needs to be created. This file is not needed when all boundary conditions are periodic.</li>
 <li><p>Finally, a mesh file is needed, which is currently generated using <a href="http://gmsh.info/">Gmsh</a>. Each example is already provided with the Gmsh geometry file (with the extension <code>.geo</code>). To generate the mesh file (with the extension <code>.msh</code>), you could either use the Gmsh GUI or create the file non-interactively from the terminal </p>
 
-<div><pre><code class="language-bash">$ gmsh -2 mymeshfile.geo</code></pre></div></li>
+<div><pre><code class="language-text">$ gmsh -2 mymeshfile.geo</code></pre></div></li>
 </ul>
 
-<h4 id="toc_11"><a name="scalar2d"></a>Scalar 2D</h4>
+<h4 id="toc_11">Scalar 2D</h4>
 
 <p>The basic structure of the various scripts are as follows:</p>
 
@@ -855,10 +858,9 @@ ScalarDriver2D;</code></pre></div>
 <ul>
 <li><code>&#39;P&#39;</code>: Periodic boundary conditions. Note there must be an even number of periodic boundary faces.</li>
 <li><code>&#39;D&#39;</code>: Dirichlet boundary condition. The actual Dirichlet conditions are specified in BC.m</li>
-<li><code>&#39;Sym&#39;</code>: Symmteric boundary conditions.<br></li>
-</ul>
-
-<p>Boundary conditions require the creation of ghost cells, with the value of the solution in these cells depending on the type of boundary condition. </p></li>
+<li><code>&#39;Sym&#39;</code>: Symmteric boundary conditions.<br>
+Boundary conditions require the creation of ghost cells, with the value of the solution in these cells depending on the type of boundary condition. </li>
+</ul></li>
 <li><p>The final simulation time is set using <code>FinalTime</code>, while the time step is chosen using a constant <code>CFL</code> or a setting a step <code>fixed_dt</code>. NOTE: Either <code>CFL</code> can be mentioned or the fixed time-step <code>fixed_dt</code>, but not both at the same time.</p></li>
 <li><p><code>tstamps</code> is used to specify the number of uniform time-instances (exluding the initial time) at which the solution files are saved. This must be a positive integer. For instance if <code>tstamps=2</code> and <code>FinalTime = 2</code>, then the solution evaluated at times closest (less than half the local time-step) to \(t=0,1,2\) are saved. NOTE: It might happen that pen-ultimate time instance in the simulation is very close to <code>FinalTime</code>, with the difference being much smaller than the pen-ultimate time-step. In this case, the solver saves the solution at this pen-ultimate as the solution representing the final solution. Thus, we also save the solution at the actual <code>FinalTime</code>, leading to a total of <code>tstamps</code>+2 save points in time. This becomes crucial when comparing the troubled-cells flagged at the final time-step, since the number of cell flagged is sensitive to the size of the time-step taken.</p></li>
 <li><p><code>N</code> sets the order of the basis.</p></li>
@@ -927,7 +929,7 @@ return;</code></pre></div>
 
 <p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
 
-<h4 id="toc_15"><a name="euler2d"></a>Euler 2D</h4>
+<h4 id="toc_15">Euler 2D</h4>
 
 <p>The basic structure of the various scripts are as follows:</p>
 
@@ -1086,7 +1088,7 @@ return;</code></pre></div>
 
 <p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
 
-<h2 id="toc_19"><a name="usemlp"></a>Using the MLP indicator</h2>
+<h2 id="toc_19">Using the MLP indicator</h2>
 
 <p>For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder <strong>Trained_networks</strong>. For each network, the following files exist:</p>
 
@@ -1126,7 +1128,7 @@ ind = \text{find}(Y(1,:) &gt; 0.5).
 
 <p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
 
-<h3 id="toc_20"><a name="net1d"></a>Network for 1D problems</h3>
+<h3 id="toc_20">Network for 1D problems</h3>
 
 <p>The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.</p>
 
@@ -1140,7 +1142,7 @@ f_{\text{activation}}(U) = max(0,U) - \nu(0,-U),
 <p>with the parameter \(\nu\). The details and results with this indicator are published <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">here</a>.</p></li>
 </ul>
 
-<h3 id="toc_21"><a name="net2d"></a>Network for 2D problems</h3>
+<h3 id="toc_21">Network for 2D problems</h3>
 
 <p>The following is a list of the available networks for 2D problems. The latest recommended network is MLP_v1.</p>
 
@@ -1158,10 +1160,6 @@ var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScop
 
 <script type="text/javascript">
 Prism.languages.matlab={string:/\B'(?:''|[^'\n])*'/,comment:[/%\{[\s\S]*?\}%/,/%.+/],number:/\b-?(?:\d*\.?\d+(?:[eE][+-]?\d+)?(?:[ij])?|[ij])\b/,keyword:/\b(?:break|case|catch|continue|else|elseif|end|for|function|if|inf|NaN|otherwise|parfor|pause|pi|return|switch|try|while)\b/,"function":/(?!\d)\w+(?=\s*\()/,operator:/\.?[*^\/\\']|[+\-:@]|[<>=~]=?|&&?|\|\|?/,punctuation:/\.{3}|[.,;\[\](){}!]/};
-</script>
-
-<script type="text/javascript">
-!function(e){var t={variable:[{pattern:/\$?\(\([\w\W]+?\)\)/,inside:{variable:[{pattern:/(^\$\(\([\w\W]+)\)\)/,lookbehind:!0},/^\$\(\(/],number:/\b-?(?:0x[\dA-Fa-f]+|\d*\.?\d+(?:[Ee]-?\d+)?)\b/,operator:/--?|-=|\+\+?|\+=|!=?|~|\*\*?|\*=|\/=?|%=?|<<=?|>>=?|<=?|>=?|==?|&&?|&=|\^=?|\|\|?|\|=|\?|:/,punctuation:/\(\(?|\)\)?|,|;/}},{pattern:/\$\([^)]+\)|`[^`]+`/,inside:{variable:/^\$\(|^`|\)$|`$/}},/\$(?:[a-z0-9_#\?\*!@]+|\{[^}]+\})/i]};e.languages.bash={shebang:{pattern:/^#!\s*\/bin\/bash|^#!\s*\/bin\/sh/,alias:"important"},comment:{pattern:/(^|[^"{\\])#.*/,lookbehind:!0},string:[{pattern:/((?:^|[^<])<<\s*)(?:"|')?(\w+?)(?:"|')?\s*\r?\n(?:[\s\S])*?\r?\n\2/g,lookbehind:!0,inside:t},{pattern:/(["'])(?:\\\\|\\?[^\\])*?\1/g,inside:t}],variable:t.variable,"function":{pattern:/(^|\s|;|\||&)(?:alias|apropos|apt-get|aptitude|aspell|awk|basename|bash|bc|bg|builtin|bzip2|cal|cat|cd|cfdisk|chgrp|chmod|chown|chroot|chkconfig|cksum|clear|cmp|comm|command|cp|cron|crontab|csplit|cut|date|dc|dd|ddrescue|df|diff|diff3|dig|dir|dircolors|dirname|dirs|dmesg|du|egrep|eject|enable|env|ethtool|eval|exec|expand|expect|export|expr|fdformat|fdisk|fg|fgrep|file|find|fmt|fold|format|free|fsck|ftp|fuser|gawk|getopts|git|grep|groupadd|groupdel|groupmod|groups|gzip|hash|head|help|hg|history|hostname|htop|iconv|id|ifconfig|ifdown|ifup|import|install|jobs|join|kill|killall|less|link|ln|locate|logname|logout|look|lpc|lpr|lprint|lprintd|lprintq|lprm|ls|lsof|make|man|mkdir|mkfifo|mkisofs|mknod|more|most|mount|mtools|mtr|mv|mmv|nano|netstat|nice|nl|nohup|notify-send|nslookup|open|op|passwd|paste|pathchk|ping|pkill|popd|pr|printcap|printenv|printf|ps|pushd|pv|pwd|quota|quotacheck|quotactl|ram|rar|rcp|read|readarray|readonly|reboot|rename|renice|remsync|rev|rm|rmdir|rsync|screen|scp|sdiff|sed|seq|service|sftp|shift|shopt|shutdown|sleep|slocate|sort|source|split|ssh|stat|strace|su|sudo|sum|suspend|sync|tail|tar|tee|test|time|timeout|times|touch|top|traceroute|trap|tr|tsort|tty|type|ulimit|umask|umount|unalias|uname|unexpand|uniq|units|unrar|unshar|uptime|useradd|userdel|usermod|users|uuencode|uudecode|v|vdir|vi|vmstat|wait|watch|wc|wget|whereis|which|who|whoami|write|xargs|xdg-open|yes|zip)(?=$|\s|;|\||&)/,lookbehind:!0},keyword:{pattern:/(^|\s|;|\||&)(?:let|:|\.|if|then|else|elif|fi|for|break|continue|while|in|case|function|select|do|done|until|echo|exit|return|set|declare)(?=$|\s|;|\||&)/,lookbehind:!0},"boolean":{pattern:/(^|\s|;|\||&)(?:true|false)(?=$|\s|;|\||&)/,lookbehind:!0},operator:/&&?|\|\|?|==?|!=?|<<<?|>>|<=?|>=?|=~/,punctuation:/\$?\(\(?|\)\)?|\.\.|[{}[\];]/};var a=t.variable[1].inside;a["function"]=e.languages.bash["function"],a.keyword=e.languages.bash.keyword,a.boolean=e.languages.bash.boolean,a.operator=e.languages.bash.operator,a.punctuation=e.languages.bash.punctuation}(Prism);
 </script>
 
 <script type="text/x-mathjax-config">
