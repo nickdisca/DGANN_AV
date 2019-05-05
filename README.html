@@ -709,7 +709,7 @@ SWEDriver1D;</code></pre></div>
 <li>The main driver script <code>SWEDriver1D</code> is called once all the flags have been set.</li>
 </ul>
 
-<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
 <h4 id="toc_9">Euler 1D</h4>
 
@@ -782,7 +782,7 @@ EulerDriver1D; </code></pre></div>
 <li>The main driver script <code>EulerDriver1D</code> is called once all the flags have been set. The troubled-cells flagged for each variable is pooled together.</li>
 </ul>
 
-<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
 <h3 id="toc_10">Scripts for 2D problems</h3>
 
@@ -792,9 +792,7 @@ EulerDriver1D; </code></pre></div>
 <li>A main script (with the default name <code>Main.m</code>) to set the various problem parameters. </li>
 <li>The initial condition is defined using the script/function (with the default name <code>IC.m</code>).</li>
 <li>When physical boundary conditions are used, an additional script/function (<strong>must</strong> be named <code>BC.m</code>) needs to be created. This file is not needed when all boundary conditions are periodic.</li>
-<li><p>Finally, a mesh file is needed, which is currently generated using <a href="http://gmsh.info/">Gmsh</a>. Each example is already provided with the Gmsh geometry file (with the extension <code>.geo</code>). To generate the mesh file (with the extension <code>.msh</code>), you could either use the Gmsh GUI or create the file non-interactively from the terminal </p>
-
-<div><pre><code class="language-text">$ gmsh -2 mymeshfile.geo</code></pre></div></li>
+<li>Finally, a mesh file is needed, which is currently generated using <a href="http://gmsh.info/">Gmsh</a>. Each example is already provided with the Gmsh geometry file (with the extension <code>.geo</code>). To generate the mesh file (with the extension <code>.msh</code>), you could either use the Gmsh GUI or create the file non-interactively from the terminal as <code>$ gmsh -2 mymeshfile.geo</code></li>
 </ul>
 
 <h4 id="toc_11">Scalar 2D</h4>
@@ -927,7 +925,7 @@ return;</code></pre></div>
 
 <p>where the function takes in as input a boundary physical tag <code>ckey</code> and the curent simulation-time. The output is a function of x and y (and perhaps implicitly of time).</p>
 
-<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
 <h4 id="toc_15">Euler 2D</h4>
 
@@ -1086,7 +1084,7 @@ return;</code></pre></div>
 
 <p>where the function takes in as input a boundary physical tag ckey, the curent simulation-time, <code>gas_gamma</code> and <code>gas_const</code>. The output is four functions to determine each of the primitive variables on the boundary.</p>
 
-<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
 <h2 id="toc_19">Using the MLP indicator</h2>
 
@@ -1126,7 +1124,7 @@ ind = \text{find}(Y(1,:) &gt; 0.5).
 
 <p>The <strong>Common</strong> sub-directory contains additional scripts needed to run the networks, such as the implementation of the leaky ReLU activation function.</p>
 
-<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/></p>
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
 <h3 id="toc_20">Network for 1D problems</h3>
 
@@ -1150,7 +1148,7 @@ f_{\text{activation}}(U) = max(0,U) - \nu(0,-U),
 <li><strong>MLP_v1</strong>: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. The details and results with this indicator are available <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">here</a>.</li>
 </ul>
 
-<p><a href="#TOC" style="float: right; color:green">back to table of contents</a><br/> </p>
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
 
 

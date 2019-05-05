@@ -267,14 +267,8 @@ Currently, the 1D solver supports linear advection, Burgers' equation and the co
 * A main script (with the default name `Main.m`) to set the various problem parameters. 
 * The initial condition is defined using the script/function (with the default name `IC.m`).
 * When physical boundary conditions are used, an additional script/function (**must** be named `BC.m`) needs to be created. This file is not needed when all boundary conditions are periodic.
-* Finally, a mesh file is needed, which is currently generated using [Gmsh](http://gmsh.info/). Each example is already provided with the Gmsh geometry file (with the extension `.geo`). To generate the mesh file (with the extension `.msh`), you could either use the Gmsh GUI or create the file non-interactively from the terminal 
- 
-  ~~~text
-  $ gmsh -2 mymeshfile.geo
-  ~~~
+* Finally, a mesh file is needed, which is currently generated using [Gmsh](http://gmsh.info/). Each example is already provided with the Gmsh geometry file (with the extension `.geo`). To generate the mesh file (with the extension `.msh`), you could either use the Gmsh GUI or create the file non-interactively from the terminal as `$ gmsh -2 mymeshfile.geo`
   
-  
-
 
 ####Scalar 2D
 The basic structure of the various scripts are as follows:
