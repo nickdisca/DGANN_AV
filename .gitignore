@@ -6,3 +6,6 @@ Examples/*/*/*/OUTPUT2
 Examples/*/*/*/*.msh
 Examples/2D/Advection/Shapes2
 Examples/2D/Burgers/Sinewaves_shocks
+Visualization/Plots
+Visualization/Ref_solns
+Visualization/Corrected_fig_for_paper
