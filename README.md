@@ -12,10 +12,10 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
 
 **NOTE:** If the math symbols do not display properly in README.md, have a look at README.html or README.pdf instead.
 
-## <a name="toc"></a> Table of contents 
+##Table of contents 
 
 * [Running the code](#markdown-header-running-the-code)
-   * [Scripts for 1D](#1d)
+   * [Scripts for 1D](#markdown-header-scripts-for-1d-problems)
       * [Scalar 1D](#scalar1d)
       * [Shallow water equations 1D](#swe1d)
       * [Euler equations 1D](#euler1d)
@@ -120,7 +120,7 @@ ScalarDriver1D;
 * `var_ran` is used to set the ylim for the solution plot. This should be a array of size (1,2).
 * The main driver script `ScalarDriver1D` is called once all the flags have been set.
 
-[back to table of contents](#toc)
+[back to table of contents](#markdown-header-table-of-contents)
 
 ####<a name="swe1d"></a>Shallow Water 1D 
 The basic structure of the example script is as follows.
