@@ -1,4 +1,3 @@
-"[TOC]"
 # DGANN solver
 ###Created by: Deep Ray, EPFL, Switzerland 
 ###Webpage: deepray.github.io 
@@ -15,7 +14,7 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
 
 ## <a name="toc"></a> Table of contents 
 
-* [Running the code](#running)
+* [Running the code](#markdown-header-running-the-code)
    * [Scripts for 1D](#1d)
       * [Scalar 1D](#scalar1d)
       * [Shallow water equations 1D](#swe1d)
@@ -28,7 +27,7 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
    * [Network for 2D](#net2d) 
 
 
-##<a name="running"></a>Running the code 
+##Running the code 
 After cloning the git repository, execute **mypath.m** from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the **Examples** directory or its sub-directories.
 
 ###<a name="1d"></a>Scripts for 1D problems
