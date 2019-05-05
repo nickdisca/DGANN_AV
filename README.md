@@ -17,7 +17,7 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
 * [Running the code](#markdown-header-running-the-code)
    * [Scripts for 1D](#markdown-header-scripts-for-1d-problems)
       * [Scalar 1D](#markdown-header-scalar-1d)
-      * [Shallow water equations 1D](#smarkdown-header-shallow-water-1d)
+      * [Shallow water equations 1D](#markdown-header-shallow-water-1d)
       * [Euler equations 1D](#markdown-header-euler-1d)
    * [Scripts for 2D](#markdown-header-scripts-for-2d-problems)
       * [Scalar 2D](#markdown-header-scalar-2d)
