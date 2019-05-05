@@ -1,3 +1,4 @@
+"[TOC]"
 # DGANN solver
 ###Created by: Deep Ray, EPFL, Switzerland 
 ###Webpage: deepray.github.io 
@@ -10,9 +11,12 @@
 
 Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper ["An artificial neural network as a troubled-cell indicator"](https://www.sciencedirect.com/science/article/pii/S0021999118302547). Details about the 2D network are available [here](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf).
 
-**NOTE:** If the math symbols do not display properly in README.md. have a look at README.html or README.pdf instead.
+**NOTE:** If the math symbols do not display properly in README.md, have a look at README.html or README.pdf instead.
 
-## <a name="TOC"></a>Table of contents
+## <a name="toc"></a> Table of contents 
+
+* [Running the code](#running)
+
 <ul>
 <li><a href="#running">Running the code</a></li>
     <ul>
@@ -36,7 +40,7 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
 </ul>
 
 
-##<a name="running"></a>Running the code
+##<a name="running"></a>Running the code 
 After cloning the git repository, execute **mypath.m** from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the **Examples** directory or its sub-directories.
 
 ###<a name="1d"></a>Scripts for 1D problems
@@ -129,7 +133,7 @@ ScalarDriver1D;
 * `var_ran` is used to set the ylim for the solution plot. This should be a array of size (1,2).
 * The main driver script `ScalarDriver1D` is called once all the flags have been set.
 
-<a href="#TOC" style="float: right; color:green">back to table of contents</a><br/>
+[back to table of contents](#toc)
 
 ####<a name="swe1d"></a>Shallow Water 1D 
 The basic structure of the example script is as follows.
