@@ -17,17 +17,22 @@ bc_cond   = {'P',0.0,'P',0.0};
 FinalTime = 2;
 CFL       = 0.4;
 K     = 100;
-N         = 1;
+N         = 2;
+RK        = 'SSP3';
 
 
 Indicator = 'NONE';
 nn_model       = 'MLP_v1';	
 Limiter    = 'NONE';
 
+Visc_model = 'NONE';
+nn_visc_model = 'MLP_visc';
+
 
 plot_iter  = 20;
 save_soln  = true;
 save_ind   = true;
+save_visc  = true;
 save_plot  = true;
 ref_avail  = true;
 ref_fname  = 'ref_soln.dat';

@@ -1,4 +1,4 @@
-function fname = Scalar_fnamebase1D(Problem,N,K,Limit,mesh_pert)
+function fname = Scalar_fnamebase1D(Problem,N,K,Limit,Viscosity,mesh_pert)
 
 % Globals1D_DG;
 % Globals1D_MLP;
@@ -22,6 +22,22 @@ else
     error('Indicator %s not available',Limit.Indicator);
 end
 fname = sprintf('%s_LIM_%s',fname,Limit.Limiter);
+
+if(strcmp(Viscosity.model,'NONE'))
+    fname = sprintf('%s_VISC_%s',fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'MDH'))
+    fname = sprintf('%s_VISC_%s_%d_%d_%d',fname,Viscosity.model,Viscosity.c_A,Viscosity.c_E,Viscosity.c_max);
+elseif(strcmp(Viscosity.model,'MDA'))
+    fname = sprintf('%s_VISC_%s_%d',fname,Viscosity.model,Viscosity.c_max);
+elseif(strcmp(Viscosity.model,'EV'))
+    fname = sprintf('%s_VISC_%s_%d_%d',fname,Viscosity.model,Viscosity.c_E,Viscosity.c_max);
+elseif(strcmp(Viscosity.model,'NN'))
+    fname = sprintf('%s_VISC_%s',fname,Viscosity.nn_visc_model);  
+else
+    error('Viscosity model %s not available',Viscosity.model);
+end
+
+
 if(mesh_pert ~= 0.0)
     fname = sprintf('%s_pert',fname);
 end

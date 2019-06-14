@@ -58,6 +58,10 @@ assert(exist('CFL','var')==1,...
 assert((isnumeric(CFL) & CFL > 0.0),...
     'ERROR: ''CFL'' must be a positive number')
 
+% Runge-Kutta scheme
+assert(exist('RK','var')==1,...
+    'ERROR: ''RK'' variable must be defined')
+
 
 % Indicator and Limiter
 assert(exist('Limiter','var')==1,...
@@ -94,6 +98,33 @@ elseif(strcmp(Limiter,'MINMOD'))
     
 else
     error('Unknown limiter type %s',Limiter)
+end
+
+
+%Viscosity
+assert(exist('Visc_model','var')==1,...
+    'ERROR: ''Visc_model'' variable must be defined')
+switch Visc_model
+    case 'NONE'
+        
+    case 'MDH'
+        assert(exist('c_A','var')==1 && exist('c_k','var')==1 && exist('c_max','var')==1, ...
+            'ERROR: ''c_A,c_k,c_max'' variables must be defined since Visc_model = MDH')
+        
+    case 'MDA'
+        assert(exist('c_max','var')==1, ...
+            'ERROR: ''c_max'' variable must be defined since Visc_model = MDA')
+        
+    case 'EV'
+        assert(exist('c_E','var')==1 && exist('c_max','var')==1, ...
+            'ERROR: ''c_E,c_max'' variables must be defined since Visc_model = EV')
+        
+    case 'NN'
+        assert(exist('nn_visc_model','var')==1,...
+            'ERROR: ''nn_visc_model'' variable must be defined since Visc_model = NN')
+        
+    otherwise
+            error('Unknown viscosity_model %s',Visc_model)
 end
 
 
@@ -148,6 +179,7 @@ Problem.u_IC      = u_IC;
 Problem.bc_cond   = bc_cond;
 Problem.FinalTime = FinalTime;
 Problem.CFL       = CFL;
+Problem.RK        = RK;
 
 
 Mesh.N         = N;
@@ -164,10 +196,29 @@ elseif(strcmp(Indicator,'NN'))
     Limit.nn_model   = nn_model;
 end
 
+Viscosity.model = Visc_model;
+switch Visc_model     
+    case 'MDH'
+        Viscosity.c_A=c_A; 
+        Viscosity.c_k=c_k; 
+        Viscosity.c_max=c_max;
+        
+    case 'MDA'
+        Viscosity.c_max=c_max;
+        
+    case 'EV'
+        Viscosity.c_E=c_E; 
+        Viscosity.c_max=c_max;
+        
+    case 'NN'
+        Viscosity.nn_visc_model = nn_visc_model;
+end
+
 
 Output.plot_iter  = plot_iter;
 Output.save_soln  = save_soln;
 Output.save_ind   = save_ind;
+Output.save_visc   = save_visc;
 Output.save_plot  = save_plot;
 if(Output.save_plot)
     Output.ref_avail  = ref_avail;

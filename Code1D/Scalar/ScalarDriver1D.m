@@ -13,11 +13,18 @@ Find_relative_path;
 % generate various matrix operators and maps
 StartUp1D;
 
-% Extract MLP weights, biases and other parameters
+% Extract MLP weights, biases and other parameters for troubled cells
 if(strcmp(Limit.Indicator,'NN'))
     Net = read_mlp_param1D(Limit.nn_model,REL_PATH);
 else
     Net.avail = false;
+end
+
+%Repeat for viscosity
+if(strcmp(Viscosity.model,'NN'))
+    NetVisc = read_mlp_param1D_visc(Viscosity.nn_visc_model,REL_PATH,Mesh.N);
+else
+    NetVisc.avail = false;
 end
 
 
@@ -25,11 +32,11 @@ end
 u = Problem.u_IC(Mesh.x);
 
 % Creating file name base for saving solution
-Output.fname_base = Scalar_fnamebase1D(Problem,Mesh.N,Mesh.K,Limit,Mesh.mesh_pert);
+Output.fname_base = Scalar_fnamebase1D(Problem,Mesh.N,Mesh.K,Limit,Viscosity,Mesh.mesh_pert);
 
 
 if(save_plot)
-    assert(save_soln && save_ind,'To be able to save plots, set save_soln and save_ind as true');
+    assert(save_soln && save_ind && save_visc,'To be able to save plots, set save_soln, save_ind, save_visc as true');
 end
 
 % Solve Problem

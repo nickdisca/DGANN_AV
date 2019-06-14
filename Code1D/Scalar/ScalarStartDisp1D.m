@@ -14,3 +14,20 @@ elseif(strcmp(Limit.Indicator,'TVB'))
 end
 
 fprintf('   Limiter            : %s\n',Limit.Limiter)
+
+switch Viscosity.model
+    case 'NONE'
+    fprintf('   Viscosity Model    : %s \n',Viscosity.model)
+    
+    case 'MDH'
+    fprintf('   Viscosity Model    : %s (c_A=%.2f, c_k=%.2f, c_max=%.2f)\n',Viscosity.model,Viscosity.c_A,Viscosity.c_k,Viscosity.c_max)
+
+    case 'MDA'
+    fprintf('   Viscosity Model    : %s (c_max=%.2f)\n',Viscosity.model,Viscosity.c_max)
+    
+    case 'EV'
+    fprintf('   Viscosity Model    : %s (c_E=%.2f, c_max=%.2f)\n',Viscosity.model,Viscosity.c_E,Viscosity.c_max)
+    
+    case 'NN'
+    fprintf('   Viscosity Model    : %s (%s)\n',Viscosity.model, Viscosity.nn_visc_model)
+end
