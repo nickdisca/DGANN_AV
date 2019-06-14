@@ -15,19 +15,19 @@ bnd_r     = 1.0;
 mesh_pert = 0.0;
 bc_cond   = {'P',0.0,'P',0.0};
 FinalTime = 2;
-CFL       = 0.6;
+CFL       = 0.4;
 K     = 100;
 N         = 1;
 
 
-Indicator = 'MINMOD';
+Indicator = 'NONE';
 nn_model       = 'MLP_v1';	
-Limiter    = 'MINMOD';
+Limiter    = 'NONE';
 
 
 plot_iter  = 20;
 save_soln  = true;
-save_ind   = false;
+save_ind   = true;
 save_plot  = true;
 ref_avail  = true;
 ref_fname  = 'ref_soln.dat';

@@ -93,7 +93,7 @@ elseif(strcmp(Limiter,'MINMOD'))
     end
     
 else
-    error('Unknown indicator type %s',Indicator)
+    error('Unknown limiter type %s',Limiter)
 end
 
 
@@ -157,13 +157,11 @@ Mesh.mesh_pert = mesh_pert;
 Mesh.K         = K;
 
 Limit.Limiter    = Limiter;
-if(~strcmp(Limiter,'NONE'))
-    Limit.Indicator  = Indicator;
-    if(strcmp(Indicator,'TVB'))
-        Limit.TVBM = TVBM;
-    elseif(strcmp(Indicator,'NN'))
-        Limit.nn_model   = nn_model;
-    end
+Limit.Indicator  = Indicator;
+if(strcmp(Indicator,'TVB'))
+    Limit.TVBM = TVBM;
+elseif(strcmp(Indicator,'NN'))
+    Limit.nn_model   = nn_model;
 end
 
 
