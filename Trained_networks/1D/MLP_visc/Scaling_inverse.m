@@ -1,4 +1,4 @@
-function out_scale = Scaling_inverse(out,u,h,wave_speed)
+function out_scale = Scaling_inverse(out,u,h,wave_speed,bc_cond)
 
 % Perform scaling for each column of out according to the physics of the
 % problem, mulitplying by a mesh-dependent factor and a wave speed. Note
@@ -13,7 +13,7 @@ jump_R=u_ext(2,2:n+1)-u_ext(1,3:n+2);
 scaling=max(abs(jump_L),abs(jump_R));
 scaling=min(scaling,h);
         
-fact=scaling.*wave_speed; fact=repmat(fact,m,1);
+fact=scaling.*wave_speed;
 out_scale = out.*fact;
 
 return

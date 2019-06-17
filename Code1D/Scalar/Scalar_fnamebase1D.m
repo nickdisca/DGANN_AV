@@ -26,7 +26,7 @@ fname = sprintf('%s_LIM_%s',fname,Limit.Limiter);
 if(strcmp(Viscosity.model,'NONE'))
     fname = sprintf('%s_VISC_%s',fname,Viscosity.model);
 elseif(strcmp(Viscosity.model,'MDH'))
-    fname = sprintf('%s_VISC_%s_%d_%d_%d',fname,Viscosity.model,Viscosity.c_A,Viscosity.c_E,Viscosity.c_max);
+    fname = sprintf('%s_VISC_%s_%d_%d_%d',fname,Viscosity.model,Viscosity.c_A,Viscosity.c_k,Viscosity.c_max);
 elseif(strcmp(Viscosity.model,'MDA'))
     fname = sprintf('%s_VISC_%s_%d',fname,Viscosity.model,Viscosity.c_max);
 elseif(strcmp(Viscosity.model,'EV'))
