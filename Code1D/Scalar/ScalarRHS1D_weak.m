@@ -10,7 +10,7 @@ fluxr_u = ScalarC1D(u_ext(2,2:Mesh.K+1),u_ext(1,3:Mesh.K+2),flux,dflux);
 fluxl_u = ScalarC1D(u_ext(2,1:Mesh.K),u_ext(1,2:Mesh.K+1),flux,dflux);
 
 % Compute auxiliary variable variable q
-qh = - Mesh.S'*u + (Mesh.Imat(:,mesh.N+1)*fluxr_u(1,:) - Mesh.Imat(:,1)*fluxl_u(1,:));
+qh = - Mesh.S'*u + (Mesh.Imat(:,Mesh.N+1)*fluxr_u(1,:) - Mesh.Imat(:,1)*fluxl_u(1,:));
 q = mu.*Mesh.int_metric.*(Mesh.invM*qh); 
 
 % Apply BC to auxiliary variable
@@ -35,7 +35,7 @@ fluxr_fu = ScalarC1D(u_ext(2,2:Mesh.K+1),u_ext(1,3:Mesh.K+2),flux,dflux);
 fluxl_fu = ScalarC1D(u_ext(2,1:Mesh.K),u_ext(1,2:Mesh.K+1),flux,dflux);
 
 % compute right hand sides of the semi-discrete PDE
-rhsu  = Mesh.S'*flux(u) - Mesh.S'*q + (mesh.Imat(:,mesh.Np)*fluxr_q(1,:) - mesh.Imat(:,1)*fluxl_q(1,:)) - (Mesh.Imat(:,Mesh.Np)*fluxr_fu(1,:) - Mesh.Imat(:,1)*fluxl_fu(1,:)) ;
+rhsu  = Mesh.S'*flux(u) - Mesh.S'*q + (Mesh.Imat(:,Mesh.Np)*fluxr_q(1,:) - Mesh.Imat(:,1)*fluxl_q(1,:)) - (Mesh.Imat(:,Mesh.Np)*fluxr_fu(1,:) - Mesh.Imat(:,1)*fluxl_fu(1,:)) ;
 rhsu  = Mesh.int_metric.*(Mesh.invM*rhsu);
 
 return

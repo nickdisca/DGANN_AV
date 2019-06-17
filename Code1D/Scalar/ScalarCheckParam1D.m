@@ -159,11 +159,6 @@ if(save_plot)
     assert(exist('ref_fname','var')==1,...
         'ERROR: ''ref_fname'' variable must be defined')
     
-    assert(exist('rk_comb','var')==1,...
-        'ERROR: ''rk_comb'' variable must be defined')
-    assert(islogical(rk_comb),...
-        'ERROR: ''rk_comb'' must be a logical variable')
-    
     assert(exist('var_ran','var')==1,...
         'ERROR: ''var_ran'' variable must be defined to save plots')
     Check_ran1D(var_ran,1);
@@ -223,6 +218,5 @@ Output.save_plot  = save_plot;
 if(Output.save_plot)
     Output.ref_avail  = ref_avail;
     Output.ref_fname  = ref_fname;
-    Output.rk_comb    = rk_comb;
     Output.var_ran    = var_ran;
 end

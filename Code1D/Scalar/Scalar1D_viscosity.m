@@ -9,7 +9,7 @@ local_wave_sp=max(dflux(u));
 switch Viscosity.model
     
     case 'NONE'
-        mu_piece=zeros(1,N);
+        mu_piece=zeros(1,Mesh.K);
         
         
     case "EV"

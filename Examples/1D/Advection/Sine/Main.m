@@ -14,19 +14,22 @@ bnd_l     = 0;
 bnd_r     = 1.0;
 mesh_pert = 0.0;
 bc_cond   = {'P',0.0,'P',0.0};
-FinalTime = 2;
+FinalTime = 0.2;
 CFL       = 0.4;
 K     = 100;
 N         = 2;
 RK        = 'SSP3';
 
 
-Indicator = 'NONE';
+Indicator = 'TVB'; TVBM=1;
 nn_model       = 'MLP_v1';	
-Limiter    = 'NONE';
+Limiter    = 'MINMOD';
 
 Visc_model = 'NONE';
 nn_visc_model = 'MLP_visc';
+%Visc_model='EV'; c_E=1; c_max=0.5;
+%Visc_model='MDH'; c_A=2.5; c_k=0.2; c_max=0.5;
+%Visc_model='MDA'; c_max=1;
 
 
 plot_iter  = 20;
@@ -36,7 +39,6 @@ save_visc  = true;
 save_plot  = true;
 ref_avail  = true;
 ref_fname  = 'ref_soln.dat';
-rk_comb    = false;
 var_ran    = [-1.2,1.5];
 
 % Call code driver

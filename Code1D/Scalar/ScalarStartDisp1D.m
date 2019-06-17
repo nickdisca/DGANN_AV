@@ -7,7 +7,7 @@ fprintf('   CFL                : %.2f\n',Problem.CFL)
 
 if(strcmp(Limit.Indicator,'NONE') || strcmp(Limit.Indicator,'ALL') || strcmp(Limit.Indicator,'MINMOD'))
     fprintf('   Indicator          : %s \n',Limit.Indicator)
-elseif(strcmp(Limit.Limit.Indicator,'NN'))
+elseif(strcmp(Limit.Indicator,'NN'))
     fprintf('   Indicator          : %s (%s)\n',Limit.Indicator, Limit.nn_model)
 elseif(strcmp(Limit.Indicator,'TVB'))
     fprintf('   Indicator          : %s (M=%.2f)\n',Limit.Indicator,Limit.TVBM)

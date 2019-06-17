@@ -41,7 +41,7 @@ end
 
 % Solve Problem
 fprintf('... starting main solve\n')
-[u] = Scalar1D(u,Problem,Mesh,Limit,Net,Output);
+[u] = Scalar1D(u,Problem,Mesh,Limit,Net,Viscosity,NetVisc,Output);
 
 %%
 
@@ -51,9 +51,9 @@ Save_scalar_soln1D(u,Mesh.x,Output.fname_base);
 if(Output.save_plot)
     fprintf('... generating and saving plots in directory OUTPUT\n')
     if(Output.ref_avail)
-        PlotScalar1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],Output.rk_comb,true,Output.ref_fname); 
+        PlotScalar1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],true,Output.ref_fname,Mesh.x,Problem.RK); 
     else
-        PlotScalar1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],Output.rk_comb,false);
+        PlotScalar1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],false,Mesh.x,Problem.RK);
     end
 end
 

@@ -1,4 +1,4 @@
-function [u] = Scalar1D(u,Problem,Mesh,Limit,Net,Output)
+function [u] = Scalar1D(u,Problem,Mesh,Limit,Net,Viscosity,NetVisc,Output)
 
 % Purpose  : Integrate 1D Scalar equation until
 %            FinalTime starting with
@@ -18,7 +18,7 @@ if(Output.save_ind)
     fid = fopen(strcat(Output.fname_base,'_tcells.dat'),'w');
 end
 if(Output.save_visc)
-    fid = fopen(strcat(Output.fname_base,'_visc.dat'),'w');
+    fid2 = fopen(strcat(Output.fname_base,'_visc.dat'),'w');
 end
 
 
@@ -39,15 +39,19 @@ while(time<Problem.FinalTime)
     
     %Compute artificial viscosity
     uold = reshape(u_tmp(:,1),Mesh.Np,Mesh.K);
-    mu_piece = Scalar1D_viscosity(u, uold, dflux, Viscosity, Problem, Mesh, dt, iter, local_diam, NetVisc);
+    mu_piece = Scalar1D_viscosity(u, uold, dflux, Viscosity, Problem, Mesh, dt, iter, NetVisc);
     mu_piece=max(mu_piece,0);
     mu_vals=Scalar1D_smooth_viscosity(mu_piece,Mesh.x); 
     mu_vals=max(mu_vals,0);
     maxvisc=max(abs(mu_vals(:)));
     
+    if(Output.save_visc && (mod(iter,Output.plot_iter) == 0 || time+dt >= Problem.FinalTime))
+        Visc_write1D(fid2,time,mu_vals);
+    end
+    
     %Set timestep
     speed = max(max(abs(dflux(u))));
-    dt = Problem.CFL*1/(speed*mesh.N^2/min(Mesh.hK)+maxvisc*Mesh.N^4*min(Mesh.hK)^2);
+    dt = Problem.CFL*1/(speed*Mesh.N^2/min(Mesh.hK)+maxvisc*Mesh.N^4*min(Mesh.hK)^2);
     
     if(time+dt>Problem.FinalTime)
         dt = Problem.FinalTime-time;
@@ -70,7 +74,7 @@ while(time<Problem.FinalTime)
         end 
         
         % SSP RK Stage 2.
-        rhsu  = ScalarRHS1D_weak(u1,flux,dflux,Problem.bc_cond,Mesh);
+        rhsu  = ScalarRHS1D_weak(u1,flux,dflux,mu_vals,Problem.bc_cond,Mesh);
         u2   = (3*u  + u1  + dt*rhsu )/4;
         
         % Limit fields
@@ -81,7 +85,7 @@ while(time<Problem.FinalTime)
         end
         
         % SSP RK Stage 3.
-        rhsu  = ScalarRHS1D_weak(u2,flux,dflux,Problem.bc_cond,Mesh);
+        rhsu  = ScalarRHS1D_weak(u2,flux,dflux,mu_vals,Problem.bc_cond,Mesh);
         u  = (u  + 2*u2  + 2*dt*rhsu )/3;
         
         % Limit solution
@@ -134,23 +138,15 @@ while(time<Problem.FinalTime)
     % Increment saved variables (needed for EV)
     u_tmp(:,1)=u_tmp(:,2); u_tmp(:,2)=u(:);
     
-%     if(mod(iter,Output.plot_iter) == 0 || time >= Problem.FinalTime)
-%         figure(1)
-%         plot(Mesh.x(:),u(:),'b-','LineWidth',2)
-%         xlabel('x')
-%         ylabel('u')
-%         title(['time = ',num2str(time)])
-%         
-%         figure(10)
-%         subplot(1,3,1)
-%         plot(xcen(ind1),ones(1,length(ind1))*time,'r.')
-%         subplot(1,3,2)
-%         plot(xcen(ind2),ones(1,length(ind2))*time,'r.')
-%         subplot(1,3,3)
-%         plot(xcen(ind3),ones(1,length(ind3))*time,'r.')
-%         
-%         pause(0.1)
-%     end
+    if(mod(iter,Output.plot_iter) == 0 || time >= Problem.FinalTime)
+        figure(1)
+        plot(Mesh.x(:),u(:),'b-','LineWidth',2)
+        xlabel('x')
+        ylabel('u')
+        title(['time = ',num2str(time)])
+        
+        pause(0.1)
+    end
     
         
 end
