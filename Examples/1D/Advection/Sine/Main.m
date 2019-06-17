@@ -15,24 +15,25 @@ bnd_r     = 1.0;
 mesh_pert = 0.0;
 bc_cond   = {'P',0.0,'P',0.0};
 FinalTime = 0.2;
-CFL       = 0.2;
+CFL       = 0.1;
 K     = 100;
 N         = 3;
-RK        = 'SSP3';
+RK        = 'LS54';
 
 
 Indicator = 'NONE'; TVBM=1;
 nn_model       = 'MLP_v1';	
 Limiter    = 'NONE';
 
-%Visc_model = 'NONE';
+Visc_model = 'NONE';
 nn_visc_model = 'MLP_visc';
 %Visc_model='EV'; c_E=1; c_max=0.5;
 %Visc_model='MDH'; c_A=2.5; c_k=0.2; c_max=0.5;
 %Visc_model='MDA'; c_max=1;
-Visc_model='NN';
+%Visc_model='NN';
 
-plot_iter  = 20;
+plot_iter  = 200;
+save_iter  = 1;
 save_soln  = true;
 save_ind   = true;
 save_visc  = true;

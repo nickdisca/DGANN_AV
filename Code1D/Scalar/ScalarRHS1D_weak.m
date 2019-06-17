@@ -29,10 +29,10 @@ end
 q_ext = Apply_BC1D(q(Mesh.VtoE),bc_cond_aux);
 
 % Compute numerical fluxes at interfaces for for mu*q and f
-fluxr_q = ScalarLF1D(q_ext(2,2:Mesh.K+1),q_ext(1,3:Mesh.K+2),flux,dflux);
-fluxl_q = ScalarLF1D(q_ext(2,1:Mesh.K),q_ext(1,2:Mesh.K+1),flux,dflux);
-fluxr_fu = ScalarC1D(u_ext(2,2:Mesh.K+1),u_ext(1,3:Mesh.K+2),flux,dflux);
-fluxl_fu = ScalarC1D(u_ext(2,1:Mesh.K),u_ext(1,2:Mesh.K+1),flux,dflux);
+fluxr_q = ScalarC1D(q_ext(2,2:Mesh.K+1),q_ext(1,3:Mesh.K+2),flux,dflux);
+fluxl_q = ScalarC1D(q_ext(2,1:Mesh.K),q_ext(1,2:Mesh.K+1),flux,dflux);
+fluxr_fu = ScalarLF1D(u_ext(2,2:Mesh.K+1),u_ext(1,3:Mesh.K+2),flux,dflux);
+fluxl_fu = ScalarLF1D(u_ext(2,1:Mesh.K),u_ext(1,2:Mesh.K+1),flux,dflux);
 
 % compute right hand sides of the semi-discrete PDE
 rhsu  = Mesh.S'*flux(u) - Mesh.S'*q + (Mesh.Imat(:,Mesh.Np)*fluxr_q(1,:) - Mesh.Imat(:,1)*fluxl_q(1,:)) - (Mesh.Imat(:,Mesh.Np)*fluxr_fu(1,:) - Mesh.Imat(:,1)*fluxl_fu(1,:)) ;

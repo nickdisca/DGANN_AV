@@ -134,6 +134,11 @@ assert(exist('plot_iter','var')==1,...
 assert((floor(plot_iter)==plot_iter & plot_iter > 0),...
     'ERROR: ''plot_iter'' must be a positive integer')
 
+assert(exist('save_iter','var')==1,...
+    'ERROR: ''save_iter'' variable must be defined')
+assert((floor(save_iter)==save_iter & save_iter > 0),...
+    'ERROR: ''save_iter'' must be a positive integer')
+
 assert(exist('save_soln','var')==1,...
     'ERROR: ''save_soln'' variable must be defined')
 assert(islogical(save_soln),...
@@ -211,6 +216,7 @@ end
 
 
 Output.plot_iter  = plot_iter;
+Output.save_iter  = save_iter;
 Output.save_soln  = save_soln;
 Output.save_ind   = save_ind;
 Output.save_visc   = save_visc;

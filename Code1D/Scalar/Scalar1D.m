@@ -30,8 +30,7 @@ if(Output.save_ind)
 end
 
 % Initialize solution at previous time step
-u_tmp=zeros(size(u,1)*size(u,2),2); 
-u_tmp(:,2)=u(:);
+u_tmp=zeros(length(u(:)),3);
 
 
 % outer time step loop
@@ -45,7 +44,7 @@ while(time<Problem.FinalTime)
     mu_vals=max(mu_vals,0);
     maxvisc=max(abs(mu_vals(:)));
     
-    if(Output.save_visc && (mod(iter,Output.plot_iter) == 0 || time+dt >= Problem.FinalTime))
+    if(Output.save_visc && (mod(iter,Output.save_iter) == 0 || time+dt >= Problem.FinalTime))
         Visc_write1D(fid2,time,mu_vals);
     end
     
@@ -69,7 +68,7 @@ while(time<Problem.FinalTime)
         % Limit fields
         ind1  = Scalar1D_Tcells(u1,Problem.bc_cond,Mesh,Limit,Net);
         u1    = Scalar1D_limit(u1,ind1,Problem.bc_cond,Limit.Limiter,Mesh);
-        if(Output.save_ind && (mod(iter,Output.plot_iter) == 0 || time+dt >= Problem.FinalTime))
+        if(Output.save_ind && (mod(iter,Output.save_iter) == 0 || time+dt >= Problem.FinalTime))
             Tcell_write1D(fid,time+dt,xcen(ind1));
         end 
         
@@ -80,7 +79,7 @@ while(time<Problem.FinalTime)
         % Limit fields
         ind2  = Scalar1D_Tcells(u2,Problem.bc_cond,Mesh,Limit,Net);
         u2    = Scalar1D_limit(u2,ind2,Problem.bc_cond,Limit.Limiter,Mesh);
-        if(Output.save_ind && (mod(iter,Output.plot_iter) == 0 || time+dt >= Problem.FinalTime))
+        if(Output.save_ind && (mod(iter,Output.save_iter) == 0 || time+dt >= Problem.FinalTime))
             Tcell_write1D(fid,time+dt,xcen(ind2));
         end
         
@@ -91,7 +90,7 @@ while(time<Problem.FinalTime)
         % Limit solution
         ind3  = Scalar1D_Tcells(u,Problem.bc_cond,Mesh,Limit,Net);
         u     = Scalar1D_limit(u,ind3,Problem.bc_cond,Limit.Limiter,Mesh);
-        if(Output.save_ind && (mod(iter,Output.plot_iter) == 0 || time+dt >= Problem.FinalTime))
+        if(Output.save_ind && (mod(iter,Output.save_iter) == 0 || time+dt >= Problem.FinalTime))
             Tcell_write1D(fid,time+dt,xcen(ind3));
         end
        
@@ -108,16 +107,16 @@ while(time<Problem.FinalTime)
         UU=u; VV=zeros(size(u));
         for index=1:nsteps
             
-            rhsu  = ScalarRHS1D_weak(u,flux,dflux,mu_vals,Problem.bc_cond,Mesh);
+            rhsu  = ScalarRHS1D_weak(UU,flux,dflux,mu_vals,Problem.bc_cond,Mesh);
             
-            VV=A(index)*VV+k*rhsu;
+            VV=A(index)*VV+dt*rhsu;
             
             UU=UU+B(index)*VV;
             
-            ind_substage  = Scalar1D_Tcells(u,Problem.bc_cond,Mesh,Limit,Net);
+            ind_substage  = Scalar1D_Tcells(UU,Problem.bc_cond,Mesh,Limit,Net);
             
             UU  = Scalar1D_limit(UU,ind_substage,Problem.bc_cond,Limit.Limiter,Mesh);
-            if(Output.save_ind && (mod(iter,Output.plot_iter) == 0 || time+dt >= Problem.FinalTime))
+            if(Output.save_ind && (mod(iter,Output.save_iter) == 0 || time+dt >= Problem.FinalTime))
                 Tcell_write1D(fid,time+dt,xcen(ind_substage));
             end
         end
@@ -136,7 +135,7 @@ while(time<Problem.FinalTime)
     iter = iter+1;
     
     % Increment saved variables (needed for EV)
-    u_tmp(:,1)=u_tmp(:,2); u_tmp(:,2)=u(:);
+    u_tmp(:,3)=u(:); u_tmp(:,1)=u_tmp(:,2); u_tmp(:,2)=u_tmp(:,3);
     
     if(mod(iter,Output.plot_iter) == 0 || time >= Problem.FinalTime)
         figure(1)

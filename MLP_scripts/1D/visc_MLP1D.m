@@ -1,4 +1,4 @@
-function mu = visc_MLP1D(x, Net, u,h,wave_speed, bc_cond)
+function mu = visc_MLP1D(x, Net, u,h,wave_speed, VtoE, bc_cond)
    
    % CHECKS THAT SIZES ARE COMPATIBLE
    [m,n] = size(x);
@@ -31,6 +31,6 @@ function mu = visc_MLP1D(x, Net, u,h,wave_speed, bc_cond)
    y = softplus(Net.WEIGHTS{end}*x_in + repmat(Net.BIASES{end},1,n));
    
    % APPLY INVERSE SCALING
-   mu = Scaling_inverse(y,u,h,wave_speed,bc_cond);
+   mu = Scaling_inverse(y,u,h,wave_speed,VtoE,bc_cond);
    
 end 

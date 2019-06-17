@@ -21,13 +21,13 @@ switch Viscosity.model
         
         mu_max=Viscosity.c_max*Mesh.hK/Mesh.N.*local_wave_sp;
         
-        R=(E_new-E_old)/dt+(Mesh.Dr*F_old+Mesh.Dr*F_new)/Mesh.hK;
+        R=(E_new-E_old)/dt+(Mesh.Dr*F_old+Mesh.Dr*F_new)./Mesh.hK;
         if (iter==0)
             R=zeros(size(R));
         end
         
         % E_ext = Apply_BC1D(E_new,{'N',0.0,'N',0.0});
-        F_ext = Apply_BC1D(F_new,{'N',0.0,'N',0.0});
+        F_ext = Apply_BC1D(F_new(Mesh.VtoE),{'N',0.0,'N',0.0});
         % f_prime_ext=extendDG(f_prime_new,{'N',0.0,'N',0.0});
         cL=F_ext(2,1:Mesh.K)-F_ext(1,2:Mesh.K+1); 
         cR=F_ext(2,2:Mesh.K+1)-F_ext(1,3:Mesh.K+2);
@@ -84,7 +84,7 @@ switch Viscosity.model
     
     case "NN"
         
-        mu_piece = visc_MLP1D(u,Net,u,Mesh.hK,local_wave_sp,Problem.bc_cond);
+        mu_piece = visc_MLP1D(u,Net,u,Mesh.hK,local_wave_sp,Mesh.VtoE, Problem.bc_cond);
         
         
     otherwise

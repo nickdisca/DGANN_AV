@@ -7,7 +7,7 @@ if(ref_avail)
     ref_soln = load(ref_fname);
 end
 
-figure(1)
+figure;
 clf
 if(ref_avail)
     plot(ref_soln(:,1),ref_soln(:,2),'k-','LineWidth',2) 
@@ -34,7 +34,7 @@ data  = str2num(char(regexp(tline,', ','split')));
 t     = data(1);
 ind   = data(2:end);
 
-figure(2)
+figure;
 clf
 plot(t*ones(1,length(ind)),ind,'r.')
 xlim(x_ran)
@@ -65,7 +65,7 @@ fname = sprintf('%s_tcells.pdf',fname_base);
 print(fname,'-dpdf')
 
 %plot viscosity
-figure(3)
+figure;
 fid = fopen(strcat(fname_base,'_visc.dat'));
 
 tline = fgetl(fid);

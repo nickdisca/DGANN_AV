@@ -17,28 +17,3 @@ switch model
 end
 
 return
-
-
-
-       if (type=='linear')
-            E_old=1/2*uold.^2; E_new=1/2*u.^2;
-            F_old=1/2*uold.^2; F_new=1/2*u.^2;
-            f_prime_old=ones(size(uold)); f_prime_new=ones(size(u));
-        end
-        if (type=='burgers')
-            E_old=1/2*uold.^2; E_new=1/2*u.^2;
-            F_old=1/3*uold.^3; F_new=1/3*u.^3;
-            f_prime_old=uold; f_prime_new=u;
-        end
-        if (type=='fourth')
-            E_old=1/2*uold.^2; E_new=1/2*u.^2;
-            F_old=1/5*uold.^5; F_new=1/5*u.^5;
-            f_prime_old=uold.^3; f_prime_new=u.^3;
-        end
-        if (type=='buckley')
-            E_old=1/2*uold.^2; E_new=1/2*u.^2;
-            F_old=1/9*(2*(uold-2)./(3*uold.^2-2*uold+1)-2*log(3*uold.^2-2*uold+1)+sqrt(2)*atan((3*uold-1)/sqrt(2)));
-            F_new=1/9*(2*(u-2)./(3*u.^2-2*u+1)-2*log(3*u.^2-2*u+1)+sqrt(2)*atan((3*u-1)/sqrt(2)));
-            f_prime_old=4/9*uold.*(1-uold)./((uold.^2-2/3*uold+1/3).^2); 
-            f_prime_new=4/9*u.*(1-u)./((u.^2-2/3*u+1/3).^2);
-        end

@@ -53,7 +53,7 @@ if(Output.save_plot)
     if(Output.ref_avail)
         PlotScalar1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],true,Output.ref_fname,Mesh.x,Problem.RK); 
     else
-        PlotScalar1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],false,Mesh.x,Problem.RK);
+        PlotScalar1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],false,Output.ref_fname,Mesh.x,Problem.RK);
     end
 end
 
