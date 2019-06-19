@@ -50,9 +50,9 @@ while(time<Problem.FinalTime)
     pre    = (Problem.gas_gamma-1)*(q(:,:,3) - 0.5*q(:,:,2).^2./q(:,:,1));
     c_sound = sqrt(Problem.gas_gamma*pre./q(:,:,1));
     %c_sound = abs(c_sound);
-    if min(min(q(:,:,1)))<=0 || min(pre(:))<=0
-        warning('Positivity loss');
-    end
+    %if( min(min(real(q(:,:,1)))) <= 0.0 || min(min(real(pre))) <= 0.0)
+    %    error('Positivity loss!!');
+    %end
     lambda = c_sound + abs(q(:,:,2)./q(:,:,1));
     dt = Problem.CFL*1/(max(lambda(:))*Mesh.N^2/min(Mesh.hK)+maxvisc*Mesh.N^4/min(Mesh.hK)^2);
     

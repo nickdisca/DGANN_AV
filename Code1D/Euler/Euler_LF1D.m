@@ -17,6 +17,7 @@ fv   = [v(:,2) (pv + v(:,1).*velv.^2) (v(:,3) + pv).*velv ];
 lamu = sqrt(gas_gamma*pu./u(:,1)) + abs(velu);
 lamv = sqrt(gas_gamma*pv./v(:,1)) + abs(velv);
 lam  = max(lamu,lamv);
+%lam = abs(lam);
 
 fval = 0.5*(fu + fv - (lam*ones(1,3)).*(v-u));
 

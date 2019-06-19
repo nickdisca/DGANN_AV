@@ -12,7 +12,7 @@ jump_L=u_ext(2,1:n)-u_ext(1,2:n+1);
 jump_R=u_ext(2,2:n+1)-u_ext(1,3:n+2);
 scaling=max(abs(jump_L),abs(jump_R));
 scaling=min(scaling,h);
-        
+
 fact=scaling.*wave_speed;
 out_scale = out.*fact;
 
