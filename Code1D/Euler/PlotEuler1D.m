@@ -107,7 +107,7 @@ while ischar(tline)
 end
 
 fname = sprintf('%s_tcells.pdf',fname_base);
-print(fname,'-dpdf')
+%print(fname,'-dpdf')
 
 
 %plot viscosity
@@ -132,7 +132,7 @@ xlabel({'$x$'},'interpreter','latex','FontSize',20);
 ylabel({'$t$'},'interpreter','latex','FontSize',20);
 
 fname = sprintf('%s_visc.pdf',fname_base);
-print(fname,'-dpdf')
+%print(fname,'-dpdf')
 
 
 

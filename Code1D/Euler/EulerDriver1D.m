@@ -48,7 +48,9 @@ end
 
 % Solve Problem
 fprintf('... starting main solve\n')
+tic;
 q = Euler1D(q,Problem,Mesh,Limit,Net,Viscosity,NetVisc,Output);
+Problem.exec_time=toc;
 
 %%
 

@@ -169,6 +169,8 @@ while(time<Problem.FinalTime)
       
 end
 
+Problem.total_iter=iter;
+
 if(Output.save_ind)
     fclose(fid);
 end
