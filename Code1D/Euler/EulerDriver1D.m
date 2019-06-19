@@ -20,6 +20,13 @@ else
     Net.avail = false;
 end
 
+%Repeat for viscosity
+if(strcmp(Viscosity.model,'NN'))
+    NetVisc = read_mlp_param1D_visc(Viscosity.nn_visc_model,REL_PATH,Mesh.N);
+else
+    NetVisc.avail = false;
+end
+
 
 % Generate mass matrix and initialize solution
 rho        = Problem.rho_IC(Mesh.x);
@@ -32,27 +39,28 @@ energy     = 0.5*rho.*vel.^2 + pre/(Problem.gas_gamma - 1);
 q = zeros(Mesh.Np,Mesh.K,3); q(:,:,1) = rho; q(:,:,2) = mmt;  q(:,:,3) = energy;
 
 % Creating file name base for saving solution
-Output.fname_base = Euler_fnamebase1D(Problem,Mesh.N,Mesh.K,Limit,Mesh.mesh_pert);
+Output.fname_base = Euler_fnamebase1D(Problem,Mesh.N,Mesh.K,Limit,Viscosity,Mesh.mesh_pert);
 
 
-if(Output.save_plot)
-    assert(Output.save_soln && Output.save_ind,'To be able to save plots, set save_soln and save_ind as true');
+if(save_plot)
+    assert(save_soln && save_ind && save_visc,'To be able to save plots, set save_soln, save_ind, save_visc as true');
 end
 
 % Solve Problem
 fprintf('... starting main solve\n')
-q = Euler1D(q,Problem,Mesh,Limit,Net,Output);
+q = Euler1D(q,Problem,Mesh,Limit,Net,Viscosity,NetVisc,Output);
+
+%%
 
 % Save final solution
 Save_Euler_soln1D(q,Mesh.x,Problem.gas_gamma,Output.fname_base);
 
-%%
 if(Output.save_plot)
     fprintf('... generating and saving plots in directory OUTPUT\n')
     if(Output.ref_avail)
-        PlotEuler1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],Output.rk_comb,true,Output.ref_fname); 
+        PlotEuler1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],true,Output.ref_fname,Mesh.x,Problem.RK); 
     else
-        PlotEulerE1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],Output.rk_comb,false);
+        PlotEuler1D(Output.fname_base,[Mesh.bnd_l,Mesh.bnd_r],Output.var_ran,[0,Problem.FinalTime],false,Output.ref_fname,Mesh.x,Problem.RK);
     end
 end
 

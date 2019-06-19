@@ -8,20 +8,20 @@ close all
 model     = 'Euler';
 gas_const = 1.0;
 gas_gamma = 1.4;
-test_name = 'Sod';
-rho_IC    =@(x) 1*(x<0.0) + 0.125*(x>=0.0);
-vel_IC    =@(x) 0*x;
-pre_IC    =@(x) 1*(x<0.0) + 0.1*(x>=0.0);
+test_name = 'Smooth';
+rho_IC    =@(x) 1+0.5*sin(2*pi*x);
+vel_IC    =@(x) ones(size(x));
+pre_IC    =@(x) ones(size(x));
 
-bnd_l     = -5;  
-bnd_r     = 5;
+bnd_l     = 0;  
+bnd_r     = 1;
 mesh_pert = 0.0;
-bc_cond   = {'D',1,'D',0.125;
-             'D',0,'D',0.0;
-             'D',1/(0.4),'D',0.1/(0.4)};  % For conserved variables
-FinalTime = 2;
-CFL       = 0.4;
-K         = 200;
+bc_cond   = {'P',0,'P',0;
+             'P',0,'P',0.0;
+             'P',0,'P',0};  % For conserved variables
+FinalTime = 0.1;
+CFL       = 0.1;
+K         = 100;
 N         = 1;
 RK        = 'LS54';
 
@@ -32,27 +32,23 @@ nn_model       = 'MLP_v1';
 Limiter    = 'NONE';
 lim_var        = "char_stencil";
 
-Visc_model = 'NONE';
 nn_visc_model = 'MLP_visc';
+%Visc_model = 'NONE';
 %Visc_model='EV'; c_E=1; c_max=0.5;
 %Visc_model='MDH'; c_A=2.5; c_k=0.2; c_max=0.5;
 %Visc_model='MDA'; c_max=1;
-%Visc_model='NN';
+Visc_model='NN';
 visc_var='density';
 
-plot_iter  = 200;
+plot_iter  = 20;
 save_iter  = 1;
 save_soln  = true;
 save_ind   = true;
 save_visc  = true;
 save_plot  = true;
-ref_avail  = true;
+ref_avail  = false;
 ref_fname  = 'ref_soln.dat';
-var_ran    = [0,1.2; -0.2,1.5; 0,1.2];
+var_ran    = [0,2; 0.5,1.5; 0.5,1.5];
 
 % Call code driver
 EulerDriver1D; 
-
-
-
-

@@ -76,6 +76,10 @@ assert(exist('CFL','var')==1,...
 assert((isnumeric(CFL) & CFL > 0.0),...
     'ERROR: ''CFL'' must be a positive number')
 
+% Runge-Kutta scheme
+assert(exist('RK','var')==1,...
+    'ERROR: ''RK'' variable must be defined')
+
 
 % Indicator and Limiter
 assert(exist('Limiter','var')==1,...
@@ -158,7 +162,43 @@ elseif(strcmp(Limiter,'MINMOD'))
     end
     
 else
-    error('Unknown indicator type %s',Indicator)
+    error('Unknown limiter type %s',Limiter)
+end
+
+
+%Viscosity 
+assert(exist('Visc_model','var')==1,...
+    'ERROR: ''Visc_model'' variable must be defined')
+switch Visc_model
+    case 'NONE'
+        
+    case 'MDH'
+        assert(exist('c_A','var')==1 && exist('c_k','var')==1 && exist('c_max','var')==1, ...
+            'ERROR: ''c_A,c_k,c_max'' variables must be defined since Visc_model = MDH')
+        
+    case 'MDA'
+        assert(exist('c_max','var')==1, ...
+            'ERROR: ''c_max'' variable must be defined since Visc_model = MDA')
+        
+    case 'EV'
+        assert(exist('c_E','var')==1 && exist('c_max','var')==1, ...
+            'ERROR: ''c_E,c_max'' variables must be defined since Visc_model = EV')
+        
+    case 'NN'
+        assert(exist('nn_visc_model','var')==1,...
+            'ERROR: ''nn_visc_model'' variable must be defined since Visc_model = NN')
+        
+    otherwise
+            error('Unknown viscosity_model %s',Visc_model)
+end
+
+if ~strcmp('Visc_model','NONE')
+    assert(exist('visc_var','var')==1,...
+        'ERROR: ''visc_var'' variable must be defined');
+    
+    if ~strcmp(visc_var,'density')
+        error('Viscosity has to be estimated using density');
+    end
 end
 
 
@@ -168,6 +208,11 @@ assert(exist('plot_iter','var')==1,...
 assert((floor(plot_iter)==plot_iter & plot_iter > 0),...
     'ERROR: ''plot_iter'' must be a positive integer')
 
+assert(exist('save_iter','var')==1,...
+    'ERROR: ''save_iter'' variable must be defined')
+assert((floor(save_iter)==save_iter & save_iter > 0),...
+    'ERROR: ''save_iter'' must be a positive integer')
+
 assert(exist('save_soln','var')==1,...
     'ERROR: ''save_soln'' variable must be defined')
 assert(islogical(save_soln),...
@@ -175,8 +220,13 @@ assert(islogical(save_soln),...
 
 assert(exist('save_ind','var')==1,...
     'ERROR: ''save_ind'' variable must be defined')
-assert(islogical(save_soln),...
+assert(islogical(save_visc),...
     'ERROR: ''save_ind'' must be a logical variable')
+
+assert(exist('save_visc','var')==1,...
+    'ERROR: ''save_visc'' variable must be defined')
+assert(islogical(save_visc),...
+    'ERROR: ''save_visc'' must be a logical variable')
 
 assert(exist('save_plot','var')==1,...
     'ERROR: ''save_plot'' variable must be defined')
@@ -192,11 +242,6 @@ if(save_plot)
     
     assert(exist('ref_fname','var')==1,...
         'ERROR: ''ref_fname'' variable must be defined')
-    
-    assert(exist('rk_comb','var')==1,...
-        'ERROR: ''rk_comb'' variable must be defined')
-    assert(islogical(rk_comb),...
-        'ERROR: ''rk_comb'' must be a logical variable')
     
     assert(exist('var_ran','var')==1,...
         'ERROR: ''var_ran'' variable must be defined to save plots')
@@ -217,6 +262,7 @@ Problem.pre_IC    = pre_IC;
 Problem.bc_cond   = bc_cond;
 Problem.FinalTime = FinalTime;
 Problem.CFL       = CFL;
+Problem.RK        = RK;
 
 
 Mesh.N         = N;
@@ -226,31 +272,46 @@ Mesh.mesh_pert = mesh_pert;
 Mesh.K         = K;
 
 Limit.Limiter    = Limiter;
-if(~strcmp(Limiter,'NONE'))
-    Limit.Indicator  = Indicator;
-    if(strcmp(Indicator,'TVB'))
-        Limit.TVBM = TVBM;
-    elseif(strcmp(Indicator,'NN'))
-        Limit.nn_model   = nn_model;
-    end
+Limit.Indicator  = Indicator;
+if(strcmp(Indicator,'TVB'))
+    Limit.TVBM = TVBM;
+elseif(strcmp(Indicator,'NN'))
+    Limit.nn_model   = nn_model;
 end
 
-if(~strcmp(Limiter,'NONE'))
-    Limit.lim_var = lim_var;
-end
+Limit.lim_var = lim_var;
 
-if(~strcmp(Indicator,'NONE') && ~strcmp(Indicator,'ALL'))
-    Limit.ind_var = ind_var;
+Limit.ind_var = ind_var;
+
+
+Viscosity.model = Visc_model;
+switch Visc_model     
+    case 'MDH'
+        Viscosity.c_A=c_A; 
+        Viscosity.c_k=c_k; 
+        Viscosity.c_max=c_max;
+        
+    case 'MDA'
+        Viscosity.c_max=c_max;
+        
+    case 'EV'
+        Viscosity.c_E=c_E; 
+        Viscosity.c_max=c_max;
+        
+    case 'NN'
+        Viscosity.nn_visc_model = nn_visc_model;
 end
+Viscosity.visc_var=visc_var;
 
 
 Output.plot_iter  = plot_iter;
+Output.save_iter  = save_iter;
 Output.save_soln  = save_soln;
 Output.save_ind   = save_ind;
+Output.save_visc   = save_visc;
 Output.save_plot  = save_plot;
 if(Output.save_plot)
     Output.ref_avail  = ref_avail;
     Output.ref_fname  = ref_fname;
-    Output.rk_comb    = rk_comb;
     Output.var_ran    = var_ran;
 end

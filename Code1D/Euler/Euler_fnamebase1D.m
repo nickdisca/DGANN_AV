@@ -1,4 +1,4 @@
-function fname = Euler_fnamebase1D(Problem,N,K,Limit,mesh_pert)
+function fname = Euler_fnamebase1D(Problem,N,K,Limit,Viscosity,mesh_pert)
 
 mkdir('OUTPUT');
 
@@ -21,6 +21,27 @@ else
 end
 fname = sprintf('%s_IVAR_%s_LIM_%s_LVAR_%s',...
                 fname,Limit.ind_var,Limit.Limiter,Limit.lim_var);
+            
+if(strcmp(Viscosity.model,'NONE'))
+    fname = sprintf('%s_VISC_%s',fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'MDH'))
+    fname = sprintf('%s_VISC_%s',fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'MDA'))
+    fname = sprintf('%s_VISC_%s',fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'EV'))
+    fname = sprintf('%s_VISC_%s',fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'NN'))
+    fname = sprintf('%s_VISC_%s',fname,Viscosity.model);
+else
+    error('Viscosity model %s not available',Viscosity.model);
+end
+
+if(strcmp(Viscosity.visc_var,'density'))
+    fname = sprintf('%s_VVAR_%s',fname,Viscosity.visc_var);
+else
+    error('Viscosity variable %s not available',Viscosity.visc_var);    
+end
+
 if(mesh_pert ~= 0.0)
     fname = sprintf('%s_pert',fname);
 end

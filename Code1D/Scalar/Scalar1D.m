@@ -99,9 +99,9 @@ while(time<Problem.FinalTime)
     % 4th order low storage Runge-Kutta    
     elseif strcmp(Problem.RK,'LS54')
         
-        A(1)=0; A(2)=-0.4178904745; A(3)=-1.192151694643; A(4)=-1.697784692471; A(5)=-1.514183444257;
-        B(1)=0.1496590219993; B(2)=0.3792103129999; B(3)=0.8229550293869; B(4)=0.6994504559488; B(5)=0.1530572479681;
-        c(1)=0; c(2)=0.1496590219993; c(3)=0.3704009573644; c(4)=0.6222557631345; c(5)=0.9582821306748;
+        A_RK(1)=0; A_RK(2)=-0.4178904745; A_RK(3)=-1.192151694643; A_RK(4)=-1.697784692471; A_RK(5)=-1.514183444257;
+        B_RK(1)=0.1496590219993; B_RK(2)=0.3792103129999; B_RK(3)=0.8229550293869; B_RK(4)=0.6994504559488; B_RK(5)=0.1530572479681;
+        c_RK(1)=0; c_RK(2)=0.1496590219993; c_RK(3)=0.3704009573644; c_RK(4)=0.6222557631345; c_RK(5)=0.9582821306748;
         nsteps=5;
         
         UU=u; VV=zeros(size(u));
@@ -109,9 +109,9 @@ while(time<Problem.FinalTime)
             
             rhsu  = ScalarRHS1D_weak(UU,flux,dflux,mu_vals,Problem.bc_cond,Mesh);
             
-            VV=A(index)*VV+dt*rhsu;
+            VV=A_RK(index)*VV+dt*rhsu;
             
-            UU=UU+B(index)*VV;
+            UU=UU+B_RK(index)*VV;
             
             ind_substage  = Scalar1D_Tcells(UU,Problem.bc_cond,Mesh,Limit,Net);
             
