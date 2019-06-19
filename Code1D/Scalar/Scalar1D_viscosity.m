@@ -3,7 +3,7 @@ function [mu_piece] = Scalar1D_viscosity(u,uold, dflux,Viscosity,Problem,Mesh,dt
 % smoothing is done afterwards
 
 %compute maximum wave speed 
-local_wave_sp=max(dflux(u));
+local_wave_sp=max(abs(dflux(u)));
 
 %compute viscosity according to the selected model
 switch Viscosity.model
@@ -85,6 +85,8 @@ switch Viscosity.model
     case "NN"
         
         mu_piece = visc_MLP1D(u,Net,u,Mesh.hK,local_wave_sp,Mesh.VtoE, Problem.bc_cond);
+        
+        c=1.0; mu_piece = c*mu_piece;
         
         
     otherwise
