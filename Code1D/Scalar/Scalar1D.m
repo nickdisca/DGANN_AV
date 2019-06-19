@@ -50,7 +50,7 @@ while(time<Problem.FinalTime)
     
     %Set timestep
     speed = max(max(abs(dflux(u))));
-    dt = Problem.CFL*1/(speed*Mesh.N^2/min(Mesh.hK)+maxvisc*Mesh.N^4*min(Mesh.hK)^2);
+    dt = Problem.CFL*1/(speed*Mesh.N^2/min(Mesh.hK)+maxvisc*Mesh.N^4/min(Mesh.hK)^2);
     
     if(time+dt>Problem.FinalTime)
         dt = Problem.FinalTime-time;
