@@ -93,7 +93,7 @@ switch Viscosity.model
     
     case "NN"
         
-        mu_piece = visc_MLP1D(var,Net,var,Mesh.hK,local_wave_sp,Mesh.VtoE, Problem.bc_cond);
+        mu_piece = visc_MLP1D(var,Net,var,Mesh.hK,local_wave_sp,Mesh.VtoE, Problem.bc_cond(1,:));
         
         c=1.0; mu_piece = c*mu_piece;
         
@@ -101,6 +101,6 @@ switch Viscosity.model
     otherwise
         error('Unknown viscosity model');
 end
-    
+
 end
 
