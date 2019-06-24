@@ -1,7 +1,7 @@
-function QG = ApplyBCScalar2D(Q,time,Mesh)
+function QG = ApplyBCScalar2D(Q,time,Mesh,flag)
  
-% function  QG = ApplyBCScalar2D(Q,time,gas_gamma)
-% Purpose: Set Boundary Condition in ghost elements. 
+% function  QG = ApplyBCScalar2D(Q,time)
+% Purpose: Set Boundary Condition in ghost elements for physical or auxiliary (gradient) variable. 
 
 QG = zeros(Mesh.Np,Mesh.KG,1);
 
@@ -19,9 +19,18 @@ for k=1:length(BC_keys)
         gc_ind = Mesh.EToGE(bc_ind,f)';
         
         if(bctype==Mesh.BC_ENUM.Sym)
-            QG(:,gc_ind,1) = Q(Mesh.MMAP(:,f),bc_ind',1);
+            if strcmp(flag,'phi')
+                QG(:,gc_ind,1) = Q(Mesh.MMAP(:,f),bc_ind',1);
+            else
+                QG(:,gc_ind,1) = -Q(Mesh.MMAP(:,f),bc_ind',1);
+            end
         elseif(bctype==Mesh.BC_ENUM.Dirichlet)
-            QG(:,gc_ind,1) = QBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind),1);  
+            if strcmp(flag,'phi')
+                QG(:,gc_ind,1) = QBC(Mesh.xG(:,gc_ind),Mesh.yG(:,gc_ind),1); 
+            else
+                QG(:,gc_ind,1) = Q(Mesh.MMAP(:,f),bc_ind',1);
+            end
+             
         else
             error('Unknown boundary condition for Scalar problems');
         end 

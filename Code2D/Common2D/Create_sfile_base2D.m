@@ -28,3 +28,21 @@ else
         data_fname = sprintf('%s_LVAR_%s',data_fname,Limit.lim_var);
     end
 end
+
+if(strcmp(Viscosity.model,'NONE'))
+    data_fname = sprintf('%s_VISC_%s',data_fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'MDH'))
+    %data_fname = sprintf('%s_VISC_%s_%d_%d_%d',fname,Viscosity.model,Viscosity.c_A,Viscosity.c_k,Viscosity.c_max);
+    data_fname = sprintf('%s_VISC_%s',data_fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'MDA'))
+    %data_fname = sprintf('%s_VISC_%s_%d',fname,Viscosity.model,Viscosity.c_max);
+    data_fname = sprintf('%s_VISC_%s',data_fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'EV'))
+    %data_fname = sprintf('%s_VISC_%s_%d_%d',fname,Viscosity.model,Viscosity.c_E,Viscosity.c_max);
+    data_fname = sprintf('%s_VISC_%s',data_fname,Viscosity.model);
+elseif(strcmp(Viscosity.model,'NN'))
+    %data_fname = sprintf('%s_VISC_%s',fname,Viscosity.nn_visc_model);
+    data_fname = sprintf('%s_VISC_%s',data_fname,Viscosity.model);
+else
+    error('Viscosity model %s not available',Viscosity.model);
+end

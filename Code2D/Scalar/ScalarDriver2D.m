@@ -32,6 +32,13 @@ if(strcmp(Limit.Indicator,'NN'))
 else
     Net.avail = false;
 end
+
+%Repeat for viscosity
+if(strcmp(Viscosity.model,'NN'))
+    NetVisc = read_mlp_param2D_visc(Viscosity.nn_visc_model,REL_PATH,Mesh.N);
+else
+    NetVisc.avail = false;
+end
     
 % Creating save file base names
 Create_sfile_base2D;
@@ -40,7 +47,7 @@ Create_sfile_base2D;
 fprintf('... starting main solve\n')
 
 tic;
-[Q_save,ind_save,ptc_hist,t_hist,Save_times] = Scalar2D(Q,Problem,Mesh,Limit,Net,Output);
+[Q_save,ind_save,visc_save,ptc_hist,maxvisc_hist,t_hist,Save_times] = Scalar2D(Q,Problem,Mesh,Limit,Net,Viscosity,NetVisc,Output);
 sim_time = toc;
     
 %%

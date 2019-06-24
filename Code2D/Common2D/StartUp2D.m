@@ -80,3 +80,37 @@ Mesh.Dsw = (Mesh.V*Mesh.Vs')/(Mesh.V*Mesh.V');
 
 % Find projection matrices need for Fu-Shu indicator
 %ProjectFromNb2D = Get_Projection_2D;
+
+
+%% 
+
+fprintf('... generating interpolation matrix\n')
+
+% Compute matrix to perform linear interpolation of artificial viscosity:
+% from value in vertexes, returns value in all points
+Mesh.VToE=sparse(length(Mesh.VX),Mesh.K);
+
+Mesh.EToVT=Mesh.EToV';
+
+% Compute neighboring elements
+for i=1:length(Mesh.VX)
+    ids=find(Mesh.EToVT(:)==i);
+    elem=floor((ids-1)/3)+1;
+    
+    Mesh.VToE(i,elem)=1;
+end
+Mesh.neighbors=full(sum(Mesh.VToE,2));
+
+% Compute (inverse) of "Vandermonde" matrix
+Coord_vector=[Mesh.VX(Mesh.EToVT(:))',Mesh.VY(Mesh.EToVT(:))',ones(length(Mesh.EToVT(:)),1)];
+for i=1:Mesh.K, Coord_vector(3*(i-1)+1:3*i,:)=Coord_vector(3*(i-1)+1:3*i,:)\eye(3,3); end
+[rws,cls]=size(Coord_vector); i=repmat([1:rws]',3,1); tmp=[1:3:3*Mesh.K, 2:3:3*Mesh.K, 3:3:3*Mesh.K]; j=repmat(tmp,3,1); 
+Coord_matrix_V_inv=sparse(i(:),j(:),Coord_vector(:));
+
+% Evaluate coefficients in the (x,y) points
+Coord_vector=[Mesh.x(:),Mesh.y(:),ones(length(Mesh.x(:)),1)];
+[rws,cls]=size(Coord_vector); i=repmat([1:rws]',3,1); tmp=[1:3:3*Mesh.K, 2:3:3*Mesh.K, 3:3:3*Mesh.K]; j=repmat(tmp,Mesh.Np,1); 
+Coord_matrix_DOF=sparse(i(:),j(:),Coord_vector(:));
+
+% Store interpolation matrix
+Mesh.Interp_matrix=Coord_matrix_DOF*(Coord_matrix_V_inv);
