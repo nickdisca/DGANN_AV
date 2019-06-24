@@ -1,13 +1,11 @@
-function PlotMesh2D()
+function PlotMesh2D(Mesh)
 
 % function PlotMesh2D()
 % Purpose: Show unstructured finite element grid
 
-Globals2D_DG;
-
 axis equal
-xmax = max(max(x)); xmin = min(min(x));
-ymax = max(max(y)); ymin = min(min(y));
+xmax = max(max(Mesh.x)); xmin = min(min(Mesh.x));
+ymax = max(max(Mesh.y)); ymin = min(min(Mesh.y));
 
 Lx = xmax-xmin;
 Ly = ymax-ymin;
@@ -17,7 +15,7 @@ ymax = ymax+.1*Ly; ymin = ymin-.1*Ly;
 axis([xmin xmax ymin ymax])
 drawnow; pause(.05);
 
-oFx = reshape(Fx, Nfp, Nfaces*K); oFy = reshape(Fy, Nfp, Nfaces*K);
+oFx = reshape(Mesh.Fx, Mesh.Nfp, Mesh.Nfaces*Mesh.K); oFy = reshape(Mesh.Fy, Mesh.Nfp, Mesh.Nfaces*Mesh.K);
 
 figure(2)
 plot(oFx, oFy, 'k-')
