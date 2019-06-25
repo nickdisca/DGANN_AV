@@ -14,8 +14,8 @@ velv = v(:,2)./v(:,1);
 fv   = [v(:,2) (pv + v(:,1).*velv.^2) (v(:,3) + pv).*velv ];
 
 % Maximum eigenvalue at face
-lamu = sqrt(gas_gamma*pu./u(:,1)) + abs(velu);
-lamv = sqrt(gas_gamma*pv./v(:,1)) + abs(velv);
+lamu = sqrt(abs(gas_gamma*pu./u(:,1))) + abs(velu);
+lamv = sqrt(abs(gas_gamma*pv./v(:,1))) + abs(velv);
 lam  = max(lamu,lamv);
 %lam = abs(lam);
 

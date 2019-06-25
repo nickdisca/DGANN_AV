@@ -48,8 +48,7 @@ while(time<Problem.FinalTime)
     
     %Set timestep
     pre    = (Problem.gas_gamma-1)*(q(:,:,3) - 0.5*q(:,:,2).^2./q(:,:,1));
-    c_sound = sqrt(Problem.gas_gamma*pre./q(:,:,1));
-    %c_sound = abs(c_sound);
+    c_sound = sqrt(abs(Problem.gas_gamma*pre./q(:,:,1)));
     %if( min(min(real(q(:,:,1)))) <= 0.0 || min(min(real(pre))) <= 0.0)
     %    error('Positivity loss!!');
     %end
