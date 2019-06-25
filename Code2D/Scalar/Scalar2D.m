@@ -151,7 +151,7 @@ while (time<Problem.FinalTime)
         
         for index=1:nsteps
             
-            rhsQ = ScalarRHS2D(Q, time,mu_vals,Problem,Mesh);
+            rhsQ = ScalarRHS2D(Q, time+c_RK(index)*dt,mu_vals,Problem,Mesh);
             
             VV=A_RK(index)*VV+dt*rhsQ;
             

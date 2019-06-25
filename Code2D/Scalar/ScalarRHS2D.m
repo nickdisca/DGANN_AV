@@ -16,7 +16,7 @@ QG = ApplyBCScalar2D(Q,time,Mesh,'phi');
 % Set boundary conditions by modifying positive traces
 if(~isempty(Mesh.mapBC_list))
         QPn = QP(:,:,1);
-        QPn(mapB) = QG(Mesh.Fmask(:,Mesh.Nfaces),:,1);
+        QPn(Mesh.mapB) = QG(Mesh.Fmask(:,Mesh.Nfaces),:,1);
         QP(:,:,1) = QPn;
 end
 
@@ -46,11 +46,11 @@ gYG = ApplyBCScalar2D(gY,time,Mesh,'aux');
 % Set boundary conditions by modifying positive traces
 if(~isempty(Mesh.mapBC_list))
         gXPn = gXP(:,:,1);
-        gXPn(mapB) = gXG(Mesh.Fmask(:,Mesh.Nfaces),:,1);
+        gXPn(Mesh.mapB) = gXG(Mesh.Fmask(:,Mesh.Nfaces),:,1);
         gXP(:,:,1) = gXPn;
         
         gYPn = gYP(:,:,1);
-        gYPn(mapB) = gYG(Mesh.Fmask(:,Mesh.Nfaces),:,1);
+        gYPn(Mesh.mapB) = gYG(Mesh.Fmask(:,Mesh.Nfaces),:,1);
         gYP(:,:,1) = gYPn;
 end
 
