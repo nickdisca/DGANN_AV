@@ -3,8 +3,8 @@
 % model
 assert(exist('model','var')==1,...
     'ERROR: ''model'' variable must be defined')
-assert((strcmp(model,'Advection') | strcmp(model,'Burgers')),...
-    'ERROR: ''model'' must be set to ''Advection'' or ''Burgers''')
+assert((strcmp(model,'Advection') | strcmp(model,'Burgers') | strcmp(model,'KPP')),...
+    'ERROR: ''model'' must be set to ''Advection'', ''Burgers'' or ''KPP''')
 
 % Advection Velocity
 if(strcmp(model,'Advection'))

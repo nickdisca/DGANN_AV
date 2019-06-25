@@ -6,7 +6,10 @@ switch Problem.model
         G = Problem.AdvectionVelocity(2)*Q;
     case 'Burgers'
         F = Q.*Q/2;
-        G = Q.*Q/2;    
+        G = Q.*Q/2; 
+    case 'KPP'    
+        F = sin(Q);
+        G = cos(Q);
     otherwise
         error('Unknown scalar model %s',Problem.model)
 end

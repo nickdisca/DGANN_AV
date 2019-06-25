@@ -6,7 +6,7 @@ switch Problem.model
         maxeig = sqrt(c(1)^2 + c(2)^2)*ones(size(Q));
     case 'Burgers'
         maxeig = abs(Q);  
-    case 'Kpp'
+    case 'KPP'
         maxeig = ones(size(Q)); 
     otherwise
         error('Unknown scalar model %s',Problem.model)

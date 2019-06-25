@@ -5,15 +5,15 @@ close all
 clear all
 clc
 
-model             = 'Advection';
+model             = 'KPP';
 AdvectionVelocity = [1,1]; % Used for linear advection only
-test_name         = 'Smooth'; 
-InitialCond       = @IC;
+test_name         = 'KPP'; 
+InitialCond       = @(x,y) 3.5*pi*(x.^2+y.^2<1)+0.25*pi*(x.^2+y.^2>=1);
 BC_cond           = {100001,'P'; 100002,'P'; 100003,'P'; 100004,'P'};
 
 
-FinalTime        = 0.5;
-CFL              = 0.3;
+FinalTime        = 1;
+CFL              = 0.2;
 tstamps          = 2;
 N                = 1;
 RK               = 'LS54';
@@ -29,21 +29,22 @@ Limiter         = 'NONE';
 %Set viscosity model
 %Visc_model = 'NONE';
 nn_visc_model = 'MLP_visc';
-Visc_model='EV'; c_E=1; c_max=0.25;
+%Visc_model='EV'; c_E=1; c_max=0.25;
 %Visc_model='MDH'; c_A=2; c_k=0.4; c_max=0.8;
 %Visc_model='MDA'; c_max=0.8;
-%Visc_model='NN';
+Visc_model='NN';
 
 
 % Mesh file
-msh_file        = 'square_trans.msh';
+msh_file        = 'uniform_22_N120.msh';
+%msh_file        = 'unstructured_22_H004.msh';
 
 % Output flags
 plot_iter  = 50;
 show_plot  = true;
-xran       = [0,1]; 
-yran       = [0,1];
-clines     = linspace(0,2,30);
+xran       = [-2,2]; 
+yran       = [-2,2];
+clines     = linspace(0.7,11.5,30);
 save_soln  = true;
 
 % Call main driver

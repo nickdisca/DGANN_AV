@@ -10,7 +10,7 @@ switch Problem.model
         entropy = Q.^2/2;
         ent_flux_x = Q.^3/3;
         ent_flux_y = Q.^3/3;        
-    case 'Kpp'
+    case 'KPP'
         entropy = Q.^2/2;
         ent_flux_x = Q.*sin(Q)+cos(Q);
         ent_flux_y = Q.*cos(Q)-sin(Q);  

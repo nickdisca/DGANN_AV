@@ -198,6 +198,12 @@ while (time<Problem.FinalTime)
         hold all
     end
     
+    % Check that solution is not diverging
+    max_allowed_val=100;
+    if max(abs(Q(:)))>=max_allowed_val
+        error('Solution is diverging!');
+    end
+    
     % Render every plot_iter time steps
     if(~mod(tstep+1,Output.plot_iter) || time == Problem.FinalTime)
         
