@@ -29,7 +29,7 @@ switch Viscosity.model
         
         FXP = F_new_X(Mesh.vmapP); FXM=F_new_X(Mesh.vmapM); FYP = F_new_Y(Mesh.vmapP); FYM=F_new_Y(Mesh.vmapM); 
         
-        Jump=max(abs(reshape(FXP-FXM,(Mesh.N+1)*3,Mesh.K).*Mesh.nx+reshape(FYP-FYM,(Mesh.N+1)*3,Mesh.K).*Mesh.ny)./(ones((Mesh.N+1)*3,1)*Mesh.dx2/Mesh.N));
+        Jump=max(abs(reshape(FXP-FXM,(Mesh.N+1)*3,Mesh.K).*Mesh.nx+reshape(FYP-FYM,(Mesh.N+1)*3,Mesh.K).*Mesh.ny)./(ones((Mesh.N+1)*3,1)*2*Mesh.dx2/Mesh.N));
         
         E_modal=Mesh.invV*E_new;
         Norm_E=max(abs(E_new(:)-1/sqrt(2)*sum(E_modal(1,:).*Mesh.J(1,:))/sum(Mesh.J(1,:))));
