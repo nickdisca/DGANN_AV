@@ -59,6 +59,10 @@ else
     CFL = [];
 end
 
+% Runge-Kutta scheme
+assert(exist('RK','var')==1,...
+    'ERROR: ''RK'' variable must be defined')
+
 % tstamps
 assert(exist('tstamps','var')==1,...
     'ERROR: ''tstamps'' variable must be defined')
@@ -138,8 +142,45 @@ elseif(strcmp(Limiter,'BJES') || strcmp(Limiter,'VENK'))
     end
     
 else
-    error('Unknown indicator type %s',Indicator)
+    error('Unknown limiter type %s',Limiter)
 end
+
+
+%Viscosity 
+assert(exist('Visc_model','var')==1,...
+    'ERROR: ''Visc_model'' variable must be defined')
+switch Visc_model
+    case 'NONE'
+        
+    case 'MDH'
+        assert(exist('c_A','var')==1 && exist('c_k','var')==1 && exist('c_max','var')==1, ...
+            'ERROR: ''c_A,c_k,c_max'' variables must be defined since Visc_model = MDH')
+        
+    case 'MDA'
+        assert(exist('c_max','var')==1, ...
+            'ERROR: ''c_max'' variable must be defined since Visc_model = MDA')
+        
+    case 'EV'
+        assert(exist('c_E','var')==1 && exist('c_max','var')==1, ...
+            'ERROR: ''c_E,c_max'' variables must be defined since Visc_model = EV')
+        
+    case 'NN'
+        assert(exist('nn_visc_model','var')==1,...
+            'ERROR: ''nn_visc_model'' variable must be defined since Visc_model = NN')
+        
+    otherwise
+            error('Unknown viscosity_model %s',Visc_model)
+end
+
+if ~strcmp('Visc_model','NONE')
+    assert(exist('visc_var','var')==1,...
+        'ERROR: ''visc_var'' variable must be defined');
+    
+    if ~strcmp(visc_var,'density')
+        error('Viscosity has to be estimated using density');
+    end
+end
+
 
 % Mesh file details
 assert(exist('msh_file','var')==1,...
@@ -216,6 +257,7 @@ Problem.test_name    = test_name;
 Problem.InitialCond  = InitialCond;
 Problem.FinalTime    = FinalTime;
 Problem.CFL          = CFL;
+Problem.RK           = RK;
 Problem.fixed_dt     = fixed_dt;
 Problem.tstamps      = tstamps;
 
@@ -228,15 +270,14 @@ Mesh.UseMeshPerData = UseMeshPerData;
 Limit.Limiter    = Limiter;
 Limit.ind_var    = [];
 Limit.lim_var    = [];
-if(~strcmp(Limiter,'NONE'))
-    Limit.Indicator  = Indicator;
-    Limit.lim_var    = lim_var;
-    if(strcmp(Indicator,'TVB'))
-        Limit.TVBM  = TVBM;
-        Limit.TVBnu = TVBnu;
-    elseif(strcmp(Indicator,'NN'))
-        Limit.nn_model   = nn_model;
-    end
+
+Limit.Indicator  = Indicator;
+Limit.lim_var    = lim_var;
+if(strcmp(Indicator,'TVB'))
+    Limit.TVBM  = TVBM;
+    Limit.TVBnu = TVBnu;
+elseif(strcmp(Indicator,'NN'))
+    Limit.nn_model   = nn_model;
 end
 
 if(~strcmp(Indicator,'NONE') && ~strcmp(Indicator,'ALL'))
@@ -245,6 +286,25 @@ end
 
 Limit.Filter_const = Filter_const;
 % Limit.Remove_iso   = Remove_iso;
+
+Viscosity.model = Visc_model;
+switch Visc_model     
+    case 'MDH'
+        Viscosity.c_A=c_A; 
+        Viscosity.c_k=c_k; 
+        Viscosity.c_max=c_max;
+        
+    case 'MDA'
+        Viscosity.c_max=c_max;
+        
+    case 'EV'
+        Viscosity.c_E=c_E; 
+        Viscosity.c_max=c_max;
+        
+    case 'NN'
+        Viscosity.nn_visc_model = nn_visc_model;
+end
+Viscosity.visc_var=visc_var;
 
 Output.plot_iter  = plot_iter;
 Output.show_plot  = show_plot;

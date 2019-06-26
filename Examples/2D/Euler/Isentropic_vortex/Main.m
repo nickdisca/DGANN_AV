@@ -14,21 +14,30 @@ InitialCond    = @IC;
 BC_cond        = {100001,'P'; 100002,'P'; 100003,'P'; 100004,'P'};
 
 FinalTime      = 10;
-CFL            = 0.4;
+CFL            = 0.2;
 %fixed_dt       = 1e-4;
 tstamps        = 1;
 N              = 1;
+RK             = 'SSP3';
 
 
 % Set type of indicator
 %Indicator = 'TVB'; TVBM = 200; TVBnu = 1.5;
-Indicator     = 'NN';
+Indicator     = 'NONE';
 ind_var       = 'con';
 nn_model      = 'MLP_v1';	
-Limiter       = 'BJES'; 
+Limiter       = 'NONE'; 
 lim_var       = 'con';
 Filter_const  = true;
 
+%Set viscosity model
+%Visc_model = 'NONE';
+nn_visc_model = 'MLP_visc';
+%Visc_model='EV'; c_E=1; c_max=0.5;
+%Visc_model='MDH'; c_A=2; c_k=0.2; c_max=0.8;
+%Visc_model='MDA'; c_max=0.5;
+Visc_model='NN';
+visc_var = 'density';
 
 % Mesh file
 msh_file      = 'square_trans.msh';
@@ -40,7 +49,7 @@ show_plot  = true;
 xran       = [-5,5]; 
 yran       = [-5,5];
 plot_var   = {'density'};
-clines     = {linspace(0.5,1.2,30)}; % Should have as many vectors as 
+clines     = {linspace(0.4,1.2,30)}; % Should have as many vectors as 
                                     % plotting variables
 save_soln  = true;
                                     

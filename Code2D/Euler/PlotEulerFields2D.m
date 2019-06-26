@@ -26,24 +26,13 @@ for n = 1:nvar
     figure(figc)
     subplot(nrows,ncols,n)
     F  = scatteredInterpolant(x(:),y(:),QC(:)); interpc=F(xq,yq);
-    contour(xq,yq,interpc,Output.clines{n},'k-','LineWidth',1);
+    contourf(xq,yq,interpc,Output.clines{n},'LineWidth',1);
+    colormap jet;
     xlim(Output.xran)
     ylim(Output.yran)
-    xlabel('x')
-    ylabel('y')
+    xlabel({'x'},'interpreter','latex');
+    xlabel({'y'},'interpreter','latex');
     title([Output.plot_var{n},' at t=',num2str(time)])
-    drawnow;
-    
-
-    figure(figf)
-    subplot(nrows,ncols,n)
-    PlotField2D(QC,interp,TRI,xout,yout);
-    xlim(Output.xran)
-    ylim(Output.yran)
-    zlabel(Output.plot_var{n})
-    xlabel('x')
-    ylabel('y')
-    title(['t=',num2str(time)])
     drawnow;
     
 end

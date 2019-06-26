@@ -9,9 +9,11 @@ if(Output.save_soln)
     x = Mesh.x;
     y = Mesh.y;
     invV = Mesh.invV;
+    J = Mesh.J;
+    Mass = Mesh.MassMatrix;
     
     
-    save(fname,'x','y','invV','Save_times','Q_save','ind_save','ptc_hist','pnc_hist','t_hist','sim_time','gas_gamma','gas_const')
+    save(fname,'x','y','invV','J','Save_times','Q_save','ind_save','visc_save','ptc_hist','pnc_hist','maxvisc_hist','t_hist','sim_time','gas_gamma','gas_const')
     
     
 end
