@@ -30,8 +30,8 @@ for n = 1:nvar
     colormap jet;
     xlim(Output.xran)
     ylim(Output.yran)
-    xlabel({'x'},'interpreter','latex');
-    xlabel({'y'},'interpreter','latex');
+    xlabel({'$x$'},'interpreter','latex');
+    xlabel({'$y$'},'interpreter','latex');
     title([Output.plot_var{n},' at t=',num2str(time)])
     drawnow;
     
