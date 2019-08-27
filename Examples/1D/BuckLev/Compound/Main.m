@@ -17,16 +17,22 @@ FinalTime = 0.4;
 CFL       = 0.4;
 K     = 150;
 N         = 2;
+RK        = 'LS54';
 
 
-Indicator = 'NN';
-nn_model       = 'MLP_v1';
-Limiter    = 'MINMOD';
+Indicator = 'NONE'; TVBM=1;
+nn_model       = 'MLP_v1';	
+Limiter    = 'NONE';
+
+nn_visc_model = 'MLP_visc';
+Visc_model='EV'; c_E=1; c_max=0.5;
 
 
 plot_iter  = 10;
+save_iter  = 1;
 save_soln  = true;
 save_ind   = true;
+save_visc  = true;
 save_plot  = true;
 ref_avail  = true;
 ref_fname  = 'ref_soln.dat';

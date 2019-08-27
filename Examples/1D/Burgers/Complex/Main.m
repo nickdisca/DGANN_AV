@@ -18,20 +18,26 @@ bnd_l     = -4.0;
 bnd_r     = 4.0;
 mesh_pert = 0.0;
 bc_cond   = {'P',0.0,'P',0.0};
-FinalTime = 0.4;
+FinalTime = 0.01;
 CFL       = 0.4;
 K     = 200;
 N         = 2;
+RK        = 'LS54';
 
 
-Indicator = 'NN';
-nn_model       = 'MLP_v1';
-Limiter    = 'MINMOD';
+Indicator = 'NONE'; TVBM=1;
+nn_model       = 'MLP_v1';	
+Limiter    = 'NONE';
+
+nn_visc_model = 'MLP_visc';
+Visc_model='EV'; c_E=1; c_max=0.5;
 
 
 plot_iter  = 5;
+save_iter  = 1;
 save_soln  = true;
 save_ind   = true;
+save_visc  = true;
 save_plot  = true;
 ref_avail  = true;
 ref_fname  = 'ref_soln.dat';

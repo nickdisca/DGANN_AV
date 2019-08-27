@@ -5,7 +5,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>README</title>
+<title>README_AV</title>
 
 
 <style type="text/css">
@@ -470,22 +470,27 @@ pre[class*="language-"] {
 
 <h1 id="toc_0">DGANN solver</h1>
 
-<h3 id="toc_1">Created by: Deep Ray, EPFL, Switzerland</h3>
+<h3 id="toc_1">Created by: Deep Ray (Rice University, Houston), Niccolò Discacciati (EPFL, Lausanne)</h3>
 
-<h3 id="toc_2">Webpage: deepray.github.io</h3>
+<h3 id="toc_2">Code available at:</h3>
 
-<h3 id="toc_3">Date : 10 January, 2018</h3>
+<p><code>https://github.com/nickdisca/DGANN_AV/</code>
+<code>https://bitbucket.org/deepray/dgann/src/master/</code>    </p>
 
-<p><strong>DGANN</strong> is a RKDG-solver written in MATLAB, which is also capable of using an artificial neural network trained to serve as a troubled-cell detector. The main source code for the RKDG solver is based on the solvers available with the following texts:</p>
+<h3 id="toc_3">Date: 26 August, 2019</h3>
+
+<p><strong>DGANN</strong> is a RKDG-solver written in MATLAB, which is also capable of using artificial neural networks trained to serve as a troubled-cell detector and/or artificial viscosity estimator. The main source code for the RKDG solver is based on the solvers available with the following texts:</p>
 
 <ol>
 <li>Nodal Disontinuous Galerkin methods, by Jan S. Hesthaven and Tim Warburton. </li>
 <li>Numerical Methods for Conservation Laws: From Analysis to Algorithms, by Jan S. Hesthaven.</li>
 </ol>
 
-<p>Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator have been published in the paper <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">&quot;An artificial neural network as a troubled-cell indicator&quot;</a>. Details about the 2D network are available <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">here</a>.</p>
+<p>Details about the design of the Multilayer Perceptron (MLP) troubled-cell indicator for 1D problems have been published in the paper <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">&quot;An artificial neural network as a troubled-cell indicator&quot;</a>, while the extension to 2D problems is described <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">here</a>. Details about the MLP viscosity estimator can be found <a href="https://infoscience.epfl.ch/record/263616/files/Artificial_viscosity_nn.pdf">here</a>.</p>
 
-<p><strong>NOTE:</strong> If the math symbols do not display properly in README.md, have a look at README.html or README.pdf instead.</p>
+<p><strong>NOTE:</strong> If the math symbols do not display properly in README_AV.md, have a look at README_AV.html or README_AV.pdf instead.</p>
+
+<p><strong>NOTE:</strong> As of today, the two MLPs have not been tested together. We used either limiting or artificial viscosity. Even though no issues should arise when combining the models, we advice the interested user to take particular care in case (s)he whants to do so.</p>
 
 <h2 id="toc_4">Table of contents</h2>
 
@@ -497,7 +502,6 @@ pre[class*="language-"] {
 
 <ul>
 <li><a href="#markdown-header-scalar-1d">Scalar 1D</a></li>
-<li><a href="#markdown-header-shallow-water-1d">Shallow water equations 1D</a></li>
 <li><a href="#markdown-header-euler-1d">Euler equations 1D</a></li>
 </ul></li>
 <li><a href="#markdown-header-scripts-for-2d-problems">Scripts for 2D</a>
@@ -507,11 +511,18 @@ pre[class*="language-"] {
 <li><a href="#markdown-header-euler-2d">Euler equations 2D</a> </li>
 </ul></li>
 </ul></li>
-<li><a href="#markdown-header-using-the-mlp-indicator">Using the MLP indicator</a>
+<li><a href="#markdown-header-using-the-mlp-indicator">Using the MLP troubled-cell indicator</a>
 
 <ul>
-<li><a href="#markdown-header-network-for-1d-problems">Network for 1D</a> </li>
-<li><a href="#markdown-header-network-for-2d-problems">Network for 2D</a> </li>
+<li><a href="#markdown-header-network-for-1d-problems-ind">Network for 1D</a> </li>
+<li><a href="#markdown-header-network-for-2d-problems-ind">Network for 2D</a> </li>
+</ul></li>
+<li><a href="#markdown-header-using-the-mlp-predictor">Using the MLP artificial viscosity estimator</a>
+
+<ul>
+<li><a href="#markdown-header-network-for-1d-problems-visc">Network for 1D</a> </li>
+<li><a href="#markdown-header-network-for-2d-problems-visc">Network for 2D</a> </li>
+<li><a href="#markdown-header-remarks">Remarks</a> </li>
 </ul></li>
 </ul>
 
@@ -539,21 +550,27 @@ test_name = &#39;Sine&#39;;
 u_IC =@(x) sin(10*pi*x);   
 
 bnd_l     = 0.0;  
-bnd_r     = 1.4;
+bnd_r     = 1.0;
 mesh_pert = 0.0;
 bc_cond   = {&#39;P&#39;,0.0,&#39;P&#39;,0.0};
-FinalTime = 1.4;
+FinalTime = 0.2;
 CFL       = 0.2;
 K         = 100;
 N         = 4;
+RK        = &#39;LS54&#39;;
 
 Indicator = &#39;MINMOD&#39;;
 nn_model  = &#39;MLP_v1&#39;;   
 Limiter   = &#39;MINMOD&#39;;
 
-plot_iter  = 50;
+Visc_model    = &#39;NONE&#39;;
+nn_visc_model = &#39;MLP_visc&#39;;
+
+plot_iter  = 200;
+save_iter  = 1; 
 save_soln  = true;
 save_ind   = true;
+save_visc  = true;
 save_plot  = true;
 ref_avail  = true;
 ref_fname  = &#39;ref_soln.dat&#39;;
@@ -574,11 +591,9 @@ ScalarDriver1D; </code></pre></div>
 </ul></li>
 <li><code>test_name</code> is used to declare the name of the test. This is used for creating various save files.</li>
 <li><code>u_IC</code> is used to set the initial condition for the problem.</li>
-<li><code>bnd_l</code> and <code>bnd_r</code> define the left and right domain boundaries, which is descritized using <code>Nelem</code> number of elements. The degree of the polynomial in each element/cell is set using <code>N</code>. </li>
-<li><p><code>mesh_pert</code> is used to randomly perturb the interior cell-interfaces using the following algorithm
-\(
-x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,K-1
-\)</p>
+<li><code>bnd_l</code> and <code>bnd_r</code> define the left and right domain boundaries, which is descritized using <code>K</code> number of elements. The degree of the polynomial in each element/cell is set using <code>N</code>. </li>
+<li><p><code>mesh_pert</code> is used to randomly perturb the interior cell-interfaces using the following algorithm.<br>
+\[x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_{i+\frac{1}{2}}, \qquad \omega_{i+\frac{1}{2}} \in \mathcal{U}[-0.5,0.5], \qquad i=1,...,K-1\]</p>
 
 <p>where \(h\) is the mesh size of the initial uniform grid.</p></li>
 <li><p><code>bc_cond</code> is used to set the left and right boundary conditions. It is a cell of the form
@@ -592,6 +607,7 @@ x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_
 <li><p>The final simulation time is set using <code>FinalTime</code>, while the time step is chosen using <code>CFL</code>.</p></li>
 <li><p><code>K</code> is the number of elements/cells in the mesh.</p></li>
 <li><p><code>N</code> sets the order of the basis.</p></li>
+<li><p><code>RK</code> sets the time integration scheme. The current implementation supports the five-stage fourth-order low-storage Runge-Kutta scheme <code>&#39;LS54&#39;</code> and the third order strong stability preserving Runge-Kutta <code>&#39;SSP3&#39;</code>.</p></li>
 <li><p>The troubled-cell indicator is set using <code>Indicator</code>. The following options are currently available:</p>
 
 <ul>
@@ -599,7 +615,7 @@ x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_
 <li><code>&#39;ALL&#39;</code>: All cells are flagged.</li>
 <li><code>&#39;MINMOD&#39;</code>: Uses the basic minmod limiter.</li>
 <li><code>&#39;TVB&#39;</code>: Uses the modified minmod-type TVB limiter. If this is chosen, then one also needs to set the variable <code>TVBM</code> to a positive number. Note that if this constant is set to 0, then the limiter reduces to the usual minmod limiter.</li>
-<li><code>&#39;NN&#39;</code>: Uses the trained neural network. The network name is set using the variable <code>nn_model</code>. The available networks are described below in the section <strong>Using the MLP indicator</strong>.</li>
+<li><code>&#39;NN&#39;</code>: Uses the trained neural network. The network name is set using the variable <code>nn_model</code>. The available networks are described below in the section <strong>Using the MLP troubled-cell indicator</strong>.</li>
 </ul></li>
 <li><p>The limiter usd to reconstruct the solution in each troubled-cell,is set using <code>Limiter</code>. The following options are currently available:</p>
 
@@ -607,111 +623,44 @@ x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omega_
 <li><code>&#39;NONE&#39;</code>: No limiting is applied.</li>
 <li><code>&#39;MINMOD&#39;</code>: MUSCL reconstruction using minmod limiter.</li>
 </ul></li>
-<li><p>The flag <code>plot_iter</code> is used for visualization purposes. The solution plots are shown after every <code>plot_iter</code> number of iterations during the simulation. This number also controls the frequency with which the time-history of the flagged troubled-cells is saved to file (see <code>save_ind</code>).</p></li>
-<li><p>If solution at the final time needs to be saved, the flag <code>save_soln</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The solution files are save in the directory <strong>OUTPUT</strong>. The filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_LIM_&lt;Limiter&gt;.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format: </p>
+<li><p>The artificial viscosity model is set using <code>Visc_model</code>. The following options are currently available:</p>
 
 <ul>
-<li>Column 1: x-coordinates</li>
-<li>Column 2: solution value at corresponding x-coordinate </li>
+<li><code>&#39;NONE&#39;</code>: No artificial viscosity is added.</li>
+<li><code>&#39;EV&#39;</code>: Uses the entropy viscosity model. If this is chosen, two nonnegative parameters <code>c_E</code> and <code>c_max</code> have to be specified.</li>
+<li><code>&#39;MDH&#39;</code>: Uses the highest modal decay model. If this is chosen, three nonnegative parameters <code>c_A</code>,<code>c_k</code>, and <code>c_max</code> have to be specified.</li>
+<li><code>&#39;MDA&#39;</code>: Uses the averaged modal decay model. If this is chosen, a nonnegative parameter <code>c_max</code> has to be specified.</li>
+<li><code>&#39;NN&#39;</code>: Uses the trained neural network. The network name is set using the variable <code>nn_visc_model</code>. The available networks are described below in the section <strong>Using the MLP artificial viscosity estimator</strong>. </li>
 </ul></li>
-<li><p>If the time-history of the troubled-cells needs to be viewe/saved, the flag <code>save_ind</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The time-history files are also save in the directory <strong>OUTPUT</strong>. The filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_LIM_&lt;Limiter&gt;_tcells.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format:</p>
+<li><p>The flag <code>plot_iter</code> is used for visualization purposes. The solution plots are shown after every <code>plot_iter</code> number of iterations during the simulation. </p></li>
+<li><p>The flag <code>save_iter</code> controls the frequency with which data are saved to files. This applies to both the troubled cells and the artificial viscosity.</p></li>
+<li><p>If solution at the final time needs to be saved, the flag <code>save_soln</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The solution files are save in the directory <strong>OUTPUT</strong>. The filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_LIM_&lt;Limiter&gt;_VISC_&lt;Visc_model&gt;.dat</code>. If mesh perturbation is used, then the filename will contain the tag <code>pert</code>. The data in the file has the following format:         </p>
+
+<ul>
+<li>Column 1: x-coordinates.<br></li>
+<li>Column 2: solution value at corresponding x-coordinate<br></li>
+</ul></li>
+<li><p>If the time-history of the troubled-cells needs to be viewed/saved, the flag <code>save_ind</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The time-history files are also save in the directory <strong>OUTPUT</strong>. The filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_LIM_&lt;Limiter&gt;_VISC_&lt;Visc_model&gt;_tcells.dat</code>. If mesh perturbation is used, then the filename includes the tag <code>pert</code>. The data in the file has the following format:</p>
 
 <ul>
 <li>Each row of the file contains the time, followed by the mid-points of the cells flagged as troubled-cells at that time.</li>
 <li>The first row corresponds to the cell flagged at time \(t=0\). This is essentially done for the initial condition.</li>
-<li>Following the first row, the rows can be grouped in sets of size \(r\), to list the cells flagged after each sub-stage of the r-stage time-integration scheme. Since the current implementation of the code uses SSP-RK3, the rows will be grouped as triplets. </li>
+<li>Following the first row, the rows can be grouped in sets of size \(r\), to list the cells flagged after each sub-stage of the r-stage time-integration scheme. Depending on the selected Runge-Kutta scheme, \(r\) will be equal to 3 or 5.</li>
 </ul></li>
-<li><p>If <code>save_plot</code> is set to <code>true</code>, then the solution plots are generated and saved in <strong>OUTPUT</strong>. NOTE: This needs <code>save_soln</code> and <code>save_ind</code> to be set as <code>true</code>. </p></li>
+<li><p>If the time-history of the artificial viscosity needs to be viewed/saved, the flag <code>save_visc</code> must be set to <code>true</code>. If this is not the case, set this flag to <code>false</code>. The time-history files are also save in the directory <strong>OUTPUT</strong>. The filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_LIM_&lt;Limiter&gt;_VISC_&lt;Visc_model&gt;_visc.dat</code>. If mesh perturbation is used, then the filename will include the tag <code>pert</code>. The data in the file has the following format:</p>
+
+<ul>
+<li>Each row of the file contains the time, followed by the value of the artificial viscosity in each x coordinate at the current time. Unlike the troubled-cell indicator, the viscosity is updated at the beginning of the RK sub-loop. Thus, the number of rows is equal to the number of timesteps.</li>
+</ul></li>
+<li><p>If <code>save_plot</code> is set to <code>true</code>, then the solution plots are generated and saved in <strong>OUTPUT</strong>. <strong>NOTE</strong>: This needs <code>save_soln</code>, <code>save_ind</code> and <code>save_visc</code> to be set as <code>true</code>. </p></li>
 <li><p>If a reference/exact solution data file is available, then set <code>ref_avail</code> to <code>true</code> and the (relative) file name of the referene solution in <code>ref_fname</code>. </p></li>
-<li><p>If the troubled-cell plots should be saved for each individual RK-stage, then set <code>rk_comb</code> to <code>false</code>. To save a unified plot, set this to <code>true</code>.</p></li>
 <li><p><code>var_ran</code> is used to set the ylim for the solution plot. This should be a array of size (1,2).</p></li>
 <li><p>The main driver script <code>ScalarDriver1D</code> is called once all the flags have been set.</p></li>
 </ul>
 
 <p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
-<h4 id="toc_8">Shallow Water 1D</h4>
-
-<p>The basic structure of the example script is as follows.</p>
-
-<div><pre><code class="language-matlab">CleanUp1D;
-
-clc
-clear all
-close all
-
-Globals1D_DG;
-Globals1D_MLP;
-
-model        = &#39;SWE&#39;;
-gravity      = 1.0;
-test_name    = &#39;Dambreak&#39;;
-depth_IC     =@(x) 3*(x&lt;0.0) + 1*(x&gt;=0.0);
-velocity_IC  =@(x) 0*x;
-
-bnd_l     = -3.0;  
-bnd_r     = 3.0;
-mesh_pert = 0.0;
-bc_cond   = {&#39;N&#39;,0.0,&#39;N&#39;,0.0;
-             &#39;N&#39;,0.0,&#39;N&#39;,0.0};  % For conserved variables
-FinalTime = 1;
-CFL       = 0.4;
-K         = 100;
-N         = 4;
-
-Indicator      = &#39;TVB&#39;;  TVBM = 100;
-ind_var        = &#39;depth&#39;;
-nn_model       = &#39;MLP_v1&#39;; 
-Limiter        = &#39;MINMOD&#39;;
-lim_var        = &#39;con&#39;;
-
-plot_iter  = 10;
-save_soln  = true;
-save_ind   = true;
-save_plot  = true;
-ref_avail  = true;
-ref_fname  = &#39;ref_soln.dat&#39;;
-rk_comb    = true;
-var_ran    = [1,3.2; 0,1];
-
-% Call code driver
-SWEDriver1D;</code></pre></div>
-
-<p>Most of the structure is similar to the Scalar 1D script. The differences are described below.</p>
-
-<ul>
-<li>The <code>model</code> needs to be set as <code>&#39;SWE&#39;</code>. This should not be changed.</li>
-<li>The acceleration due to gravity is set using <code>gravity</code>.</li>
-<li>The initial depth and velocity are set using <code>depth_IC</code> and <code>velocity_IC</code>.</li>
-<li>The <code>bc_cond</code> has the same format as earlier, although now it has two rows of parameters. The first row corresponds to depth, while the second corresponds to the discharge (depth*velocity). Note that the boundary condition are set for the conserved variables.</li>
-<li>For systems of conservation laws, there are various choices for the variables to be used for troubled-cell detection. For the shallow water equations, this choice is made via the flag <code>ind_var</code>, with the following options (the troubled-cells flagged for each variable is pooled together):
-
-<ul>
-<li><code>&#39;prim&#39;</code>: The primitive variables i.e., depth and velocity, are used. </li>
-<li><code>&#39;con&#39;</code>:  The conserved variables i.e., depth and discharge, are used.</li>
-</ul></li>
-<li>As was the case with detection, there are several options for the variables which can be reconstructed. This is set using the flag <code>lim_var</code>, with the following options:
-
-<ul>
-<li><code>&#39;prim&#39;</code>:  The primitive variables i.e., depth and velocity, are recontructed.</li>
-<li><code>&#39;con&#39;</code>:  The conserved variables i.e., depth and discharge, are recontructed.</li>
-<li><code>&#39;char_cell&#39;</code>: The local characterictic variables are reconstructed. These are obtained cell-by-cell using the linearized transformation operators. More precisely, the transformation matrix in each cell is evaluated using the cell-average value, following which the conserved variables are transformed to the characteristic variables in that cell. The same transformation is used to retrieve the conserved variables after limiting the characteristic variables. </li>
-<li><code>&#39;char_stencil&#39;</code>: The local characterictic variables obtained cell-by-cell can introduce spurious oscillations in the solution. One can also obtain the local characteristic variables, stencil-by stencil. More precisely, for a given reconstruction stencil of 3-cells, the transformation matrix is evaluated using the cell-average value of the central cell, following which the conserved variables are transformed to the characteristic variables in every cell of that stencil. The transformed variables are used to obtain the reconstructed characteristic variables in the central cell. Note that this approach can be 3 times more expensive than the <code>&#39;char_cell&#39;</code> approach.</li>
-</ul></li>
-<li>The solution filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_IVAR_&lt;ind_var&gt;_LIM_&lt;Limiter&gt;_LVAR_&lt;lim_var&gt;.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>. The data in the file has the following format: 
-
-<ul>
-<li>Column 1: x-coordinates</li>
-<li>Column 2: the value of depth and velocity (in that order) at corresponding x-coordinate.</li>
-</ul></li>
-<li>The troubled-cell time-history filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_IVAR_&lt;ind_var&gt;_LIM_&lt;Limiter&gt;_LVAR_&lt;lim_var&gt;_tcells.dat</code>. If mesh perturbation is used, then the filename will end with the tag <code>pert</code>.</li>
-<li><code>var_ran</code> is used to set the ylim for the solution plots, with the format <code>[depth_min,depth_max ; velocity_min, velocity_max]</code>.</li>
-<li>The main driver script <code>SWEDriver1D</code> is called once all the flags have been set.</li>
-</ul>
-
-<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
-
-<h4 id="toc_9">Euler 1D</h4>
+<h4 id="toc_8">Euler 1D</h4>
 
 <p>The basic structure of the example script is as follows.</p>
 
@@ -743,6 +692,7 @@ FinalTime = 1.8;
 CFL       = 0.1;
 K         = 200;
 N         = 4;
+RK        = &#39;LS54&#39;;
 
 Indicator = &#39;NN&#39;;
 ind_var   = &#39;prim&#39;;
@@ -750,9 +700,14 @@ nn_model  = &#39;MLP_v1&#39;;
 Limiter   = &#39;MINMOD&#39;;
 lim_var   = &#39;con&#39;;
 
+nn_visc_model = &#39;MLP_visc&#39;;
+Visc_model=&#39;NN&#39;;
+visc_var=&#39;density&#39;;
+
 plot_iter  = 100;
 save_soln  = true;
 save_ind   = true;
+save_visc  = true;
 save_plot  = true;
 ref_avail  = true;
 ref_fname  = &#39;ref_soln.dat&#39;;
@@ -762,14 +717,14 @@ var_ran    = [0,1.2; -0.2,1.5; 0,1.2];
 % Call code driver
 EulerDriver1D; </code></pre></div>
 
-<p>Most of the structure is similar to the shallow water 1D script. The differences are described below. </p>
+<p>Most of the structure is similar to the Scalar 1D script. The differences are described below. </p>
 
 <ul>
-<li>The <code>model</code> needs to be set as <code>&#39;SWE&#39;</code>. This should not be changed.</li>
+<li>The <code>model</code> needs to be set as <code>&#39;Euler&#39;</code>. This should not be changed.</li>
 <li>The gas constant and ratio of specific heats is set using <code>gas_const</code> and <code>gas_gamma</code>.</li>
 <li>The initial density, velocity and pressure are set using <code>rho_IC</code>, <code>vel_IC</code> and <code>pre_IC</code>.</li>
 <li>The <code>bc_cond</code> has the same format as earlier, although now it has three rows of parameters. The first row corresponds to density, the second corresponds to the momentum, and the third to energy. Note that the boundary condition are set for the conserved variables.</li>
-<li>For the Euler equations, <code>ind_var</code> can be set as (the troubled-cells flagged for each variable is pooled together):
+<li>For systems of conservation laws, there are various choices for the variables to be used for troubled-cell detection. For the Euler equations, <code>ind_var</code> can be set as (the troubled-cells flagged for each variable is pooled together):
 
 <ul>
 <li><code>&#39;density&#39;</code>: Only the density is used</li>
@@ -778,15 +733,32 @@ EulerDriver1D; </code></pre></div>
 <li><code>&#39;prim&#39;</code>: The primitive variables i.e., density, velocity and pressure, are used.</li>
 <li><code>&#39;con&#39;</code>: The conserved variables i.e., density, momentum and energy, are used. </li>
 </ul></li>
+<li>As was the case with detection, there are several options for the variables which can be reconstructed. This is set using the flag <code>lim_var</code>, with the following options:
+
+<ul>
+<li><code>&#39;prim&#39;</code>:  The primitive variables i.e., density, velocity and pressure, are recontructed.</li>
+<li><code>&#39;con&#39;</code>:  The conserved variables i.e., density, momentum and energy, are recontructed.</li>
+<li><code>&#39;char_cell&#39;</code>: The local characterictic variables are reconstructed. These are obtained cell-by-cell using the linearized transformation operators. More precisely, the transformation matrix in each cell is evaluated using the cell-average value, following which the conserved variables are transformed to the characteristic variables in that cell. The same transformation is used to retrieve the conserved variables after limiting the characteristic variables. </li>
+<li><code>&#39;char_stencil&#39;</code>: The local characterictic variables obtained cell-by-cell can introduce spurious oscillations in the solution. One can also obtain the local characteristic variables, stencil-by stencil. More precisely, for a given reconstruction stencil of 3-cells, the transformation matrix is evaluated using the cell-average value of the central cell, following which the conserved variables are transformed to the characteristic variables in every cell of that stencil. The transformed variables are used to obtain the reconstructed characteristic variables in the central cell. Note that this approach can be 3 times more expensive than the <code>&#39;char_cell&#39;</code> approach.</li>
+</ul></li>
+<li>For systems of conservation laws, there are various choices to estimate the artificial viscosity. The current implementation of Euler equations estimates the dissipation using the representative variable set in <code>visc_var</code>. Only <code>&#39;density&#39;</code> is currently supported. After the viscosity estimation, the same value is applied to all equations.</li>
+<li>The solution filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_IVAR_&lt;ind_var&gt;_LIM_&lt;Limiter&gt;_LVAR_&lt;lim_var&gt;_VISC_&lt;Visc_model&gt;_VVAR_&lt;visc_var&gt;.dat</code>. The data in the file has the following format: 
+
+<ul>
+<li>Column 1: x-coordinates</li>
+<li>Column 2: the value of density, velocity and pressure (in that order) at corresponding x-coordinate.</li>
+</ul></li>
+<li>The troubled-cell time-history filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_IVAR_&lt;ind_var&gt;_LIM_&lt;Limiter&gt;_LVAR_&lt;lim_var&gt;_VISC_&lt;Visc_model&gt;_VVAR_&lt;visc_var&gt;_tcells.dat</code>.</li>
+<li>The artificial viscosity time-history filename has the format: <code>&lt;model&gt;1D_&lt;test_name&gt;_P&lt;N&gt;_N&lt;K&gt;_IND_&lt;Indicator&gt;_IVAR_&lt;ind_var&gt;_LIM_&lt;Limiter&gt;_LVAR_&lt;lim_var&gt;_VISC_&lt;Visc_model&gt;_VVAR_&lt;visc_var&gt;_visc.dat</code>. As the same viscosity is injected in all equations, it is saved only for the first one.</li>
 <li><code>var_ran</code> is used to set the ylim for the solution plots, with the format <code>[rho_min,rho_max ; velocity_min, velocity_max ; pressure_min, pressure_max]</code>.</li>
 <li>The main driver script <code>EulerDriver1D</code> is called once all the flags have been set. The troubled-cells flagged for each variable is pooled together.</li>
 </ul>
 
 <p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
-<h3 id="toc_10">Scripts for 2D problems</h3>
+<h3 id="toc_9">Scripts for 2D problems</h3>
 
-<p>Currently, the 1D solver supports linear advection, Burgers&#39; equation and the compressible Euler equations. For each problem, we need the following files:</p>
+<p>Currently, the 2D solver supports linear advection, Burgers&#39; equation, the KPP equation, and the compressible Euler equations. For each problem, we need the following files:</p>
 
 <ul>
 <li>A main script (with the default name <code>Main.m</code>) to set the various problem parameters. </li>
@@ -795,13 +767,14 @@ EulerDriver1D; </code></pre></div>
 <li>Finally, a mesh file is needed, which is currently generated using <a href="http://gmsh.info/">Gmsh</a>. Each example is already provided with the Gmsh geometry file (with the extension <code>.geo</code>). To generate the mesh file (with the extension <code>.msh</code>), you could either use the Gmsh GUI or create the file non-interactively from the terminal as <code>$ gmsh -2 mymeshfile.geo</code></li>
 </ul>
 
-<h4 id="toc_11">Scalar 2D</h4>
+<h4 id="toc_10">Scalar 2D</h4>
 
 <p>The basic structure of the various scripts are as follows:</p>
 
-<h5 id="toc_12">Main.m</h5>
+<h5 id="toc_11">Main.m</h5>
 
-<div><pre><code class="language-matlab">CleanUp2D;
+<div><pre><code class="language-matlab">% Remove NN diretory paths if they still exist
+CleanUp2D;
 
 close all
 clear all
@@ -809,23 +782,26 @@ clc
 
 model             = &#39;Advection&#39;;
 AdvectionVelocity = [1,1]; % Used for linear advection only
-test_name         = &#39;Shapes&#39;; 
+test_name         = &#39;Smooth&#39;; 
 InitialCond       = @IC;
 BC_cond           = {100001,&#39;P&#39;; 100002,&#39;P&#39;; 100003,&#39;P&#39;; 100004,&#39;P&#39;};
 
 
-FinalTime        = 1;
-CFL              = 0.6;
-% fixed_dt        = 1.0e-3;
+FinalTime        = 0.5;
+CFL              = 0.3;
 tstamps          = 2;
 N                = 1;
+RK               = &#39;LS54&#39;;
 
 % Set type of indicator
-Indicator       = &#39;TVB&#39;; TVBM = 10; TVBnu = 1.5;
+Indicator       = &#39;NONE&#39;;
 Filter_const    = true;
 nn_model        = &#39;MLP_v1&#39;;
-Limiter         = &#39;BJES&#39;;
+Limiter         = &#39;NONE&#39;;
 
+%Set viscosity model
+nn_visc_model = &#39;MLP_visc&#39;;
+Visc_model=&#39;EV&#39;; c_E=1; c_max=0.25;
 
 % Mesh file
 msh_file        = &#39;square_trans.msh&#39;;
@@ -833,9 +809,9 @@ msh_file        = &#39;square_trans.msh&#39;;
 % Output flags
 plot_iter  = 50;
 show_plot  = true;
-xran       = [-1,1]; 
-yran       = [-1,1]; 
-clines     = linspace(-0.98,0.98,30);
+xran       = [0,1]; 
+yran       = [0,1];
+clines     = linspace(0,2,30);
 save_soln  = true;
 
 % Call main driver
@@ -847,7 +823,8 @@ ScalarDriver2D;</code></pre></div>
 
 <ul>
 <li><code>&#39;Advection&#39;</code>: Linear advection equation with the advection speed set set using <code>AdvectionVelocity</code>.</li>
-<li><code>&#39;Burgers&#39;</code> : Simple extension of the Burgers&#39; equation to 2D, with the flux \(u^2/2\) in each coordinate direction. NOTE: <code>AdvectionVelocity</code> not required for this model.</li>
+<li><code>&#39;Burgers&#39;</code> : Simple extension of the Burgers&#39; equation to 2D, with the flux \(u^2/2\) in each coordinate direction. </li>
+<li><code>&#39;KPP&#39;</code>: KPP problem in 2D with flux \((\sin(u),\cos(u))\).</li>
 </ul></li>
 <li><code>test_name</code> is used to declare the name of the test. This is used for creating various save files.</li>
 <li><code>InitialCond</code> is used to set the initial condition for the problem (see the description of IC.m below).</li>
@@ -862,13 +839,14 @@ Boundary conditions require the creation of ghost cells, with the value of the s
 <li><p>The final simulation time is set using <code>FinalTime</code>, while the time step is chosen using a constant <code>CFL</code> or a setting a step <code>fixed_dt</code>. NOTE: Either <code>CFL</code> can be mentioned or the fixed time-step <code>fixed_dt</code>, but not both at the same time.</p></li>
 <li><p><code>tstamps</code> is used to specify the number of uniform time-instances (exluding the initial time) at which the solution files are saved. This must be a positive integer. For instance if <code>tstamps=2</code> and <code>FinalTime = 2</code>, then the solution evaluated at times closest (less than half the local time-step) to \(t=0,1,2\) are saved. NOTE: It might happen that pen-ultimate time instance in the simulation is very close to <code>FinalTime</code>, with the difference being much smaller than the pen-ultimate time-step. In this case, the solver saves the solution at this pen-ultimate as the solution representing the final solution. Thus, we also save the solution at the actual <code>FinalTime</code>, leading to a total of <code>tstamps</code>+2 save points in time. This becomes crucial when comparing the troubled-cells flagged at the final time-step, since the number of cell flagged is sensitive to the size of the time-step taken.</p></li>
 <li><p><code>N</code> sets the order of the basis.</p></li>
+<li><p><code>RK</code> sets the time integration scheme. The current implementation supports the five-stage fourth-order low-storage Runge-Kutta scheme <code>&#39;LS54&#39;</code> and the third order strong stability preserving Runge-Kutta <code>&#39;SSP3&#39;</code>.</p></li>
 <li><p>The troubled-cell indicator is set using <code>Indicator</code>. The following options are currently available:</p>
 
 <ul>
 <li><code>&#39;NONE&#39;</code>: No cells are flagged.</li>
 <li><code>&#39;ALL&#39;</code>: All cells are flagged.</li>
 <li><code>&#39;TVB&#39;</code>: Uses the 2D minmod-type TVB limiter. If this is chosen, then one also needs to set the variables <code>TVBM</code> and <code>TVBnu</code> as positive numbers. See the <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">paper</a> for details. </li>
-<li><code>&#39;NN&#39;</code>: Uses the trained neural network. The network name is set using the variable <code>nn_model</code>. The available networks are described below in the section <strong>Using the MLP indicator</strong>.</li>
+<li><code>&#39;NN&#39;</code>: Uses the trained neural network. The network name is set using the variable <code>nn_model</code>. The available networks are described below in the section <strong>Using the MLP troubled-cell indicator</strong>.</li>
 </ul></li>
 <li><p>Set <code>Filter_const</code> to <code>true</code>, if you want to avoid flagging almost constant cells. This is especially important for speeding up the performance with the network. See the <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">paper</a> for details. </p></li>
 <li><p>The limiter usd to reconstruct the solution in each troubled-cell,is set using <code>Limiter</code>. The following options are currently available:</p>
@@ -877,25 +855,37 @@ Boundary conditions require the creation of ghost cells, with the value of the s
 <li><code>&#39;NONE&#39;</code>: No limiting is applied.</li>
 <li><code>&#39;BJES&#39;</code>: Barth-Jespersen limiter.</li>
 </ul></li>
-<li><p>The flag <code>plot_iter</code> is used for visualization/verbose purposes. The solution plots (and simulation time etc) are shown after every <code>plot_iter</code> number of iterations during the simulation.</p></li>
+<li><p>The artificial viscosity model is set using <code>Visc_model</code>. The following options are currently available:</p>
+
+<ul>
+<li><code>&#39;NONE&#39;</code>: No artificial viscosity is added.</li>
+<li><code>&#39;EV&#39;</code>: Uses the entropy viscosity model. If this is chosen, two nonnegative parameters <code>c_E</code> and <code>c_max</code> have to be specified.</li>
+<li><code>&#39;MDH&#39;</code>: Uses the highest modal decay model. If this is chosen, three nonnegative parameters <code>c_A</code>,<code>c_k</code>, and <code>c_max</code> have to be specified.</li>
+<li><code>&#39;MDA&#39;</code>: Uses the averaged modal decay model. If this is chosen, a nonnegative parameter <code>c_max</code> has to be specified.</li>
+<li><code>&#39;NN&#39;</code>: Uses the trained neural network. The network name is set using the variable <code>nn_visc_model</code>. The available networks are described below in the section <strong>Using the MLP artificial viscosity estimator</strong>.</li>
+</ul></li>
+<li><p>The flag <code>plot_iter</code> is used for visualization/verbose purposes. The solution plots  are shown after every <code>plot_iter</code> number of iterations during the simulation.</p></li>
 <li><p>Set <code>show_plot</code> to <code>true</code> if you want solution plots to be generated during the simulation.</p></li>
 <li><p><code>xran</code> and <code>yran</code> are used to crop the x and y axes of the solution plots (if <code>show_plot</code> is set to <code>true</code>). This is particulalry helpful when an extended domain is used to impose artificial boundary conditions, for instance when solving 2D Riemann problem.</p></li>
 <li><p><code>clines</code> is used to set the contour lines for the solution contour plots (if <code>show_plot</code> is set to <code>true</code>). </p></li>
-<li><p>The solution variables are saved in the <strong>OUTPUT</strong> directory if <code>save_soln</code> is set to <code>true</code>. The filename has the format: <code>&lt;model&gt;2D_&lt;test_name&gt;_P&lt;N&gt;_IND_&lt;Indicator&gt;_LIM_&lt;Limiter&gt;_DATA.mat</code>. If <code>Filter_const</code> is set to <code>true</code>, then <code>ConstFilt</code> also appears in the filename. The following MATLAB variables are saved:</p>
+<li><p>The solution variables are saved in the <strong>OUTPUT</strong> directory if <code>save_soln</code> is set to <code>true</code>. The filename has the format: <code>&lt;model&gt;2D_&lt;test_name&gt;_P&lt;N&gt;_IND_&lt;Indicator&gt;_LIM_&lt;Limiter&gt;_VISC_&lt;Visc_model&gt;_DATA.mat</code>. If <code>Filter_const</code> is set to <code>true</code>, then <code>ConstFilt</code> also appears in the filename. The following MATLAB variables are saved:</p>
 
 <ul>
 <li>The <code>x</code> and <code>y</code> coordinates of all degrees of freedom in the mesh.</li>
-<li>Inverse of the Vandermonde matrix <code>invV</code></li>
+<li>Inverse of the Vandermonde matrix <code>invV</code>, the Jacobian of the geometric mapping <code>J</code>, the mass matrix <code>Mass</code> in the reference element.</li>
 <li><code>Save_times</code> is the array of exact time-instances at which the solution is saved. This is of length <code>tstamps</code>+2.</li>
 <li>The solutions evaluated at the time-instances listed in <code>Save_times</code> is stored in the MATLAB-cell <code>Q_save</code>.</li>
 <li>The troubled-cells flagged in the mesh at each time-instance listed in <code>Save_times</code> is stored in the MATLAB-cell <code>ind_save</code>.</li>
-<li><code>ptc_cell</code> stores the time-history of the percentage of the total number mesh cells flaged as troubled-cells. <code>t_hist</code> stores all the time-instances attained during the simulation. Both these arrays have the same size. </li>
+<li>The artificial viscosity at each time-instance listed in <code>Save_times</code> is stored in the MATLAB-cell <code>visc_save</code>.</li>
+<li><code>ptc_hist</code> stores the time-history of the percentage of the total number mesh cells flaged as troubled-cells. </li>
+<li><code>maxvisc_hist</code> stores the time-history of the maximum value of the artificial viscosity.</li>
+<li><code>t_hist</code> stores all the time-instances attained during the simulation. </li>
 <li><code>sim_time</code> stores the full simulation time (excludes time taken to generate mesh data structures).</li>
 </ul></li>
 <li><p>The main driver script <code>ScalarDriver2D</code> is called once all the flags have been set.</p></li>
 </ul>
 
-<h4 id="toc_13">IC.m</h4>
+<h4 id="toc_12">IC.m</h4>
 
 <p>The initial condition function must take as input the arrays x and y, where each of these is of the shape \(m \times n\). The output should be a array of dimension \(m \times n \times 1\). Almost always, \(m\) will denote the number of DOFs per cell in the mesh, while \(n\) will be the number of cells. We give an example of this function below:</p>
 
@@ -905,7 +895,7 @@ Boundary conditions require the creation of ghost cells, with the value of the s
 
 return;</code></pre></div>
 
-<h4 id="toc_14">BC.m</h4>
+<h4 id="toc_13">BC.m</h4>
 
 <p>When using non-periodic boundary conditions, a function script called BC.m is also needed. An example function is as follows:</p>
 
@@ -927,11 +917,11 @@ return;</code></pre></div>
 
 <p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
-<h4 id="toc_15">Euler 2D</h4>
+<h4 id="toc_14">Euler 2D</h4>
 
 <p>The basic structure of the various scripts are as follows:</p>
 
-<h5 id="toc_16">Main.m</h5>
+<h5 id="toc_15">Main.m</h5>
 
 <div><pre><code class="language-matlab">% Remove NN diretory paths if they still exist
 CleanUp2D;
@@ -944,40 +934,45 @@ clc
 model          = &#39;Euler&#39;;
 gas_const      = 1.0;
 gas_gamma      = 1.4;
-test_name      = &#39;DoubleMach&#39;;
+test_name      = &#39;SV&#39;;
 InitialCond    = @IC;
-BC_cond        = {101,&#39;I&#39;; 102,&#39;O&#39;; 103,&#39;O&#39;; 104,&#39;S&#39;; 105,&#39;D&#39;};
+BC_cond        = {100001,&#39;P&#39;; 100002,&#39;P&#39;; 100003,&#39;P&#39;; 100004,&#39;P&#39;};
 
-FinalTime      = 0.2;
-fixed_dt       = 2e-5;
+FinalTime      = 0.8;
+CFL            = 0.8;
 tstamps        = 1;
-N              = 1;
+N              = 4;
+RK               = &#39;LS54&#39;;
+
+% Mesh file
+msh_file      = &#39;nonuniform_m1p3_H002.msh&#39;;
 
 % Set type of indicator
-Indicator     = &#39;NN&#39;;
+Indicator     = &#39;NONE&#39;;
 ind_var       = &#39;con&#39;;
 nn_model      = &#39;MLP_v1&#39;;   
-Limiter       = &#39;BJES&#39;; 
+Limiter       = &#39;NONE&#39;; 
 lim_var       = &#39;con&#39;;
 Filter_const  = true;
 
-
-% Mesh file
-msh_file      = &#39;domain.msh&#39;;
+%Set viscosity model
+nn_visc_model = &#39;MLP_visc&#39;;
+Visc_model=&#39;EV&#39;; c_E=1; c_max=0.25;
+visc_var=&#39;density&#39;;
 
 
 plot_iter  = 50;
 show_plot  = true;
-xran       = [0,4]; 
+xran       = [0,2]; 
 yran       = [0,1];
-plot_var   = {&#39;density&#39;,&#39;pressure&#39;};
-clines     = {linspace(0.255,1.9,30),linspace(0.36,2.15,30)};
+plot_var   = {&#39;density&#39;};
+clines     = {linspace(0.85,1.35,30)}; 
 save_soln  = true;
 
 % Call main driver
 EulerDriver2D;</code></pre></div>
 
-<p>Most of the structure is similar to the scalar 2D script. The differences are described below.</p>
+<p>Most of the structure is similar to the Scalar 2D script. The differences are described below. Note that most of the differences coincide with the 1D case.</p>
 
 <ul>
 <li>The <code>model</code> flag must be set to <code>Euler</code>.</li>
@@ -1000,17 +995,18 @@ EulerDriver2D;</code></pre></div>
 <li><code>&#39;prim&#39;</code>: The primitive variables are used. </li>
 <li><code>&#39;con&#39;</code>:  The conserved variables are used.</li>
 </ul></li>
-<li><p>The limiting variables are set using the flag <code>lim_var</code>, with the following options being avaialable:</p>
+<li>The limiting variables are set using the flag <code>lim_var</code>, with the following options being avaialable:
 
 <ul>
 <li><code>&#39;prim&#39;</code><br></li>
 <li><code>&#39;con&#39;</code> </li>
 </ul></li>
+<li>The viscosity is estimated using the variable mentioned in <code>visc_var</code>. Currently, only <code>&#39;density&#39;</code> is supported. The same value of the dissipation is injected in all equations of the system.</li>
 <li><p><code>plot_var</code> is a MATLAB-cell which listing the variables that should be plotted. The following options are available:</p>
 
 <ul>
 <li><code>&#39;density&#39;</code></li>
-<li><code>&#39;pressure</code></li>
+<li><code>&#39;pressure&#39;</code></li>
 <li><code>&#39;velx&#39;</code>: x-velocity component.</li>
 <li><code>&#39;vely&#39;</code>: y-velocity component.</li>
 <li><code>&#39;energy&#39;</code></li>
@@ -1020,7 +1016,7 @@ EulerDriver2D;</code></pre></div>
 <li><p>The main driver script <code>EulerDriver2D</code> is called once all the flags have been set.</p></li>
 </ul>
 
-<h4 id="toc_17">IC.m</h4>
+<h4 id="toc_16">IC.m</h4>
 
 <p>The initial condition function must take as input the arrays <code>x</code>,<code>y</code>,<code>gas_gamma</code>, and <code>gas_const</code>, where <code>x</code> and <code>y</code> are of the shape \(m \times n\). The output should be the conserved variables array <code>Q</code> of dimension \(m \times n \times 4\). Once again, \(m\) generally denotes the number of DOFs per cell in the mesh, while \(n\) will be the number of cells. We give an example of this function below:</p>
 
@@ -1046,7 +1042,7 @@ return;</code></pre></div>
 
 <p>where the function <code>Euler_Energy2D</code> is an available custom function used to determine the total energy from the primitive variables. Similarly, the function <code>Euler_Pressure2D(Q,gas_gamma)</code> is available to evaluate the pressure from the conserved variables.</p>
 
-<h4 id="toc_18">BC.m</h4>
+<h4 id="toc_17">BC.m</h4>
 
 <p>When using non-periodic boundary conditions, a function script called BC.m is also needed. An example function is as follows:</p>
 
@@ -1086,7 +1082,7 @@ return;</code></pre></div>
 
 <p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
-<h2 id="toc_19">Using the MLP indicator</h2>
+<h2 id="toc_18">Using the MLP troubled-cell indicator</h2>
 
 <p>For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder <strong>Trained_networks</strong>. For each network, the following files exist:</p>
 
@@ -1102,11 +1098,11 @@ return;</code></pre></div>
 <p>Consider the input \(X\) to be an array of size \(m \times n\), where \(m\) is the dimension of each data sample, while \(n\) is the number of samples. The algortihm for the network with \(L\) hidden-layers having \(N_l\) neurons in the \(l\)-th hidden layer, is as follows:</p>
 
 <p>\[
-\begin{align}
+\begin{aligned}
 X_0 &amp;= \text{Scaling}(X), \quad N_0 = m\\
 X_l &amp;= f_{\text{activation}}(W_l X_{l-1} + b_l \mathbb{1}(n)), \quad W_l \in \mathbb{R}^{N_l \times N_{l-1}}, \quad b_l \in \mathbb{R}^{N_l}, \qquad l=1,...,L\\
 Y &amp;= \text{Softmax}(W_{out} X_L + b_{out} \mathbb{1}(n)), \quad W_{out} \in \mathbb{R}^{2 \times N_L}, \quad b_{out} \in \mathbb{R}^{2} \\
-\end{align}
+\end{aligned}
 \]</p>
 
 <p>where the final output \(Y\) is of dimension \(2 \times n\), and \(\mathbb{1}(n)\) is a row vector of \(n\) ones. The activation function is chosen as a suitable non-linear function, such as the Logistic function, hyperbolic tangent, ReLU, etc. The Softmax function is used a the output function. The first row of \(Y\) gives the probability of the sample corresponding to a troubled-cell, while the second row gives the probability of the sample corresponding to a good-cell. Note that the sum along each column of \(Y\) equals \(1\). The indices of the troubled-cells can be obtained as</p>
@@ -1126,7 +1122,7 @@ ind = \text{find}(Y(1,:) &gt; 0.5).
 
 <p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
 
-<h3 id="toc_20">Network for 1D problems</h3>
+<h3 id="toc_19">Network for 1D problems</h3>
 
 <p>The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.</p>
 
@@ -1140,12 +1136,78 @@ f_{\text{activation}}(U) = max(0,U) - \nu(0,-U),
 <p>with the parameter \(\nu\). The details and results with this indicator are published <a href="https://www.sciencedirect.com/science/article/pii/S0021999118302547">here</a>.</p></li>
 </ul>
 
-<h3 id="toc_21">Network for 2D problems</h3>
+<h3 id="toc_20">Network for 2D problems</h3>
 
 <p>The following is a list of the available networks for 2D problems. The latest recommended network is MLP_v1.</p>
 
 <ul>
 <li><strong>MLP_v1</strong>: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. This network should be used with the filter to remove almost constant cells. The details and results with this indicator are available <a href="https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf">here</a>.</li>
+</ul>
+
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
+
+<h2 id="toc_21">Using the MLP artificial viscosity estimator</h2>
+
+<p>For those interested in using the artificial viscosity network in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder <strong>Trained_networks</strong>. A different network is trained for each polynomial degree \(N \in \left\lbrace 1,...,4 \right\rbrace\). For each network, the following files exist:</p>
+
+<ul>
+<li><strong><em>model_parameters.dat</em></strong>: Contains the number of hidden layers (NHL), and network hyperparameters (the Leaky ReLU factor, etc.).</li>
+<li><strong><em>w<em>h{i}</em>m{N}.dat</em></strong>: Weights for the i&#39;th hidden layer.</li>
+<li><strong><em>w<em>out</em>m{N}.dat</em></strong>: Weights for the output layer.</li>
+<li><strong><em>b<em>h{i}</em>m{N}.dat</em></strong>: Biases for the i&#39;th hidden layer.</li>
+<li><strong><em>b<em>out</em>m{N}.dat</em></strong>: Biases for the output layer.</li>
+<li><strong><em>Scaling.m</em></strong>: Script for scaling the input data before passing it through the network.</li>
+<li><strong><em>Scaling_inverse.m</em></strong>: Script for scaling the output data returned by the network. As discussed in the <a href="https://infoscience.epfl.ch/record/263616/files/Artificial_viscosity_nn.pdf">report</a>, it returns a constant value equal to the maximum among the components of each output vector. Note that among the input arguments, a characteristic mesh size and a local wave speed have to be provided.</li>
+</ul>
+
+<p>Consider the input \(X\) to be an array of size \(m \times n\), where \(m\) is the dimension of each data sample, while \(n\) is the number of samples. The algortihm for the network with \(L\) hidden-layers having \(N_l\) neurons in the \(l\)-th hidden layer, is as follows:</p>
+
+<p>\[
+\begin{aligned}
+X_0 &amp;= \text{Scaling}(X), \quad N_0 = m\\
+X_l &amp;= f_{\text{activation}}(W_l X_{l-1} + b_l \mathbb{1}(n)), \quad W_l \in \mathbb{R}^{N_l \times N_{l-1}}, \quad b_l \in \mathbb{R}^{N_l}, \qquad l=1,...,L\\
+Y &amp;= \text{Softplus}(W_{out} X_L + b_{out} \mathbb{1}(n)), \quad W_{out} \in \mathbb{R}^{m \times N_L}, \quad b_{out} \in \mathbb{R}^{m} \\
+\mu &amp;= \text{Scaling_inverse}(Y) \\
+\end{aligned}
+\]</p>
+
+<p>where the network output \(Y\) is of dimension \(m \times n\), while the artificial viscosity has dimension \(1 \times n\) in the current implementation. The activation function is chosen as a suitable non-linear function, here chosen as the Leaky ReLU function. The Softplus function is used as the output function to ensure nonnegativity. </p>
+
+<p>The MATLAB scripts to read and run the networks can be found under the folder <strong>MLP_scripts</strong>. For instance, the following scripts for 1D problems are available in the <strong>1D</strong> sub-directory:</p>
+
+<ul>
+<li><strong>read_mlp_param1D_visc.m</strong> reads the various weights and biases for a given network. Note that <code>N</code> has to be provided as input to the function.</li>
+<li><strong>visc_MLP1D.m</strong> runs the network for a given input <code>x</code>.</li>
+</ul>
+
+<p>The <strong>Common</strong> sub-directory contains additional scripts needed to run the networks, such as the implementation of the leaky ReLU and Softplus activation function.</p>
+
+<p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>
+
+<h3 id="toc_22">Network for 1D problems</h3>
+
+<p>The following is a list of the available networks for 1D problems. The latest recommended network is MLP_visc.</p>
+
+<ul>
+<li><strong>MLP_visc</strong>: This network has an input layer of size <code>N+1</code>. In particular, the input to estimate artificial viscosity of cell \(i\) consists of the solution degrees of freedom in the same cell. There are 5 hidden layers, with 10 neurons each, and Leaky ReLU activation function. The output layer has again dimension <code>N+1</code>, and the Softplus activation function is used.</li>
+</ul>
+
+<h3 id="toc_23">Network for 2D problems</h3>
+
+<p>The following is a list of the available networks for 2D problems. The latest recommended network is MLP_visc.</p>
+
+<ul>
+<li><strong>MLP_visc</strong>: This network has an input layer of size <code>(N+1)(N+2)/2</code>. In particular, the input to estimate artificial viscosity of cell \(i\) consists of the solution degrees of freedom in the same cell. There are 5 hidden layers, with 20 neurons each, and Leaky ReLU activation function. The output layer has again dimension <code>(N+1)(N+2)/2</code>, and the Softplus activation function is used.</li>
+</ul>
+
+<h3 id="toc_24">Remarks</h3>
+
+<p>We emphasise that: </p>
+
+<ul>
+<li>The network input and output are scaled versions of the solution and viscosity values. This is why the functions <strong>Scaling.m</strong> and <strong>Scaling_inverse.m</strong> play an important role.<br></li>
+<li>With the current implementation, we predict a constant viscosity coefficient in each cell. This is chosen as the maximum among the local values of the dissipation.</li>
+<li>To ensure continuity of \(\mu\) and enhance subcell resolution, the pointwise values of the viscosity are obtained after a smoothing algorithm (see, e.g., <strong>Scalar1D_smooth_viscosity.m</strong>).</li>
 </ul>
 
 <p><a href="#markdown-header-table-of-contents">back to table of contents</a></p>

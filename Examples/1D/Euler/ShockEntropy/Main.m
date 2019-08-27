@@ -24,20 +24,32 @@ bc_cond   = {'D',3.857143,'N',0.0;
 FinalTime = 1.8;
 CFL       = 0.1;
 K         = 256;
-N         = 4;
+N         = 1;
+RK        = 'LS54';
 
 
-Indicator = 'NN';
+
+Indicator = 'NONE'; TVBM=1;
 ind_var        = 'prim';
-nn_model       = 'MLP_v1';
-Limiter    = 'MINMOD';
+nn_model       = 'MLP_v1';	
+Limiter    = 'NONE';
 lim_var        = "char_stencil";
+
+nn_visc_model = 'MLP_visc';
+%Visc_model = 'NONE';
+%Visc_model='EV'; c_E=1; c_max=0.5;
+%Visc_model='MDH'; c_A=2.5; c_k=0.2; c_max=0.5;
+%Visc_model='MDA'; c_max=1;
+Visc_model='NN';
+visc_var='density';
 
 
 % Plot and save parameters
 plot_iter  = 100;
+save_iter  = 1;
 save_soln  = true;
 save_ind   = true;
+save_visc  = true;
 save_plot  = true;
 ref_avail  = true;
 ref_fname  = 'ref_soln.dat';

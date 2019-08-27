@@ -20,7 +20,7 @@ bc_cond   = {'D',1,'D',0.125;
              'D',0,'D',0.0;
              'D',1/(0.4),'D',0.1/(0.4)};  % For conserved variables
 FinalTime = 2;
-CFL       = 0.4;
+CFL       = 0.1;
 K         = 200;
 N         = 1;
 RK        = 'LS54';
@@ -32,9 +32,9 @@ nn_model       = 'MLP_v1';
 Limiter    = 'NONE';
 lim_var        = "char_stencil";
 
-Visc_model = 'NONE';
+%Visc_model = 'NONE';
 nn_visc_model = 'MLP_visc';
-%Visc_model='EV'; c_E=1; c_max=0.5;
+Visc_model='EV'; c_E=1; c_max=0.5;
 %Visc_model='MDH'; c_A=2.5; c_k=0.2; c_max=0.5;
 %Visc_model='MDA'; c_max=1;
 %Visc_model='NN';
