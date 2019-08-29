@@ -1,10 +1,10 @@
 # DGANN solver
-###Created by: Deep Ray (Rice University, Houston), Niccolò Discacciati (EPFL, Lausanne) 
-###Code available at: 
-`https://github.com/nickdisca/DGANN_AV/`
+### Created by: Deep Ray (Rice University, Houston), Niccolò Discacciati (EPFL, Lausanne) 
+### Code available at: 
+`https://github.com/nickdisca/DGANN_AV/`             
 `https://bitbucket.org/deepray/dgann/src/master/`    
 
-###Date: 26 August, 2019
+### Date: 26 August, 2019
 
 **DGANN** is a RKDG-solver written in MATLAB, which is also capable of using artificial neural networks trained to serve as a troubled-cell detector and/or artificial viscosity estimator. The main source code for the RKDG solver is based on the solvers available with the following texts:
 
@@ -17,7 +17,7 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
 
 **NOTE:** As of today, the two MLPs have not been tested together. We used either limiting or artificial viscosity. Even though no issues should arise when combining the models, we advice the interested user to take particular care in case (s)he whants to do so.
 
-##Table of contents 
+## Table of contents 
 
 * [Running the code](#markdown-header-running-the-code)
    * [Scripts for 1D](#markdown-header-scripts-for-1d-problems)
@@ -35,13 +35,13 @@ Details about the design of the Multilayer Perceptron (MLP) troubled-cell indica
    * [Remarks](#markdown-header-remarks) 
 
 
-##Running the code 
+## Running the code 
 After cloning the git repository, execute **mypath.m** from the parent directory in MATLAB. This will set all the neccesary paths to use the solver. The various test cases need to be run from the **Examples** directory or its sub-directories.
 
-###Scripts for 1D problems
+### Scripts for 1D problems
 Currently, the 1D solver supports linear advection, Burgers' equation, the shallow water equations and the compressible Euler equations.
 
-####Scalar 1D
+#### Scalar 1D
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -143,7 +143,7 @@ $$x_{i+\frac{1}{2}} \rightarrow x_{i+\frac{1}{2}} + \text{mesh_pert} \ h \ \omeg
 
 [back to table of contents](#markdown-header-table-of-contents)
  
-####Euler 1D 
+#### Euler 1D 
 The basic structure of the example script is as follows.
 
 ~~~matlab
@@ -229,7 +229,7 @@ Most of the structure is similar to the Scalar 1D script. The differences are de
 
 [back to table of contents](#markdown-header-table-of-contents)
 
-###Scripts for 2D problems
+### Scripts for 2D problems
 Currently, the 2D solver supports linear advection, Burgers' equation, the KPP equation, and the compressible Euler equations. For each problem, we need the following files:
 
 * A main script (with the default name `Main.m`) to set the various problem parameters. 
@@ -238,7 +238,7 @@ Currently, the 2D solver supports linear advection, Burgers' equation, the KPP e
 * Finally, a mesh file is needed, which is currently generated using [Gmsh](http://gmsh.info/). Each example is already provided with the Gmsh geometry file (with the extension `.geo`). To generate the mesh file (with the extension `.msh`), you could either use the Gmsh GUI or create the file non-interactively from the terminal as `$ gmsh -2 mymeshfile.geo`
   
 
-####Scalar 2D
+#### Scalar 2D
 The basic structure of the various scripts are as follows:
 ##### Main.m
 
@@ -337,7 +337,7 @@ ScalarDriver2D;
  * `sim_time` stores the full simulation time (excludes time taken to generate mesh data structures).
 * The main driver script `ScalarDriver2D` is called once all the flags have been set.
 
-####IC.m
+#### IC.m
 The initial condition function must take as input the arrays x and y, where each of these is of the shape $$m \times n$$. The output should be a array of dimension $$m \times n \times 1$$. Almost always, $$m$$ will denote the number of DOFs per cell in the mesh, while $$n$$ will be the number of cells. We give an example of this function below:
 
 ~~~matlab
@@ -348,7 +348,7 @@ function Q = IC(x, y)
 return;
 ~~~  
 
-####BC.m
+#### BC.m
 When using non-periodic boundary conditions, a function script called BC.m is also needed. An example function is as follows:
 
 ~~~matlab
@@ -370,7 +370,7 @@ where the function takes in as input a boundary physical tag `ckey` and the cure
 
 [back to table of contents](#markdown-header-table-of-contents)
 
-####Euler 2D
+#### Euler 2D
 The basic structure of the various scripts are as follows:
 ##### Main.m
 
@@ -456,7 +456,7 @@ Most of the structure is similar to the Scalar 2D script. The differences are de
  
 * The main driver script `EulerDriver2D` is called once all the flags have been set.
 
-####IC.m
+#### IC.m
 The initial condition function must take as input the arrays `x`,`y`,`gas_gamma`, and `gas_const`, where `x` and `y` are of the shape $$m \times n$$. The output should be the conserved variables array `Q` of dimension $$m \times n \times 4$$. Once again, $$m$$ generally denotes the number of DOFs per cell in the mesh, while $$n$$ will be the number of cells. We give an example of this function below:
 
 ~~~matlab
@@ -482,7 +482,7 @@ return;
 ~~~
 where the function `Euler_Energy2D` is an available custom function used to determine the total energy from the primitive variables. Similarly, the function `Euler_Pressure2D(Q,gas_gamma)` is available to evaluate the pressure from the conserved variables.
 
-####BC.m
+#### BC.m
 When using non-periodic boundary conditions, a function script called BC.m is also needed. An example function is as follows:
 
 ~~~matlab
@@ -522,7 +522,7 @@ where the function takes in as input a boundary physical tag ckey, the curent si
 
 [back to table of contents](#markdown-header-table-of-contents)
 
-##Using the MLP troubled-cell indicator 
+## Using the MLP troubled-cell indicator 
 For those interested in using the trained indicator in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder **Trained_networks**. For each network, the following files exist:
 
 * ***model_parameters.dat***: Lists the dimensions of the input (IDIM) and output (ODIM) layers for the network, the number of hidden layers (NHL), and network hyperparameters (the Leaky ReLU factor, etc.).
@@ -558,7 +558,7 @@ The **Common** sub-directory contains additional scripts needed to run the netwo
 
 [back to table of contents](#markdown-header-table-of-contents)
 
-###Network for 1D problems
+### Network for 1D problems
 The following is a list of the available networks for 1D problems. The latest recommended network is MLP_v1.
 
 * **MLP_v1**: This network has an input layer of size 5. In particular, the input for the classification of cell $$i$$ is $$X=[\overline{u}_{i-1}, \overline{u}_{i}, \overline{u}_{i+1}, u_{i-\frac{1}{2}}^+, u_{i+\frac{1}{2}}^-]$$, where the first 3 quantities are the cell averages of the solution in the cells $$i-1,i,i+1$$ and the last two entries are the left and right cell interface values of the approximating polynomial in cell $$i$$. There are 5 hidden layers, whose widths are 256, 128, 64, 32 and 16, going from the input to the output layer. The activation function is taken to be the Leaky ReLU activation function 
@@ -569,14 +569,14 @@ $$
 
  with the parameter $$\nu$$. The details and results with this indicator are published [here](https://www.sciencedirect.com/science/article/pii/S0021999118302547).
  
-###Network for 2D problems
+### Network for 2D problems
 The following is a list of the available networks for 2D problems. The latest recommended network is MLP_v1.
 
 * **MLP_v1**: This network has an input layer of size 12. In particular, the input is the linear modal coefficient of each triangle in a 4-cell patch. There are 5 hidden layers of width 20 each. The activation function is taken to be the Leaky ReLU activation function. This network should be used with the filter to remove almost constant cells. The details and results with this indicator are available [here](https://infoscience.epfl.ch/record/258044/files/2D_troubled_cell_indicator.pdf).
  
 [back to table of contents](#markdown-header-table-of-contents)
 
-##Using the MLP artificial viscosity estimator 
+## Using the MLP artificial viscosity estimator 
 For those interested in using the artificial viscosity network in their own solvers, we explain the various components of the network. The descriptor files for the various trained networks are available under the folder **Trained_networks**. A different network is trained for each polynomial degree $$N \in \left\lbrace 1,...,4 \right\rbrace$$. For each network, the following files exist:
 
 * ***model_parameters.dat***: Contains the number of hidden layers (NHL), and network hyperparameters (the Leaky ReLU factor, etc.).
@@ -609,17 +609,17 @@ The **Common** sub-directory contains additional scripts needed to run the netwo
 
 [back to table of contents](#markdown-header-table-of-contents)
 
-###Network for 1D problems
+### Network for 1D problems
 The following is a list of the available networks for 1D problems. The latest recommended network is MLP_visc.
 
 * **MLP_visc**: This network has an input layer of size `N+1`. In particular, the input to estimate artificial viscosity of cell $$i$$ consists of the solution degrees of freedom in the same cell. There are 5 hidden layers, with 10 neurons each, and Leaky ReLU activation function. The output layer has again dimension `N+1`, and the Softplus activation function is used.
   
-###Network for 2D problems
+### Network for 2D problems
 The following is a list of the available networks for 2D problems. The latest recommended network is MLP_visc.
 
 * **MLP_visc**: This network has an input layer of size `(N+1)(N+2)/2`. In particular, the input to estimate artificial viscosity of cell $$i$$ consists of the solution degrees of freedom in the same cell. There are 5 hidden layers, with 20 neurons each, and Leaky ReLU activation function. The output layer has again dimension `(N+1)(N+2)/2`, and the Softplus activation function is used.
 
-###Remarks
+### Remarks
 We emphasise that: 
    
 * The network input and output are scaled versions of the solution and viscosity values. This is why the functions **Scaling.m** and **Scaling_inverse.m** play an important role.   
